@@ -51,7 +51,7 @@ namespace Interview.Persistence.ServiceExtensions
                 options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
                 {
 
-                    if (httpContext.Request.Path.StartsWithSegments("/api/Admin/getAllusers"))
+                    if (httpContext.Request.Path.StartsWithSegments("/api/Authenticate/login"))
                     {
                         return RateLimitPartition.GetFixedWindowLimiter(partitionKey: httpContext.Request.Headers.Host.ToString(), partition =>
                             new FixedWindowRateLimiterOptions
