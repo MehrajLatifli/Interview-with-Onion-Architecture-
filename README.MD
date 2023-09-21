@@ -2,6 +2,8 @@
 
 
 
+<h1> Migration </h1>
+
 add-migration AnyMigration -Context Interview.Persistence.Contexts.AuthDbContext.DbContext.CustomDbContext 
 update-database -Context Interview.Persistence.Contexts.AuthDbContext.DbContext.CustomDbContext 
 
