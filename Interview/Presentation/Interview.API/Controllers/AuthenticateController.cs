@@ -81,7 +81,7 @@ namespace Interview.API.Controllers
                 UserName = model.Username,
                 PhoneNumber = model.PhoneNumber,
                 ImagePath = imageUrl,
-                Roles = UserRoles.Admin,
+                Roles = $"{UserRoles.Admin+", "+UserRoles.HR}",
             };
 
             var result = await _userManager.CreateAsync(user, model.Password);
