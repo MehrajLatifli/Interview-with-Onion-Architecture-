@@ -30,4 +30,5 @@ namespace Interview.Persistence.ValidationAttributes
             return new ValidationResult("Invalid input type. This attribute is only applicable to double numbers.");
         }
     }
+
 }

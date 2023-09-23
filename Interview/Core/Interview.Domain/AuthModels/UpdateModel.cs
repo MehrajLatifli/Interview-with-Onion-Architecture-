@@ -11,6 +11,7 @@ namespace Interview.Domain.AuthModels
         [Required(ErrorMessage = "User Name is required")]
         public string? Username { get; set; }
         [Required(ErrorMessage = "User Email is required")]
+        [Email(ErrorMessage = "Invalid email format.")]
         public string? Email { get; set; }
         [Required(ErrorMessage = "User Password is required")]
         public string? Password { get; set; }

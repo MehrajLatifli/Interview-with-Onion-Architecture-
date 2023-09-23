@@ -18,7 +18,7 @@ namespace Interview.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthenticateController : ControllerBase
+    public class HRAuthenticateController : ControllerBase
     {
         private readonly UserManager<CustomUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
@@ -29,7 +29,7 @@ namespace Interview.API.Controllers
 
         List<IdentityError> errorList = new List<IdentityError>();
 
-        public AuthenticateController(UserManager<CustomUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration, SignInManager<CustomUser> signInManager)
+        public HRAuthenticateController(UserManager<CustomUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration, SignInManager<CustomUser> signInManager)
         {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -38,7 +38,7 @@ namespace Interview.API.Controllers
         }
 
         [HttpPost]
-        [Route("register-admin")]
+        [Route("register")]
         public async Task<IActionResult> RegisterAdmin([FromForm] RegisterModel model)
         {
             var userExists = await _userManager.FindByNameAsync(model.Username);
@@ -81,7 +81,7 @@ namespace Interview.API.Controllers
                 UserName = model.Username,
                 PhoneNumber = model.PhoneNumber,
                 ImagePath = imageUrl,
-                Roles = $"{UserRoles.Admin+", "+UserRoles.HR}",
+                Roles = $"{UserRoles.HR}",
             };
 
             var result = await _userManager.CreateAsync(user, model.Password);
@@ -93,11 +93,7 @@ namespace Interview.API.Controllers
 
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = $"User creation failed! \n {errorMessage}" });
             }
-            if (!await _roleManager.RoleExistsAsync(UserRoles.Admin))
-                await _roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
 
-            if (await _roleManager.RoleExistsAsync(UserRoles.Admin))
-                await _userManager.AddToRoleAsync(user, UserRoles.Admin);
 
             if (!await _roleManager.RoleExistsAsync(UserRoles.HR))
                 await _roleManager.CreateAsync(new IdentityRole(UserRoles.HR));
