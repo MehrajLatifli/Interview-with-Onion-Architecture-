@@ -1,11 +1,12 @@
 <img src="https://github.com/MehrajLatifli/Interview-with-Onion-Architecture-/blob/master/Assets/image.png" alt="Your Image Description" width="500">
 
 
-<h1> SQL file </h1>
+<h1> SQL </h1>
 <a href="https://github.com/MehrajLatifli/Interview-with-Onion-Architecture-/blob/master/Assets/Interview.sql">Interview SQL file</a>
+</br>
+<img src="https://github.com/MehrajLatifli/Interview-with-Onion-Architecture-/blob/master/Assets/SQL%20Diagram.png" alt="Your Image Description" width="500">
 
 </br>
-
 
 <h1> Migration </h1>
 add-migration AnyMigration -Context Interview.Persistence.Contexts.AuthDbContext.DbContext.CustomDbContext 

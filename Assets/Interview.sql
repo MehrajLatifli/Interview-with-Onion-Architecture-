@@ -19,6 +19,10 @@ CREATE TABLE [Branch]
    [IdBranch] INT PRIMARY KEY IDENTITY (1,1) NOT NULL,
    [BranchName] NVARCHAR(max) NOT NULL,
 
+   [SectorId_forBranch]  int NOT NULL,
+
+   Constraint [FK_SectorId_forBranch]  Foreign key ([SectorId_forBranch]) References  [Sector]  ( [IdSector] ) On Delete NO ACTION On Update NO ACTION,
+
 )
 
 -- Departament
@@ -27,6 +31,11 @@ CREATE TABLE [Department]
 
    [IdDepartment] INT PRIMARY KEY IDENTITY (1,1) NOT NULL,
    [DepartmentName] NVARCHAR(max) NOT NULL,
+
+   
+   [BranchId_forDepartment]  int NOT NULL,
+
+   Constraint [FK_BranchId_forDepartment]  Foreign key ([BranchId_forDepartment]) References  [Branch]  ( [IdBranch] ) On Delete NO ACTION On Update NO ACTION,
 
 )
 
