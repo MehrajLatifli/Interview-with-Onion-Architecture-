@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Interview.Persistence.ValidationAttributes
+namespace Interview.Domain.Validations
 {
     public class RangeAttribute : ValidationAttribute
     {

@@ -1,4 +1,4 @@
-﻿using Interview.Persistence.ValidationAttributes;
+﻿using Interview.Domain.Validations;
 using Microsoft.AspNetCore.Http;
 
 namespace Interview.Domain.AuthModels

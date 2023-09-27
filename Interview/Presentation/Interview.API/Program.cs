@@ -62,6 +62,10 @@ builder.Services.AddSwaggerGen(c =>
 
 builder.Services.AddCors();
 
+
+builder.Services.AddPersistenceServices();
+
+
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("AdminOnly", policy =>

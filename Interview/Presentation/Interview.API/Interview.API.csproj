@@ -72,6 +72,8 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Core\Interview.Application\Interview.Application.csproj" />
     <ProjectReference Include="..\..\Core\Interview.Domain\Interview.Domain.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\Interview.Infrastructure\Interview.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\Interview.Persistence\Interview.Persistence.csproj" />
   </ItemGroup>
 
 </Project>

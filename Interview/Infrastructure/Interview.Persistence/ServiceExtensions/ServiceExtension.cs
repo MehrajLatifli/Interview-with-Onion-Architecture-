@@ -1,4 +1,7 @@
-﻿using Interview.Persistence.Contexts.AuthDbContext.DbContext;
+﻿using Interview.Application.Repositories.Custom;
+using Interview.Persistence.Contexts.AuthDbContext.DbContext;
+using Interview.Persistence.Contexts.InterviewDbContext;
+using Interview.Persistence.Repositories.Custom;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -55,9 +58,50 @@ namespace Interview.Persistence.ServiceExtensions
         }
 
 
+        public static void AddPersistenceServices(this IServiceCollection services)
+        {
+            services.AddDbContext<InterviewContext>(options => options.UseSqlServer(ConnectionString));
+
+            services.AddScoped<IBranchWriteRepository, BranchWriteRepository>();
+            services.AddScoped<IBranchReadRepository, BranchReadRepository>();
+
+            services.AddScoped<ICandidateWriteRepository, CandidateWriteRepository>();
+            services.AddScoped<ICandidateReadRepository, CandidateReadRepository>();
+
+            services.AddScoped<ICandidateQuestionWriteRepository, CandidateQuestionWriteRepository>();
+            services.AddScoped<ICandidateQuestionReadRepository, CandidateQuestionReadRepository>();
+
+            services.AddScoped<ICandidateVacancyWriteRepository, CandidateVacancyWriteRepository>();
+            services.AddScoped<ICandidateVacancyReadRepository, CandidateVacancyReadRepository>();
+
+            services.AddScoped<IDepartmentWriteRepository, DepartmentWriteRepository>();
+            services.AddScoped<IDepartmentReadRepository, DepartmentReadRepository>();
+
+            services.AddScoped<IJobDegreeWriteRepository, JobDegreeWriteRepository>();
+            services.AddScoped<IJobDegreeReadRepository, JobDegreeReadRepository>();
+
+            services.AddScoped<IOpenQuestionWriteRepository, OpenQuestionWriteRepository>();
+            services.AddScoped<IOpenQuestionReadRepository, OpenQuestionReadRepository>();
+
+            services.AddScoped<IQuestionWriteRepository, QuestionWriteRepository>();
+            services.AddScoped<IQuestionReadRepository, QuestionReadRepository>();
+
+            services.AddScoped<IQuestionLevelWriteRepository, QuestionLevelWriteRepository>();
+            services.AddScoped<IQuestionLevelReadRepository, QuestionLevelReadRepository>();
+
+            services.AddScoped<IQuestionWriteRepository, QuestionWriteRepository>();
+            services.AddScoped<IQuestionReadRepository, QuestionReadRepository>();
+
+            services.AddScoped<ISectorWriteRepository, SectorWriteRepository>();
+            services.AddScoped<ISectorReadRepository, SectorReadRepository>();
+
+            services.AddScoped<IVacancyWriteRepository, VacancyWriteRepository>();
+            services.AddScoped<IVacancyReadRepository, VacancyReadRepository>();
 
 
-        public static void AddRateLimiterServiceExtension(this IServiceCollection services)
+        }
+
+            public static void AddRateLimiterServiceExtension(this IServiceCollection services)
         {
             services.AddRateLimiter(options =>
             {

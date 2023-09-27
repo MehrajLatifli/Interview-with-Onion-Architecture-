@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
 
-namespace Interview.Persistence.ValidationAttributes
+namespace Interview.Domain.Validations
 {
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false)]
     public class FileSizeAttribute : ValidationAttribute

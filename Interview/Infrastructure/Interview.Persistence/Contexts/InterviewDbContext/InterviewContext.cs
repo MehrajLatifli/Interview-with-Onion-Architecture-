@@ -4,8 +4,9 @@ using System;
 using System.Collections.Generic;
 using Interview.Persistence.ServiceExtensions;
 using Microsoft.EntityFrameworkCore;
+using Interview.Domain.Entities.Models;
 
-namespace Interview.Domain.Entities.Models;
+namespace Interview.Persistence.Contexts.InterviewDbContext;
 
 public partial class InterviewContext : DbContext
 {

@@ -1,6 +1,8 @@
-﻿using Interview.Persistence.ValidationAttributes;
+﻿
+using Interview.Domain.Validations;
 using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
+
 
 namespace Interview.Domain.AuthModels
 {

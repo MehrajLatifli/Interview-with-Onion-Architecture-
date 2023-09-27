@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
 
-namespace Interview.Persistence.ValidationAttributes
+namespace Interview.Domain.Validations
 {
     public class EmailAttribute : ValidationAttribute
     {

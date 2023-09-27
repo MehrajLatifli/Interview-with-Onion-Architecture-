@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Interview.Persistence.ValidationAttributes
+namespace Interview.Domain.Validations
 {
     public class AllowedExtensionsAttribute : ValidationAttribute
     {

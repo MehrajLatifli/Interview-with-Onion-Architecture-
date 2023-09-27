@@ -54,9 +54,8 @@
     <PackageReference Include="System.Text.Json" Version="7.0.3" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\Infrastructure\Interview.Infrastructure\Interview.Infrastructure.csproj" />
-    <ProjectReference Include="..\..\Infrastructure\Interview.Persistence\Interview.Persistence.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+
+	</ItemGroup>
 
 </Project>
