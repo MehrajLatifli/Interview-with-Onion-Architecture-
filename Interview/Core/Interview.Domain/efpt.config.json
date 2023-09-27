@@ -1,0 +1,91 @@
+﻿{
+   "CodeGenerationMode": 3,
+   "ContextClassName": "InterviewContext",
+   "ContextNamespace": null,
+   "DefaultDacpacSchema": null,
+   "FilterSchemas": false,
+   "IncludeConnectionString": true,
+   "ModelNamespace": null,
+   "OutputContextPath": null,
+   "OutputPath": "Entities\\Models",
+   "PreserveCasingWithRegex": true,
+   "ProjectRootNamespace": "Interview.Domain",
+   "Schemas": null,
+   "SelectedHandlebarsLanguage": 0,
+   "SelectedToBeGenerated": 0,
+   "T4TemplatePath": null,
+   "Tables": [
+      {
+         "Name": "[dbo].[Branch]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Candidate]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[CandidateQuestion]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[CandidateVacancy]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Department]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[JobDegree]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[OpenQuestion]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Question]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[QuestionCategory]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[QuestionLevel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[QuestionValue]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Sector]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Vacancy]",
+         "ObjectType": 0
+      }
+   ],
+   "UiHint": "sql2.Interview.dbo",
+   "UncountableWords": null,
+   "UseBoolPropertiesWithoutDefaultSql": false,
+   "UseDatabaseNames": false,
+   "UseDateOnlyTimeOnly": false,
+   "UseDbContextSplitting": false,
+   "UseFluentApiOnly": false,
+   "UseHandleBars": false,
+   "UseHierarchyId": false,
+   "UseInflector": true,
+   "UseLegacyPluralizer": false,
+   "UseManyToManyEntity": false,
+   "UseNoDefaultConstructor": false,
+   "UseNoObjectFilter": false,
+   "UseNodaTime": false,
+   "UseNullableReferences": false,
+   "UseSchemaFolders": false,
+   "UseSchemaNamespaces": false,
+   "UseSpatial": false,
+   "UseT4": false
+}
