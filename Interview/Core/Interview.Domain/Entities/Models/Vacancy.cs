@@ -14,7 +14,7 @@ public partial class Vacancy : BaseEntity
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int IdVacancy { get; set; }
+    public int Id { get; set; }
 
     [Required]
     public string Title { get; set; }

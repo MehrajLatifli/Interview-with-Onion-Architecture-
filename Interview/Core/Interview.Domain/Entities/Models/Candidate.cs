@@ -14,7 +14,7 @@ public partial class Candidate : BaseEntity
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int IdCandidate { get; set; }
+    public int Id { get; set; }
 
     [Required]
     public string CandidateSurname { get; set; }

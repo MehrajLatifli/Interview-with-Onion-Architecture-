@@ -14,7 +14,7 @@ public partial class JobDegree : BaseEntity
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int IdJobDegree { get; set; }
+    public int Id { get; set; }
 
     [Required]
     public string Degree { get; set; }

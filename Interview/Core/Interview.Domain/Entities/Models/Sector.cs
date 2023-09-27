@@ -14,7 +14,7 @@ public partial class Sector : BaseEntity
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int IdSector { get; set; }
+    public int Id { get; set; }
 
     [Required]
     public string SectorName { get; set; }

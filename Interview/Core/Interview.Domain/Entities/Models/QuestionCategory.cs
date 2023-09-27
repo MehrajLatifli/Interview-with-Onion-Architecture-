@@ -14,7 +14,7 @@ public partial class QuestionCategory : BaseEntity
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int IdQuestionCategory { get; set; }
+    public int Id { get; set; }
 
     [Required]
     [Column("QuestionCategory")]

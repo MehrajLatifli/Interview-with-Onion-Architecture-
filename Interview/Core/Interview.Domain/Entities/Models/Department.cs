@@ -14,7 +14,7 @@ public partial class Department : BaseEntity
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int IdDepartment { get; set; }
+    public int Id { get; set; }
 
     [Required]
     public string DepartmentName { get; set; }

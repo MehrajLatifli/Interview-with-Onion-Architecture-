@@ -50,4 +50,8 @@
     <ProjectReference Include="..\..\Core\Interview.Application\Interview.Application.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Contexts\InterviewDbContext\" />
+  </ItemGroup>
+
 </Project>

@@ -14,7 +14,7 @@ public partial class QuestionValue : BaseEntity
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int IdQuestionValue { get; set; }
+    public int Id { get; set; }
 
     [Column("QuestionValue")]
     public int QuestionValue1 { get; set; }

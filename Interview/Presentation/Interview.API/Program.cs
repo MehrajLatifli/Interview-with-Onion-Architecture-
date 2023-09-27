@@ -66,6 +66,10 @@ builder.Services.AddCors();
 builder.Services.AddPersistenceServices();
 
 
+
+
+
+
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("AdminOnly", policy =>
@@ -104,7 +108,6 @@ builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddAutoMapper(typeof(MapperProfile).Assembly);
 
-//builder.Services.AddSqlServer<MusicCMSContext>(builder.Configuration.GetConnectionString("DefaultConnection"));
 
 builder.Services.AddDbContext<CustomDbContext>(option => option.UseSqlServer(ServiceExtension.CustomDbConnectionString));
 

@@ -14,7 +14,7 @@ public partial class OpenQuestion : BaseEntity
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int IdOpenQuestion { get; set; }
+    public int Id { get; set; }
 
     [Required]
     public string Question { get; set; }

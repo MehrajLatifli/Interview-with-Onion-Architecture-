@@ -14,7 +14,7 @@ public partial class Branch : BaseEntity
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int IdBranch { get; set; }
+    public int Id { get; set; }
 
     [Required]
     public string BranchName { get; set; }

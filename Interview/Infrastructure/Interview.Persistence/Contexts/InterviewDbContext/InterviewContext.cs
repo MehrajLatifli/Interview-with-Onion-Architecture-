@@ -2,9 +2,9 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using Interview.Domain.Entities.Models;
 using Interview.Persistence.ServiceExtensions;
 using Microsoft.EntityFrameworkCore;
-using Interview.Domain.Entities.Models;
 
 namespace Interview.Persistence.Contexts.InterviewDbContext;
 
@@ -53,7 +53,7 @@ public partial class InterviewContext : DbContext
     {
         modelBuilder.Entity<Branch>(entity =>
         {
-            entity.HasKey(e => e.IdBranch).HasName("PK__Branch__54205B04B483BF4F");
+            entity.HasKey(e => e.Id).HasName("PK__Branch__3214EC07843B0126");
 
             entity.HasOne(d => d.SectorIdForBranchNavigation).WithMany(p => p.Branches)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -62,12 +62,12 @@ public partial class InterviewContext : DbContext
 
         modelBuilder.Entity<Candidate>(entity =>
         {
-            entity.HasKey(e => e.IdCandidate).HasName("PK__Candidat__D559897327E75C56");
+            entity.HasKey(e => e.Id).HasName("PK__Candidat__3214EC07D618580F");
         });
 
         modelBuilder.Entity<CandidateQuestion>(entity =>
         {
-            entity.HasKey(e => e.IdCandidateQuestion).HasName("PK__Candidat__D90DBFBC52CA5047");
+            entity.HasKey(e => e.Id).HasName("PK__Candidat__3214EC0751D7778D");
 
             entity.HasOne(d => d.CandidateIdForCandidateQuestionNavigation).WithMany(p => p.CandidateQuestions)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -80,7 +80,7 @@ public partial class InterviewContext : DbContext
 
         modelBuilder.Entity<CandidateVacancy>(entity =>
         {
-            entity.HasKey(e => e.IdCandidateVacancy).HasName("PK__Candidat__A5DE01AE6FFD0185");
+            entity.HasKey(e => e.Id).HasName("PK__Candidat__3214EC07F10E5675");
 
             entity.HasOne(d => d.CandidateIdForCandidateVacancyNavigation).WithMany(p => p.CandidateVacancies)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -93,7 +93,7 @@ public partial class InterviewContext : DbContext
 
         modelBuilder.Entity<Department>(entity =>
         {
-            entity.HasKey(e => e.IdDepartment).HasName("PK__Departme__DF1E6E4B75412E18");
+            entity.HasKey(e => e.Id).HasName("PK__Departme__3214EC073207D440");
 
             entity.HasOne(d => d.BranchIdForDepartmentNavigation).WithMany(p => p.Departments)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -102,19 +102,19 @@ public partial class InterviewContext : DbContext
 
         modelBuilder.Entity<JobDegree>(entity =>
         {
-            entity.HasKey(e => e.IdJobDegree).HasName("PK__JobDegre__2F2BEECE35DD5D15");
+            entity.HasKey(e => e.Id).HasName("PK__JobDegre__3214EC07392F6EFD");
         });
 
         modelBuilder.Entity<OpenQuestion>(entity =>
         {
-            entity.HasKey(e => e.IdOpenQuestion).HasName("PK__OpenQues__5708C8DD3E0D25F3");
+            entity.HasKey(e => e.Id).HasName("PK__OpenQues__3214EC07593F38A6");
 
             entity.Property(e => e.Result).HasDefaultValueSql("((0))");
         });
 
         modelBuilder.Entity<Question>(entity =>
         {
-            entity.HasKey(e => e.IdQuestion).HasName("PK__Question__FB3BDD30D1A8948D");
+            entity.HasKey(e => e.Id).HasName("PK__Question__3214EC07862B8496");
 
             entity.HasOne(d => d.OpenQuestionIdForQuestionNavigation).WithMany(p => p.Questions)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -135,27 +135,27 @@ public partial class InterviewContext : DbContext
 
         modelBuilder.Entity<QuestionCategory>(entity =>
         {
-            entity.HasKey(e => e.IdQuestionCategory).HasName("PK__Question__8A63A90E518FDA5B");
+            entity.HasKey(e => e.Id).HasName("PK__Question__3214EC071ACA4029");
         });
 
         modelBuilder.Entity<QuestionLevel>(entity =>
         {
-            entity.HasKey(e => e.IdQuestionLevel).HasName("PK__Question__855AE5C54DB64729");
+            entity.HasKey(e => e.Id).HasName("PK__Question__3214EC07FED618B1");
         });
 
         modelBuilder.Entity<QuestionValue>(entity =>
         {
-            entity.HasKey(e => e.IdQuestionValue).HasName("PK__Question__639F6E19E8F4CCB6");
+            entity.HasKey(e => e.Id).HasName("PK__Question__3214EC07FE18557A");
         });
 
         modelBuilder.Entity<Sector>(entity =>
         {
-            entity.HasKey(e => e.IdSector).HasName("PK__Sector__D0011C182C76EF69");
+            entity.HasKey(e => e.Id).HasName("PK__Sector__3214EC076F2194FB");
         });
 
         modelBuilder.Entity<Vacancy>(entity =>
         {
-            entity.HasKey(e => e.IdVacancy).HasName("PK__Vacancy__A58A0669A3852CF4");
+            entity.HasKey(e => e.Id).HasName("PK__Vacancy__3214EC076ECF1F9C");
 
             entity.HasOne(d => d.DepartmentIdForVacancyNavigation).WithMany(p => p.Vacancies)
                 .OnDelete(DeleteBehavior.ClientSetNull)
