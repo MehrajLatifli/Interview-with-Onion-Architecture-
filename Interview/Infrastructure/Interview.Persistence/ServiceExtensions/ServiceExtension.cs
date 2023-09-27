@@ -42,6 +42,19 @@ namespace Interview.Persistence.ServiceExtensions
         }
 
 
+        public static string ConnectionStringAzure
+        {
+            get
+            {
+                ConfigurationManager configurationManager = new ConfigurationManager();
+                configurationManager.SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "../../Presentation/Interview.API"));
+                configurationManager.AddJsonFile("appsettings.json");
+
+                return configurationManager["ConnectionAzureStorage"];
+            }
+        }
+
+
 
 
         public static void AddRateLimiterServiceExtension(this IServiceCollection services)

@@ -18,18 +18,15 @@ namespace Interview.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AdminAuthenticateController : ControllerBase
+    public class AdminAuthController : ControllerBase
     {
         private readonly UserManager<CustomUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _configuration;
         private readonly SignInManager<CustomUser> _signInManager;
-
-
-
         List<IdentityError> errorList = new List<IdentityError>();
 
-        public AdminAuthenticateController(UserManager<CustomUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration, SignInManager<CustomUser> signInManager)
+        public AdminAuthController(UserManager<CustomUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration, SignInManager<CustomUser> signInManager)
         {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -46,7 +43,9 @@ namespace Interview.API.Controllers
             if (userExists != null)
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User already exists!" });
 
-            string connectionString = "AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;DefaultEndpointsProtocol=http;BlobEndpoint=http://127.0.0.1:10000/devstoreaccount1;QueueEndpoint=http://127.0.0.1:10001/devstoreaccount1;TableEndpoint=http://127.0.0.1:10002/devstoreaccount1;"; // Default connection string for the Azurite Blob storage emulator.
+
+
+            string connectionString = ServiceExtension.ConnectionStringAzure;
 
             string azuriteConnectionString = Environment.GetEnvironmentVariable("CUSTOMCONNSTR_AZURE_STORAGE_CONNECTION_STRING");
             if (!string.IsNullOrEmpty(azuriteConnectionString))
@@ -81,7 +80,7 @@ namespace Interview.API.Controllers
                 UserName = model.Username,
                 PhoneNumber = model.PhoneNumber,
                 ImagePath = imageUrl,
-                Roles = $"{UserRoles.Admin+", "+UserRoles.HR}",
+                Roles = $"{UserRoles.Admin}",
             };
 
             var result = await _userManager.CreateAsync(user, model.Password);
@@ -230,7 +229,7 @@ namespace Interview.API.Controllers
             });
         }
 
-        [Authorize]
+        [Authorize(Policy = "AdminOnly")]
         [HttpPost]
         [Route("revoke/{username}")]
         public async Task<IActionResult> Revoke(string username)
@@ -244,7 +243,7 @@ namespace Interview.API.Controllers
             return NoContent();
         }
 
-        [Authorize]
+        [Authorize(Policy = "AdminOnly")]
         [HttpPost]
         [Route("revoke-all")]
         public async Task<IActionResult> RevokeAll()
@@ -258,6 +257,181 @@ namespace Interview.API.Controllers
 
             return NoContent();
         }
+
+        [Authorize(Policy = "AdminOnly")]
+        [HttpPut]
+        [Route("updateProfile")]
+        public async Task<IActionResult> UpdateProfile([FromForm] UpdateProfileModel model)
+        {
+
+            if (!User.Identity.IsAuthenticated)
+            {
+
+                return StatusCode(StatusCodes.Status401Unauthorized, new Response { Status = "Error", Message = "User not authenticated." });
+            }
+
+
+
+            var username = User.Identity.Name;
+
+            var currentUser = await _userManager.FindByNameAsync(username);
+
+            var adminUsers = await _userManager.GetUsersInRoleAsync(UserRoles.Admin);
+
+            if (currentUser != null)
+            {
+                adminUsers.Any(i => i.UserName == currentUser.UserName);
+
+                if (currentUser.UserName == null)
+                {
+                    return StatusCode(StatusCodes.Status404NotFound, new Response { Status = "Error", Message = "User not found!" });
+                }
+
+
+                currentUser.UserName = model.Username;
+                currentUser.Email = model.Email;
+                currentUser.PhoneNumber = model.PhoneNumber;
+
+    
+
+                if (!string.IsNullOrEmpty(model.OldPassword))
+                {
+                    var changePasswordResult = await _userManager.ChangePasswordAsync(currentUser, model.OldPassword, model.NewPassword);
+                    if (!changePasswordResult.Succeeded)
+                    {
+
+                        var errors = changePasswordResult.Errors.Select(e => e.Description);
+                        var errorMessage = string.Join($" ", errors);
+
+                        return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = $"Failed to update password! \n {errorMessage}" });
+
+                    }
+                }
+
+                if (model.ImagePath != null)
+                {
+                    string blobName = currentUser.UserName + "_" + Guid.NewGuid().ToString() + Path.GetExtension(model.ImagePath.FileName);
+
+                    string connectionString = ServiceExtension.ConnectionStringAzure;
+
+                    string azuriteConnectionString = Environment.GetEnvironmentVariable("CUSTOMCONNSTR_AZURE_STORAGE_CONNECTION_STRING");
+                    if (!string.IsNullOrEmpty(azuriteConnectionString))
+                    {
+                        connectionString = azuriteConnectionString;
+                    }
+
+                    string containerName = "profile-images";
+
+                    BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
+                    BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
+
+                    await containerClient.CreateIfNotExistsAsync(PublicAccessType.Blob);
+
+                    BlobClient blobClient = containerClient.GetBlobClient(blobName);
+
+                    using (Stream stream = model.ImagePath.OpenReadStream())
+                    {
+                        await blobClient.UploadAsync(stream, true);
+                    }
+
+                    string imageUrl = blobClient.Uri.ToString();
+                    currentUser.ImagePath = imageUrl;
+                }
+
+                var existingUserWithUserName = await _userManager.FindByNameAsync(model.Username);
+                if (existingUserWithUserName != null && existingUserWithUserName.Id != currentUser.Id)
+                {
+                    return StatusCode(StatusCodes.Status400BadRequest, new Response { Status = "Error", Message = "User name is already associated with another user!" });
+                }
+
+                var identityResult = await _userManager.UpdateAsync(currentUser);
+                if (!identityResult.Succeeded)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "Failed to update user!" });
+                }
+
+            }
+
+
+    
+
+      
+
+
+            return Ok(new Response { Status = "Success", Message = "User updated successfully!" });
+        }
+
+
+
+        [Authorize(Policy = "AdminOnly")]
+        [HttpPut]
+        [Route("updatePassword")]
+        public async Task<IActionResult> UpdatePassword([FromForm] UpdatePasswordModel model)
+        {
+
+            if (!User.Identity.IsAuthenticated)
+            {
+
+                return StatusCode(StatusCodes.Status401Unauthorized, new Response { Status = "Error", Message = "User not authenticated." });
+            }
+
+
+
+            var username = User.Identity.Name;
+
+            var currentUser = await _userManager.FindByNameAsync(username);
+
+            var adminUsers = await _userManager.GetUsersInRoleAsync(UserRoles.Admin);
+
+            if (currentUser != null)
+            {
+                adminUsers.Any(i => i.UserName == currentUser.UserName);
+
+                if (currentUser.UserName == null)
+                {
+                    return StatusCode(StatusCodes.Status404NotFound, new Response { Status = "Error", Message = "User not found!" });
+                }
+
+
+  
+
+
+
+                if (!string.IsNullOrEmpty(model.OldPassword))
+                {
+                    var changePasswordResult = await _userManager.ChangePasswordAsync(currentUser, model.OldPassword, model.NewPassword);
+                    if (!changePasswordResult.Succeeded)
+                    {
+
+                        var errors = changePasswordResult.Errors.Select(e => e.Description);
+                        var errorMessage = string.Join($" ", errors);
+
+                        return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = $"Failed to update password! \n {errorMessage}" });
+
+                    }
+                }
+
+               
+
+
+                var identityResult = await _userManager.UpdateAsync(currentUser);
+                if (!identityResult.Succeeded)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "Failed to update user!" });
+                }
+
+            }
+
+
+
+
+
+
+
+            return Ok(new Response { Status = "Success", Message = "User updated successfully!" });
+        }
+
+
 
 
         private JwtSecurityToken CreateToken(List<Claim> authClaims)

@@ -18,7 +18,7 @@ namespace Interview.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class HRAuthenticateController : ControllerBase
+    public class HRAuthController : ControllerBase
     {
         private readonly UserManager<CustomUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
@@ -29,7 +29,7 @@ namespace Interview.API.Controllers
 
         List<IdentityError> errorList = new List<IdentityError>();
 
-        public HRAuthenticateController(UserManager<CustomUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration, SignInManager<CustomUser> signInManager)
+        public HRAuthController(UserManager<CustomUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration, SignInManager<CustomUser> signInManager)
         {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -226,7 +226,7 @@ namespace Interview.API.Controllers
             });
         }
 
-        [Authorize]
+        [Authorize(Policy = "HROnly")]
         [HttpPost]
         [Route("revoke/{username}")]
         public async Task<IActionResult> Revoke(string username)
@@ -240,7 +240,7 @@ namespace Interview.API.Controllers
             return NoContent();
         }
 
-        [Authorize]
+        [Authorize(Policy = "HROnly")]
         [HttpPost]
         [Route("revoke-all")]
         public async Task<IActionResult> RevokeAll()
