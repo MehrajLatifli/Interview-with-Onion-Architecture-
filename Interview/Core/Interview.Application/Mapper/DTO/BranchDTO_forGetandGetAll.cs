@@ -2,11 +2,14 @@
 
 namespace Interview.Application.Mapper.DTO
 {
-    public class SectorDTO_forGetandGetAll
+    public class BranchDTO_forGetandGetAll
     {
         public int Id { get; set; }
 
-        public string SectorName { get; set; }
+      
+        public string BranchName { get; set; }
+
+        public int SectorIdForBranch { get; set; }
 
 
     }

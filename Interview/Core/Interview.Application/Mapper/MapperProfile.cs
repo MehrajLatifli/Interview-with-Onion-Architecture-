@@ -24,6 +24,27 @@ namespace Interview.Application.Mapper
             CreateMap<SectorDTO_forGetandGetAll, Sector>()
                       .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                       .ForMember(dest => dest.SectorName, opt => opt.MapFrom(src => src.SectorName));
+
+            CreateMap<Branch, BranchDTO_forCreate>();
+            CreateMap<BranchDTO_forCreate, Branch>();
+            CreateMap<Branch, BranchDTO_forUpdate>();
+            CreateMap<BranchDTO_forUpdate, Branch>();
+            CreateMap<Branch, BranchDTO_forGetandGetAll>();
+            CreateMap<BranchDTO_forGetandGetAll, Branch>();
+
+            CreateMap<Department, DepartmentDTO_forCreate>();
+            CreateMap<DepartmentDTO_forCreate, Department>();
+            CreateMap<Department, DepartmentDTO_forUpdate>();
+            CreateMap<DepartmentDTO_forUpdate, Department>();
+            CreateMap<Department, DepartmentDTO_forGetandGetAll>();
+            CreateMap<DepartmentDTO_forGetandGetAll, Department>();
+
+            CreateMap<JobDegree, JobDegreeDTO_forCreate>();
+            CreateMap<JobDegreeDTO_forCreate, JobDegree>();
+            CreateMap<JobDegree, JobDegreeDTO_forUpdate>();
+            CreateMap<JobDegreeDTO_forUpdate, JobDegree>();
+            CreateMap<JobDegree, JobDegreeDTO_forGetandGetAll>();
+            CreateMap<JobDegreeDTO_forGetandGetAll, JobDegree>();
         }
     }
 }

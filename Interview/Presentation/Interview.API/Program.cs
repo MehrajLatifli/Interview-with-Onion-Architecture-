@@ -13,12 +13,12 @@ using System.Text;
 using System.Text.Json;
 using Interview.Persistence.ServiceExtensions;
 using Microsoft.Extensions.Azure;
+using Interview.API.Attribute;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
 
 builder.Services.AddMvcCore().AddApiExplorer();
 
@@ -80,10 +80,13 @@ builder.Services.AddAuthorization(options =>
 });
 
 
-builder.Services.AddControllers().AddJsonOptions(options =>
+builder.Services.AddControllers(x => x.Filters.Add<ApiExceptionFilterAttribute>())
+    .AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
 });
+
+
 
 builder.Services.AddControllers(options => options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true);
 

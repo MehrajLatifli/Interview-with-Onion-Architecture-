@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using Interview.Application.Exception;
 using Interview.Application.Mapper.DTO;
 using Interview.Application.Repositories.Custom;
+using Interview.Application.Services.Admins.Abstract;
 using Interview.Domain.AuthModels;
 using Interview.Domain.Entities.Models;
 using Interview.Persistence.Contexts.AuthDbContext.IdentityAuth;
@@ -50,7 +52,7 @@ namespace Interview.API.Controllers
         private readonly ISectorReadRepository _sectorReadRepository;
         private readonly IVacancyWriteRepository _vacancyWriteRepository;
         private readonly IVacancyReadRepository _vacancyReadRepository;
-
+        private readonly ISectorService _sectorService;
 
         public AdminController(
 
@@ -84,10 +86,11 @@ namespace Interview.API.Controllers
             ISectorWriteRepository sectorWriteRepository,
             ISectorReadRepository sectorReadRepository,
             IVacancyWriteRepository vacancyWriteRepository,
-            IVacancyReadRepository vacancyReadRepository
-,
-            IMapper mapper)
+            IVacancyReadRepository vacancyReadRepository,
+            IMapper mapper,
+            ISectorService sectorService)
         {
+            _sectorService = sectorService;
             _userManager = userManager;
             _roleManager = roleManager;
             _configuration = configuration;
@@ -229,7 +232,7 @@ namespace Interview.API.Controllers
             {
 
 
-                var item = _mapper.Map<SectorDTO_forGetandGetAll>(_sectorReadRepository.GetByIdAsync(id, false));
+                var item = _mapper.Map<SectorDTO_forGetandGetAll>(await _sectorReadRepository.GetByIdAsync(id, false));
 
                 if (item == null)
                 {
@@ -253,7 +256,8 @@ namespace Interview.API.Controllers
 
             List<SectorDTO_forGetandGetAll> datas = null;
 
-            await Task.Run(() => {
+            await Task.Run(() =>
+            {
 
 
                 datas = _mapper.Map<List<SectorDTO_forGetandGetAll>>(_sectorReadRepository.GetAll(false));
@@ -276,28 +280,11 @@ namespace Interview.API.Controllers
         [Route("sector")]
         public async Task<IActionResult> SectorCreate([FromBody] SectorDTO_forCreate model)
         {
-            try
-            {
 
-            
+            await _sectorService.SectorCreate(model);
 
+            return Ok(new Response { Status = "Success", Message = "The Sector created successfully!" });
 
-
-                _sectorWriteRepository.AddAsync(new Sector { SectorName=model.SectorName});
-
-                await _sectorWriteRepository.SaveAsync();
-
-
-
-                return Ok(new Response { Status = "Success", Message = "The Sector created successfully!" });
-
-
-
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, $"An error occurred: {ex.Message}");
-            }
         }
 
 
@@ -305,37 +292,33 @@ namespace Interview.API.Controllers
         [Route("sector")]
         public async Task<IActionResult> SectorUpdate([FromBody] SectorDTO_forUpdate model)
         {
-            try
+
+
+            var existing = await _sectorReadRepository.GetByIdAsync(model.Id.ToString(), false);
+
+
+            if (existing is null)
+                throw new NotFoundException("eXCEPTION");
+
+
+
+
+            var update = new Sector
             {
+                Id = model.Id,
+                SectorName = model.SectorName,
 
-                var existing = await _sectorReadRepository.GetByIdAsync(model.Id.ToString(), false);
+            };
 
-
-                if (existing == null)
-                {
-                    return NotFound(new Response { Status = "Error", Message = "Not Found!" });
-                }
-
-                var update = new Sector
-                {
-                    Id = model.Id,
-                    SectorName = model.SectorName,
-
-                };
-
-                _sectorWriteRepository.Update(update);
-                await _sectorWriteRepository.SaveAsync();
+            _sectorWriteRepository.Update(update);
+            await _sectorWriteRepository.SaveAsync();
 
 
-                return Ok(new Response { Status = "Success", Message = "The Sector updated successfully!" });
+            return Ok(new Response { Status = "Success", Message = "The Sector updated successfully!" });
 
 
 
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, $"An error occurred: {ex.Message}");
-            }
+
         }
 
 
