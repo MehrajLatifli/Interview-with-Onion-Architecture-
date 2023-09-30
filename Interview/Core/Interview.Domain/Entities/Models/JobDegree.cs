@@ -19,6 +19,6 @@ public partial class JobDegree : BaseEntity
     [Required]
     public string Degree { get; set; }
 
-    [InverseProperty("JobDegreeIdForVacancyNavigation")]
+    [InverseProperty("JobDegree")]
     public virtual ICollection<Vacancy> Vacancies { get; set; } = new List<Vacancy>();
 }

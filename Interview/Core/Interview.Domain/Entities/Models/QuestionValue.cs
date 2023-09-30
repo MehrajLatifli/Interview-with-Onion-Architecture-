@@ -19,6 +19,6 @@ public partial class QuestionValue : BaseEntity
     [Column("QuestionValue")]
     public int QuestionValue1 { get; set; }
 
-    [InverseProperty("QuestionValueIdForQuestionNavigation")]
+    [InverseProperty("QuestionValue")]
     public virtual ICollection<Question> Questions { get; set; } = new List<Question>();
 }

@@ -16,17 +16,15 @@ public partial class CandidateVacancy : BaseEntity
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
 
-    [Column("CandidateId_forCandidateVacancy")]
-    public int CandidateIdForCandidateVacancy { get; set; }
+    public int CandidateId { get; set; }
 
-    [Column("VacancyId_forCandidateVacancy")]
-    public int VacancyIdForCandidateVacancy { get; set; }
+    public int VacancyId { get; set; }
 
-    [ForeignKey("CandidateIdForCandidateVacancy")]
+    [ForeignKey("CandidateId")]
     [InverseProperty("CandidateVacancies")]
-    public virtual Candidate CandidateIdForCandidateVacancyNavigation { get; set; }
+    public virtual Candidate Candidate { get; set; }
 
-    [ForeignKey("VacancyIdForCandidateVacancy")]
+    [ForeignKey("VacancyId")]
     [InverseProperty("CandidateVacancies")]
-    public virtual Vacancy VacancyIdForCandidateVacancyNavigation { get; set; }
+    public virtual Vacancy Vacancy { get; set; }
 }

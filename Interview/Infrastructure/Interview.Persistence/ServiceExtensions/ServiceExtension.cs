@@ -63,45 +63,18 @@ namespace Interview.Persistence.ServiceExtensions
         public static void AddPersistenceServices(this IServiceCollection services)
         {
             services.AddDbContext<InterviewContext>(options => options.UseSqlServer(ConnectionString));
-            services.AddScoped<ISectorService, SectorManager>();
-            services.AddScoped<IBranchWriteRepository, BranchWriteRepository>();
-            services.AddScoped<IBranchReadRepository, BranchReadRepository>();
 
-            services.AddScoped<ICandidateWriteRepository, CandidateWriteRepository>();
-            services.AddScoped<ICandidateReadRepository, CandidateReadRepository>();
-
-            services.AddScoped<ICandidateQuestionWriteRepository, CandidateQuestionWriteRepository>();
-            services.AddScoped<ICandidateQuestionReadRepository, CandidateQuestionReadRepository>();
-
-            services.AddScoped<ICandidateVacancyWriteRepository, CandidateVacancyWriteRepository>();
-            services.AddScoped<ICandidateVacancyReadRepository, CandidateVacancyReadRepository>();
-
-            services.AddScoped<IDepartmentWriteRepository, DepartmentWriteRepository>();
-            services.AddScoped<IDepartmentReadRepository, DepartmentReadRepository>();
-
-            services.AddScoped<IJobDegreeWriteRepository, JobDegreeWriteRepository>();
-            services.AddScoped<IJobDegreeReadRepository, JobDegreeReadRepository>();
-
-            services.AddScoped<IOpenQuestionWriteRepository, OpenQuestionWriteRepository>();
-            services.AddScoped<IOpenQuestionReadRepository, OpenQuestionReadRepository>();
-
-            services.AddScoped<IQuestionCategoryWriteRepository, QuestionCategoryWriteRepository>();
-            services.AddScoped<IQuestionCategoryReadRepository, QuestionCategoryReadRepository>();
-
-            services.AddScoped<IQuestionWriteRepository, QuestionWriteRepository>();
-            services.AddScoped<IQuestionReadRepository, QuestionReadRepository>();
-
-            services.AddScoped<IQuestionLevelWriteRepository, QuestionLevelWriteRepository>();
-            services.AddScoped<IQuestionLevelReadRepository, QuestionLevelReadRepository>();
-
-            services.AddScoped<IQuestionValueWriteRepository, QuestionValueWriteRepository>();
-            services.AddScoped<IQuestionValueReadRepository, QuestionValueReadRepository>();
+            services.AddScoped<IAdminService, AdminServiceManager>();
 
             services.AddScoped<ISectorWriteRepository, SectorWriteRepository>();
             services.AddScoped<ISectorReadRepository, SectorReadRepository>();
 
-            services.AddScoped<IVacancyWriteRepository, VacancyWriteRepository>();
-            services.AddScoped<IVacancyReadRepository, VacancyReadRepository>();
+            services.AddScoped<IDepartmentWriteRepository, DepartmentWriteRepository>();
+            services.AddScoped<IDepartmentReadRepository, DepartmentReadRepository>();
+
+            services.AddScoped<IBranchWriteRepository, BranchWriteRepository>();
+            services.AddScoped<IBranchReadRepository, BranchReadRepository>();
+
 
 
         }

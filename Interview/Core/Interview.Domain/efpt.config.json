@@ -40,10 +40,6 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[OpenQuestion]",
-         "ObjectType": 0
-      },
-      {
          "Name": "[dbo].[Question]",
          "ObjectType": 0
       },
@@ -53,6 +49,10 @@
       },
       {
          "Name": "[dbo].[QuestionLevel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[QuestionSession]",
          "ObjectType": 0
       },
       {

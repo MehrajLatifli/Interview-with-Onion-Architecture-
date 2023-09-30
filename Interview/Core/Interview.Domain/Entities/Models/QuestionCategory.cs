@@ -20,6 +20,6 @@ public partial class QuestionCategory : BaseEntity
     [Column("QuestionCategory")]
     public string QuestionCategory1 { get; set; }
 
-    [InverseProperty("QuestionCategoryIdForQuestionNavigation")]
+    [InverseProperty("QuestionCategory")]
     public virtual ICollection<Question> Questions { get; set; } = new List<Question>();
 }

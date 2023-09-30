@@ -88,7 +88,7 @@ namespace Interview.API.Attribute
             var details = new ProblemDetails
             {
                 Status = StatusCodes.Status500InternalServerError,
-                Title = "Əməliyyat zamanı xəta baş verdi."
+                Title = "Internal Server Error"
             };
 
             context.ExceptionHandled = true;

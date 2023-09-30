@@ -34,9 +34,9 @@ public partial class Candidate : BaseEntity
     [Required]
     public string Address { get; set; }
 
-    [InverseProperty("CandidateIdForCandidateQuestionNavigation")]
+    [InverseProperty("Candidate")]
     public virtual ICollection<CandidateQuestion> CandidateQuestions { get; set; } = new List<CandidateQuestion>();
 
-    [InverseProperty("CandidateIdForCandidateVacancyNavigation")]
+    [InverseProperty("Candidate")]
     public virtual ICollection<CandidateVacancy> CandidateVacancies { get; set; } = new List<CandidateVacancy>();
 }

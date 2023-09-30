@@ -22,20 +22,18 @@ public partial class Vacancy : BaseEntity
     [Required]
     public string Description { get; set; }
 
-    [Column("JobDegreeId_forVacancy")]
-    public int JobDegreeIdForVacancy { get; set; }
+    public int JobDegreeId { get; set; }
 
-    [Column("DepartmentId_forVacancy")]
-    public int DepartmentIdForVacancy { get; set; }
+    public int SectorId { get; set; }
 
-    [InverseProperty("VacancyIdForCandidateVacancyNavigation")]
+    [InverseProperty("Vacancy")]
     public virtual ICollection<CandidateVacancy> CandidateVacancies { get; set; } = new List<CandidateVacancy>();
 
-    [ForeignKey("DepartmentIdForVacancy")]
+    [ForeignKey("JobDegreeId")]
     [InverseProperty("Vacancies")]
-    public virtual Department DepartmentIdForVacancyNavigation { get; set; }
+    public virtual JobDegree JobDegree { get; set; }
 
-    [ForeignKey("JobDegreeIdForVacancy")]
+    [ForeignKey("SectorId")]
     [InverseProperty("Vacancies")]
-    public virtual JobDegree JobDegreeIdForVacancyNavigation { get; set; }
+    public virtual Sector Sector { get; set; }
 }

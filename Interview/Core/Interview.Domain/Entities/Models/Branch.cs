@@ -19,13 +19,12 @@ public partial class Branch : BaseEntity
     [Required]
     public string BranchName { get; set; }
 
-    [Column("SectorId_forBranch")]
-    public int SectorIdForBranch { get; set; }
+    public int SectorId { get; set; }
 
-    [InverseProperty("BranchIdForDepartmentNavigation")]
+    [InverseProperty("Branch")]
     public virtual ICollection<Department> Departments { get; set; } = new List<Department>();
 
-    [ForeignKey("SectorIdForBranch")]
+    [ForeignKey("SectorId")]
     [InverseProperty("Branches")]
-    public virtual Sector SectorIdForBranchNavigation { get; set; }
+    public virtual Sector Sector { get; set; }
 }

@@ -20,6 +20,9 @@ public partial class QuestionLevel : BaseEntity
     [Column("QuestionLevel")]
     public string QuestionLevel1 { get; set; }
 
-    [InverseProperty("QuestionLevelIdForQuestionNavigation")]
+    [Required]
+    public string Coefficient { get; set; }
+
+    [InverseProperty("QuestionLevel")]
     public virtual ICollection<Question> Questions { get; set; } = new List<Question>();
 }

@@ -16,34 +16,30 @@ public partial class Question : BaseEntity
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
 
-    [Column("OpenQuestionId_forQuestion")]
-    public int OpenQuestionIdForQuestion { get; set; }
+    public int QuestionSessionId { get; set; }
 
-    [Column("QuestionValueId_forQuestion")]
-    public int QuestionValueIdForQuestion { get; set; }
+    public int QuestionValueId { get; set; }
 
-    [Column("QuestionLevelId_forQuestion")]
-    public int QuestionLevelIdForQuestion { get; set; }
+    public int QuestionLevelId { get; set; }
 
-    [Column("QuestionCategoryId_forQuestion")]
-    public int QuestionCategoryIdForQuestion { get; set; }
+    public int QuestionCategoryId { get; set; }
 
-    [InverseProperty("QuestionIdForCandidateQuestionNavigation")]
+    [InverseProperty("Question")]
     public virtual ICollection<CandidateQuestion> CandidateQuestions { get; set; } = new List<CandidateQuestion>();
 
-    [ForeignKey("OpenQuestionIdForQuestion")]
+    [ForeignKey("QuestionCategoryId")]
     [InverseProperty("Questions")]
-    public virtual OpenQuestion OpenQuestionIdForQuestionNavigation { get; set; }
+    public virtual QuestionCategory QuestionCategory { get; set; }
 
-    [ForeignKey("QuestionCategoryIdForQuestion")]
+    [ForeignKey("QuestionLevelId")]
     [InverseProperty("Questions")]
-    public virtual QuestionCategory QuestionCategoryIdForQuestionNavigation { get; set; }
+    public virtual QuestionLevel QuestionLevel { get; set; }
 
-    [ForeignKey("QuestionLevelIdForQuestion")]
+    [ForeignKey("QuestionSessionId")]
     [InverseProperty("Questions")]
-    public virtual QuestionLevel QuestionLevelIdForQuestionNavigation { get; set; }
+    public virtual QuestionSession QuestionSession { get; set; }
 
-    [ForeignKey("QuestionValueIdForQuestion")]
+    [ForeignKey("QuestionValueId")]
     [InverseProperty("Questions")]
-    public virtual QuestionValue QuestionValueIdForQuestionNavigation { get; set; }
+    public virtual QuestionValue QuestionValue { get; set; }
 }

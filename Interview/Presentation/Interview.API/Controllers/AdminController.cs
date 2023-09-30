@@ -23,109 +23,19 @@ namespace Interview.API.Controllers
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _configuration;
         private readonly SignInManager<CustomUser> _signInManager;
-        List<IdentityError> errorList = new List<IdentityError>();
         private readonly IMapper _mapper;
 
-        private readonly IBranchWriteRepository _branchWriteRepository;
-        private readonly IBranchReadRepository _branchReadRepository;
-        private readonly ICandidateWriteRepository _candidateWriteRepository;
-        private readonly ICandidateReadRepository _candidateReadRepository;
-        private readonly ICandidateQuestionWriteRepository _candidateQuestionWriteRepository;
-        private readonly ICandidateQuestionReadRepository _candidateQuestionReadRepository;
-        private readonly ICandidateVacancyWriteRepository _candidateVacancyWriteRepository;
-        private readonly ICandidateVacancyReadRepository _candidateVacancyReadRepository;
-        private readonly IDepartmentWriteRepository _departmentWriteRepository;
-        private readonly IDepartmentReadRepository _departmentReadRepository;
-        private readonly IJobDegreeWriteRepository _jobDegreeWriteRepository;
-        private readonly IJobDegreeReadRepository _jobDegreeReadRepository;
-        private readonly IOpenQuestionWriteRepository _openQuestionWriteRepository;
-        private readonly IOpenQuestionReadRepository _openQuestionReadRepository;
-        private readonly IQuestionWriteRepository _questionWriteRepository;
-        private readonly IQuestionReadRepository _questionReadRepository;
-        private readonly IQuestionCategoryWriteRepository _questionCategoryWriteRepository;
-        private readonly IQuestionCategoryReadRepository _questionCategoryReadRepository;
-        private readonly IQuestionLevelWriteRepository _questionLevelWriteRepository;
-        private readonly IQuestionLevelReadRepository _questionLevelReadRepository;
-        private readonly IQuestionValueWriteRepository _questionValueWriteRepository;
-        private readonly IQuestionValueReadRepository _questionValueReadRepository;
-        private readonly ISectorWriteRepository _sectorWriteRepository;
-        private readonly ISectorReadRepository _sectorReadRepository;
-        private readonly IVacancyWriteRepository _vacancyWriteRepository;
-        private readonly IVacancyReadRepository _vacancyReadRepository;
-        private readonly ISectorService _sectorService;
+        private readonly IAdminService _adminService;
 
-        public AdminController(
-
-            UserManager<CustomUser> userManager,
-            RoleManager<IdentityRole> roleManager,
-            IConfiguration configuration,
-            SignInManager<CustomUser> signInManager,
-
-            IBranchWriteRepository branchWriteRepository,
-            IBranchReadRepository branchReadRepository,
-            ICandidateWriteRepository candidateWriteRepository,
-            ICandidateReadRepository candidateReadRepository,
-            ICandidateQuestionWriteRepository candidateQuestionWriteRepository,
-            ICandidateQuestionReadRepository candidateQuestionReadRepository,
-            ICandidateVacancyWriteRepository candidateVacancyWriteRepository,
-            ICandidateVacancyReadRepository candidateVacancyReadRepository,
-            IDepartmentWriteRepository departmentWriteRepository,
-            IDepartmentReadRepository departmentReadRepository,
-            IJobDegreeWriteRepository jobDegreeWriteRepository,
-            IJobDegreeReadRepository jobDegreeReadRepository,
-            IOpenQuestionWriteRepository openQuestionWriteRepository,
-            IOpenQuestionReadRepository openQuestionReadRepository,
-            IQuestionWriteRepository questionWriteRepository,
-            IQuestionReadRepository questionReadRepository,
-            IQuestionCategoryWriteRepository questionCategoryWriteRepository,
-            IQuestionCategoryReadRepository questionCategoryReadRepository,
-            IQuestionLevelWriteRepository questionLevelWriteRepository,
-            IQuestionLevelReadRepository questionLevelReadRepository,
-            IQuestionValueWriteRepository questionValueWriteRepository,
-            IQuestionValueReadRepository questionValueReadRepository,
-            ISectorWriteRepository sectorWriteRepository,
-            ISectorReadRepository sectorReadRepository,
-            IVacancyWriteRepository vacancyWriteRepository,
-            IVacancyReadRepository vacancyReadRepository,
-            IMapper mapper,
-            ISectorService sectorService)
+        public AdminController(UserManager<CustomUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration, SignInManager<CustomUser> signInManager, IMapper mapper, IAdminService adminService)
         {
-            _sectorService = sectorService;
             _userManager = userManager;
             _roleManager = roleManager;
             _configuration = configuration;
             _signInManager = signInManager;
-
-            _branchWriteRepository = branchWriteRepository;
-            _branchReadRepository = branchReadRepository;
-            _candidateWriteRepository = candidateWriteRepository;
-            _candidateReadRepository = candidateReadRepository;
-            _candidateQuestionWriteRepository = candidateQuestionWriteRepository;
-            _candidateQuestionReadRepository = candidateQuestionReadRepository;
-            _candidateVacancyWriteRepository = candidateVacancyWriteRepository;
-            _candidateVacancyReadRepository = candidateVacancyReadRepository;
-            _departmentWriteRepository = departmentWriteRepository;
-            _departmentReadRepository = departmentReadRepository;
-            _jobDegreeWriteRepository = jobDegreeWriteRepository;
-            _jobDegreeReadRepository = jobDegreeReadRepository;
-            _openQuestionWriteRepository = openQuestionWriteRepository;
-            _openQuestionReadRepository = openQuestionReadRepository;
-            _questionWriteRepository = questionWriteRepository;
-            _questionReadRepository = questionReadRepository;
-            _questionCategoryWriteRepository = questionCategoryWriteRepository;
-            _questionCategoryReadRepository = questionCategoryReadRepository;
-            _questionLevelWriteRepository = questionLevelWriteRepository;
-            _questionLevelReadRepository = questionLevelReadRepository;
-            _questionValueWriteRepository = questionValueWriteRepository;
-            _questionValueReadRepository = questionValueReadRepository;
-            _sectorWriteRepository = sectorWriteRepository;
-            _sectorReadRepository = sectorReadRepository;
-            _vacancyWriteRepository = vacancyWriteRepository;
-            _vacancyReadRepository = vacancyReadRepository;
             _mapper = mapper;
+            _adminService = adminService;
         }
-
-
 
         [HttpGet("getAdmins")]
         public async Task<IActionResult> GetAdmins()
@@ -224,28 +134,13 @@ namespace Interview.API.Controllers
 
 
         [HttpGet("sector/{id}")]
-        public async Task<IActionResult> GetSectorById(string id)
+        public async Task<IActionResult> GetSectorById(int id)
         {
 
 
-            try
-            {
+            var data = await _adminService.GetSectorById(id);
 
-
-                var item = _mapper.Map<SectorDTO_forGetandGetAll>(await _sectorReadRepository.GetByIdAsync(id, false));
-
-                if (item == null)
-                {
-                    return NotFound(new Response { Status = "Error", Message = "Not Found!" });
-                }
-
-                return Ok(item);
-
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, $"An error occurred: {ex.Message}");
-            }
+            return Ok(data);
 
         }
 
@@ -254,24 +149,10 @@ namespace Interview.API.Controllers
         public async Task<IActionResult> GetSector()
         {
 
-            List<SectorDTO_forGetandGetAll> datas = null;
-
-            await Task.Run(() =>
-            {
+          var data = await _adminService.GetSector();
 
 
-                datas = _mapper.Map<List<SectorDTO_forGetandGetAll>>(_sectorReadRepository.GetAll(false));
-            });
-
-
-
-            if (datas.Count() <= 0)
-            {
-                return NotFound(new Response { Status = "Error", Message = "Not Found!" });
-            }
-
-
-            return Ok(datas);
+            return Ok(data);
 
         }
 
@@ -281,7 +162,7 @@ namespace Interview.API.Controllers
         public async Task<IActionResult> SectorCreate([FromBody] SectorDTO_forCreate model)
         {
 
-            await _sectorService.SectorCreate(model);
+            await _adminService.SectorCreate(model);
 
             return Ok(new Response { Status = "Success", Message = "The Sector created successfully!" });
 
@@ -294,24 +175,7 @@ namespace Interview.API.Controllers
         {
 
 
-            var existing = await _sectorReadRepository.GetByIdAsync(model.Id.ToString(), false);
-
-
-            if (existing is null)
-                throw new NotFoundException("eXCEPTION");
-
-
-
-
-            var update = new Sector
-            {
-                Id = model.Id,
-                SectorName = model.SectorName,
-
-            };
-
-            _sectorWriteRepository.Update(update);
-            await _sectorWriteRepository.SaveAsync();
+            await _adminService.SectorUpdate(model);
 
 
             return Ok(new Response { Status = "Success", Message = "The Sector updated successfully!" });
@@ -326,20 +190,9 @@ namespace Interview.API.Controllers
         public async Task<IActionResult> Delete(int id)
         {
 
-            if (_sectorReadRepository.GetAll().Any(i => i.Id == Convert.ToInt32(id)))
-            {
+            await _adminService.DeleteSectorById(id);
 
-                await _sectorWriteRepository.RemoveByIdAsync(id.ToString());
-                await _sectorWriteRepository.SaveAsync();
-
-                return Ok(new Response { Status = "Success", Message = "The Sector deleted successfully!" });
-            }
-
-            else
-            {
-                return BadRequest(new Response { Status = "Error", Message = "The sector could not be deleted !" });
-            }
-
+            return Ok(new Response { Status = "Success", Message = "The Sector deleted successfully!" });
         }
 
         #endregion

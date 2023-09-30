@@ -9,18 +9,19 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Interview.Domain.Entities.Models;
 
-[Table("OpenQuestion")]
-public partial class OpenQuestion : BaseEntity
+[Table("QuestionSession")]
+public partial class QuestionSession : BaseEntity
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
 
-    [Required]
-    public string Question { get; set; }
+    public DateTime StartTime { get; set; }
+
+    public DateTime FinishTime { get; set; }
 
     public bool? Result { get; set; }
 
-    [InverseProperty("OpenQuestionIdForQuestionNavigation")]
+    [InverseProperty("QuestionSession")]
     public virtual ICollection<Question> Questions { get; set; } = new List<Question>();
 }

@@ -19,6 +19,9 @@ public partial class Sector : BaseEntity
     [Required]
     public string SectorName { get; set; }
 
-    [InverseProperty("SectorIdForBranchNavigation")]
+    [InverseProperty("Sector")]
     public virtual ICollection<Branch> Branches { get; set; } = new List<Branch>();
+
+    [InverseProperty("Sector")]
+    public virtual ICollection<Vacancy> Vacancies { get; set; } = new List<Vacancy>();
 }

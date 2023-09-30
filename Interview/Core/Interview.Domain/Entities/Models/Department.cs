@@ -19,13 +19,9 @@ public partial class Department : BaseEntity
     [Required]
     public string DepartmentName { get; set; }
 
-    [Column("BranchId_forDepartment")]
-    public int BranchIdForDepartment { get; set; }
+    public int BranchId { get; set; }
 
-    [ForeignKey("BranchIdForDepartment")]
+    [ForeignKey("BranchId")]
     [InverseProperty("Departments")]
-    public virtual Branch BranchIdForDepartmentNavigation { get; set; }
-
-    [InverseProperty("DepartmentIdForVacancyNavigation")]
-    public virtual ICollection<Vacancy> Vacancies { get; set; } = new List<Vacancy>();
+    public virtual Branch Branch { get; set; }
 }
