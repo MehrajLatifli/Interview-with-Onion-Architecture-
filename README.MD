@@ -5,7 +5,7 @@
 <a href="https://github.com/MehrajLatifli/Interview-with-Onion-Architecture-/blob/master/Assets/Interview.sql">Interview SQL file</a>
 </br>
 </br>
-<img src="https://github.com/MehrajLatifli/Interview-with-Onion-Architecture-/blob/master/Assets/SQL%20Diagram.png" alt="Your Image Description" width="500">
+<img src="https://github.com/MehrajLatifli/Interview-with-Onion-Architecture-/blob/master/Assets/İnterview%20diagram.png" alt="Diagram" width="500">
 
 </br>
 
