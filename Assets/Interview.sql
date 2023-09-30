@@ -1,80 +1,66 @@
-﻿CREATE DATABASE  Interview 
+CREATE DATABASE Interview;
 
-USE  Interview
+
+USE Interview;
+
 
 -- Bölmə
-CREATE TABLE [Sector]   
+CREATE TABLE [Sector]
 (
-
    [Id] INT PRIMARY KEY IDENTITY (1,1) NOT NULL,
-   [SectorName] NVARCHAR(max) NOT NULL,
- 
-    
-
-)
+   [SectorName] NVARCHAR(max) NOT NULL
+);
 
 
 -- Şöbə
-CREATE TABLE [Branch]   
+CREATE TABLE [Branch]
 (
-
    [Id] INT PRIMARY KEY IDENTITY (1,1) NOT NULL,
    [BranchName] NVARCHAR(max) NOT NULL,
- 
 
-   [SectorId_forBranch]  int NOT NULL,
+   [SectorId] INT NOT NULL,
 
-   Constraint [FK_SectorId_forBranch]  Foreign key ([SectorId_forBranch]) References  [Sector]  ( [Id] ) On Delete NO ACTION On Update NO ACTION,
+   CONSTRAINT [FK_SectorId_forBranch] FOREIGN KEY ([SectorId]) REFERENCES [Sector] ([Id]) ON DELETE NO ACTION ON UPDATE NO ACTION
+);
 
-)
 
 -- Departament
-CREATE TABLE [Department]   
+CREATE TABLE [Department]
 (
-
    [Id] INT PRIMARY KEY IDENTITY (1,1) NOT NULL,
    [DepartmentName] NVARCHAR(max) NOT NULL,
- 
 
-   
-   [BranchId_forDepartment]  int NOT NULL,
+   [BranchId] INT NOT NULL,
 
-   Constraint [FK_BranchId_forDepartment]  Foreign key ([BranchId_forDepartment]) References  [Branch]  ( [Id] ) On Delete NO ACTION On Update NO ACTION,
-
-)
+   CONSTRAINT [FK_BranchId_forDepartment] FOREIGN KEY ([BranchId]) REFERENCES [Branch] ([Id]) ON DELETE NO ACTION ON UPDATE NO ACTION
+);
 
 
 -- İş səviyyəsi
-CREATE TABLE [JobDegree]   
+CREATE TABLE [JobDegree]
 (
-
    [Id] INT PRIMARY KEY IDENTITY (1,1) NOT NULL,
-   [Degree] NVARCHAR(max) NOT NULL,
- 
-
-)
+   [Degree] NVARCHAR(max) NOT NULL
+);
 
 
 -- Vakansiya
-CREATE TABLE [Vacancy]   
+CREATE TABLE [Vacancy]
 (
-
    [Id] INT PRIMARY KEY IDENTITY (1,1) NOT NULL,
-   [Title]  NVARCHAR(max) NOT NULL,
-   [Description]  NVARCHAR(max) NOT NULL,
- 
+   [Title] NVARCHAR(max) NOT NULL,
+   [Description] NVARCHAR(max) NOT NULL,
 
-   [JobDegreeId_forVacancy]  int NOT NULL,
-   [DepartmentId_forVacancy]  int NOT NULL,
+   [JobDegreeId] INT NOT NULL,
+   [SectorId] INT NOT NULL,
 
-   Constraint [FK_JobDegreeId_forVacancy]  Foreign key ([JobDegreeId_forVacancy]) References  [JobDegree]  ( [Id] ) On Delete NO ACTION On Update NO ACTION,
-   Constraint [FK_DepartmentId_forVacancy]  Foreign key ([DepartmentId_forVacancy]) References  [Department]  ( [Id] ) On Delete NO ACTION On Update NO ACTION,
-
-)
+   CONSTRAINT [FK_JobDegreeId_forVacancy] FOREIGN KEY ([JobDegreeId]) REFERENCES [JobDegree] ([Id]) ON DELETE NO ACTION ON UPDATE NO ACTION,
+   CONSTRAINT [FK_SectorId_forVacancy] FOREIGN KEY ([SectorId]) REFERENCES [Sector] ([Id]) ON DELETE NO ACTION ON UPDATE NO ACTION
+);
 
 
 -- Namizəd
-CREATE TABLE [Candidate]   
+CREATE TABLE [Candidate]
 (
    [Id] INT PRIMARY KEY IDENTITY (1,1) NOT NULL,
    [CandidateSurname] NVARCHAR(max) NOT NULL,
@@ -82,89 +68,97 @@ CREATE TABLE [Candidate]
    [CandidatePhonenumber] NVARCHAR(max) NOT NULL,
    [CandidateEmail] NVARCHAR(max) NOT NULL,
    [CurriculumVitae] NVARCHAR(max) NOT NULL,
-   [Address] NVARCHAR(max) NOT NULL,
- 
-)
+   [Address] NVARCHAR(max) NOT NULL
+);
 
 
 -- Sual Dəyəri
-CREATE TABLE [QuestionValue]   
+CREATE TABLE [Value]
 (
    [Id] INT PRIMARY KEY IDENTITY (1,1) NOT NULL,
-   [QuestionValue] INT NOT NULL CHECK ([QuestionValue] >= 0 AND [QuestionValue] <= 5),
- 
-)
+   [Value] INT NOT NULL CHECK ([Value] >= 0 AND [Value] <= 5)
+);
 
 
 -- Sual səviyyəsi
-CREATE TABLE [QuestionLevel]   
+CREATE TABLE [Level]
 (
    [Id] INT PRIMARY KEY IDENTITY (1,1) NOT NULL,
-   [QuestionLevel] NVARCHAR(max) NOT NULL,
- 
-)
+   [Level] NVARCHAR(max) NOT NULL,
+   [Coefficient] NVARCHAR(max) NOT NULL
+);
 
 
 -- Sual Kateqoriyası
-CREATE TABLE [QuestionCategory]   
+CREATE TABLE [Category]
 (
    [Id] INT PRIMARY KEY IDENTITY (1,1) NOT NULL,
-   [QuestionCategory] NVARCHAR(max) NOT NULL,
- 
-)
-
-
--- Açıq Sual
-CREATE TABLE [OpenQuestion]   
-(
-   [Id] INT PRIMARY KEY IDENTITY (1,1) NOT NULL,
-   [Question] NVARCHAR(max) NOT NULL,
- 
-   Result bit DEFAULT 0
-)
+   [Category] NVARCHAR(max) NOT NULL
+);
 
 
 -- Sual
-CREATE TABLE [Question]   
+CREATE TABLE [Question]
 (
    [Id] INT PRIMARY KEY IDENTITY (1,1) NOT NULL,
- 
+   [QuestionTitle] NVARCHAR(max) NOT NULL,
+   [QuestionText] NVARCHAR(max) NOT NULL,
 
-   [OpenQuestionId_forQuestion]  int NOT NULL,
-   [QuestionValueId_forQuestion]  int NOT NULL,
-   [QuestionLevelId_forQuestion]  int NOT NULL,
-   [QuestionCategoryId_forQuestion]  int NOT NULL,
+   [LevelId] INT NOT NULL,
+   [CategoryId] INT NOT NULL,
 
-   Constraint [FK_OpenQuestionId_forQuestion]  Foreign key ([OpenQuestionId_forQuestion]) References  [OpenQuestion]  ( [Id] ) On Delete NO ACTION On Update NO ACTION,
-   Constraint [FK_QuestionValueId_forQuestion]  Foreign key ([QuestionValueId_forQuestion]) References  [QuestionValue]  ( [Id] ) On Delete NO ACTION On Update NO ACTION,
-   Constraint [FK_QuestionLevelId_forQuestion]  Foreign key ([QuestionLevelId_forQuestion]) References  [QuestionLevel]  ( [Id] ) On Delete NO ACTION On Update NO ACTION,
-   Constraint [FK_QuestionCategoryId_forQuestion]  Foreign key ([QuestionCategoryId_forQuestion]) References  [QuestionCategory]  ( [Id] ) On Delete NO ACTION On Update NO ACTION,
-)
+   CONSTRAINT [FK_LevelId_forQuestion] FOREIGN KEY ([LevelId]) REFERENCES [Level] ([Id]) ON DELETE NO ACTION ON UPDATE NO ACTION,
+   CONSTRAINT [FK_CategoryId_forQuestion] FOREIGN KEY ([CategoryId]) REFERENCES [Category] ([Id]) ON DELETE NO ACTION ON UPDATE NO ACTION
+);
+
+
+-- Sual üçün Sesiya
+CREATE TABLE [Session]
+(
+   [Id] INT PRIMARY KEY IDENTITY (1,1) NOT NULL,
+   [SessionTime] datetime2 DEFAULT NULL,
+
+   [QuestionId] INT NOT NULL,
+   [ValueId] INT NOT NULL,
+
+   CONSTRAINT [FK_QuestionId_forQuestionSession] FOREIGN KEY ([QuestionId]) REFERENCES [Question] ([Id]) ON DELETE NO ACTION ON UPDATE NO ACTION,
+   CONSTRAINT [FK_ValueId_forQuestionSession] FOREIGN KEY ([ValueId]) REFERENCES [Value] ([Id]) ON DELETE NO ACTION ON UPDATE NO ACTION
+);
 
 
 -- NamizədSual
-CREATE TABLE [CandidateQuestion]   
+CREATE TABLE [CandidateQuestion]
 (
    [Id] INT PRIMARY KEY IDENTITY (1,1) NOT NULL,
- 
 
-   [CandidateId_forCandidateQuestion]  int NOT NULL,
-   [QuestionId_forCandidateQuestion]  int NOT NULL,
+   [CandidateId] INT NOT NULL,
+   [QuestionId] INT NOT NULL,
 
-   Constraint [FK_CandidateId_forCandidateQuestion]  Foreign key ([CandidateId_forCandidateQuestion]) References  [Candidate]  ( [Id] ) On Delete NO ACTION On Update NO ACTION,
-   Constraint [FK_QuestionId_forCandidateQuestion]  Foreign key ([QuestionId_forCandidateQuestion]) References  [Question]  ( [Id] ) On Delete NO ACTION On Update NO ACTION,
-)
+   CONSTRAINT [FK_CandidateId_forCandidateQuestion] FOREIGN KEY ([CandidateId]) REFERENCES [Candidate] ([Id]) ON DELETE NO ACTION ON UPDATE NO ACTION,
+   CONSTRAINT [FK_QuestionId_forCandidateQuestion] FOREIGN KEY ([QuestionId]) REFERENCES [Question] ([Id]) ON DELETE NO ACTION ON UPDATE NO ACTION
+);
 
 
 -- NamizədVakansiya
-CREATE TABLE [CandidateVacancy]   
+CREATE TABLE [CandidateVacancy]
 (
    [Id] INT PRIMARY KEY IDENTITY (1,1) NOT NULL,
- 
 
-   [CandidateId_forCandidateVacancy]  int NOT NULL,
-   [VacancyId_forCandidateVacancy]  int NOT NULL,
+   [CandidateId] INT NOT NULL,
+   [VacancyId] INT NOT NULL,
 
-   Constraint [FK_CandidateId_forCandidateVacancy]  Foreign key ([CandidateId_forCandidateVacancy]) References  [Candidate]  ( [Id] ) On Delete NO ACTION On Update NO ACTION,
-   Constraint [FK_VacancyId_forCandidateVacancy]  Foreign key ([VacancyId_forCandidateVacancy]) References  [Vacancy]  ( [Id] ) On Delete NO ACTION On Update NO ACTION,
-)
+   CONSTRAINT [FK_CandidateId_forCandidateVacancy] FOREIGN KEY ([CandidateId]) REFERENCES [Candidate] ([Id]) ON DELETE NO ACTION ON UPDATE NO ACTION,
+   CONSTRAINT [FK_VacancyId_forCandidateVacancy] FOREIGN KEY ([VacancyId]) REFERENCES [Vacancy] ([Id]) ON DELETE NO ACTION ON UPDATE NO ACTION
+);
+
+
+-- Namizədin nəticəsi
+CREATE TABLE [Result]
+(
+   [Id] INT PRIMARY KEY IDENTITY (1,1) NOT NULL,
+   [Result] FLOAT NOT NULL DEFAULT (0.0),
+
+   [CandidateId] INT NOT NULL,
+
+   CONSTRAINT [FK_CandidateId_forResult] FOREIGN KEY ([CandidateId]) REFERENCES [Candidate] ([Id]) ON DELETE NO ACTION ON UPDATE NO ACTION
+);

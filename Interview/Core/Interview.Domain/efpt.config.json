@@ -32,6 +32,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[Category]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[Department]",
          "ObjectType": 0
       },
@@ -40,23 +44,15 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[Level]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[Question]",
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[QuestionCategory]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[QuestionLevel]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[QuestionSession]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[QuestionValue]",
+         "Name": "[dbo].[Result]",
          "ObjectType": 0
       },
       {
@@ -64,7 +60,15 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[Session]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[Vacancy]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Value]",
          "ObjectType": 0
       }
    ],

@@ -9,20 +9,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Interview.Domain.Entities.Models;
 
-[Table("QuestionLevel")]
-public partial class QuestionLevel : BaseEntity
+[Table("Value")]
+public partial class Value : BaseEntity
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
 
-    [Required]
-    [Column("QuestionLevel")]
-    public string QuestionLevel1 { get; set; }
+    [Column("Value")]
+    public int Value1 { get; set; }
 
-    [Required]
-    public string Coefficient { get; set; }
-
-    [InverseProperty("QuestionLevel")]
-    public virtual ICollection<Question> Questions { get; set; } = new List<Question>();
+    [InverseProperty("Value")]
+    public virtual ICollection<Session> Sessions { get; set; } = new List<Session>();
 }

@@ -23,17 +23,15 @@ namespace Interview.API.Controllers
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _configuration;
         private readonly SignInManager<CustomUser> _signInManager;
-        private readonly IMapper _mapper;
 
         private readonly IAdminService _adminService;
 
-        public AdminController(UserManager<CustomUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration, SignInManager<CustomUser> signInManager, IMapper mapper, IAdminService adminService)
+        public AdminController(UserManager<CustomUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration, SignInManager<CustomUser> signInManager, IAdminService adminService)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _configuration = configuration;
             _signInManager = signInManager;
-            _mapper = mapper;
             _adminService = adminService;
         }
 
@@ -130,13 +128,13 @@ namespace Interview.API.Controllers
 
         }
 
+
         #region Sector
 
 
         [HttpGet("sector/{id}")]
         public async Task<IActionResult> GetSectorById(int id)
         {
-
 
             var data = await _adminService.GetSectorById(id);
 

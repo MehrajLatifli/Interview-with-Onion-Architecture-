@@ -9,17 +9,19 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Interview.Domain.Entities.Models;
 
-[Table("QuestionCategory")]
-public partial class QuestionCategory : BaseEntity
+[Table("Result")]
+public partial class Result : BaseEntity
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
 
-    [Required]
-    [Column("QuestionCategory")]
-    public string QuestionCategory1 { get; set; }
+    [Column("Result")]
+    public double Result1 { get; set; }
 
-    [InverseProperty("QuestionCategory")]
-    public virtual ICollection<Question> Questions { get; set; } = new List<Question>();
+    public int CandidateId { get; set; }
+
+    [ForeignKey("CandidateId")]
+    [InverseProperty("Results")]
+    public virtual Candidate Candidate { get; set; }
 }

@@ -39,4 +39,7 @@ public partial class Candidate : BaseEntity
 
     [InverseProperty("Candidate")]
     public virtual ICollection<CandidateVacancy> CandidateVacancies { get; set; } = new List<CandidateVacancy>();
+
+    [InverseProperty("Candidate")]
+    public virtual ICollection<Result> Results { get; set; } = new List<Result>();
 }

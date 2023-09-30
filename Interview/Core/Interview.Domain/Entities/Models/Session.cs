@@ -9,19 +9,24 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Interview.Domain.Entities.Models;
 
-[Table("QuestionSession")]
-public partial class QuestionSession : BaseEntity
+[Table("Session")]
+public partial class Session : BaseEntity
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
 
-    public DateTime StartTime { get; set; }
+    public DateTime? SessionTime { get; set; }
 
-    public DateTime FinishTime { get; set; }
+    public int QuestionId { get; set; }
 
-    public bool? Result { get; set; }
+    public int ValueId { get; set; }
 
-    [InverseProperty("QuestionSession")]
-    public virtual ICollection<Question> Questions { get; set; } = new List<Question>();
+    [ForeignKey("QuestionId")]
+    [InverseProperty("Sessions")]
+    public virtual Question Question { get; set; }
+
+    [ForeignKey("ValueId")]
+    [InverseProperty("Sessions")]
+    public virtual Value Value { get; set; }
 }

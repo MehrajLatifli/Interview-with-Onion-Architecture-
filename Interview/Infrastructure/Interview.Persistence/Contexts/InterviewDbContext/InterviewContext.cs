@@ -27,23 +27,25 @@ public partial class InterviewContext : DbContext
 
     public virtual DbSet<CandidateVacancy> CandidateVacancies { get; set; }
 
+    public virtual DbSet<Category> Categories { get; set; }
+
     public virtual DbSet<Department> Departments { get; set; }
 
     public virtual DbSet<JobDegree> JobDegrees { get; set; }
 
+    public virtual DbSet<Level> Levels { get; set; }
+
     public virtual DbSet<Question> Questions { get; set; }
 
-    public virtual DbSet<QuestionCategory> QuestionCategories { get; set; }
-
-    public virtual DbSet<QuestionLevel> QuestionLevels { get; set; }
-
-    public virtual DbSet<QuestionSession> QuestionSessions { get; set; }
-
-    public virtual DbSet<QuestionValue> QuestionValues { get; set; }
+    public virtual DbSet<Result> Results { get; set; }
 
     public virtual DbSet<Sector> Sectors { get; set; }
 
+    public virtual DbSet<Session> Sessions { get; set; }
+
     public virtual DbSet<Vacancy> Vacancies { get; set; }
+
+    public virtual DbSet<Value> Values { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
@@ -53,7 +55,7 @@ public partial class InterviewContext : DbContext
     {
         modelBuilder.Entity<Branch>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Branch__3214EC071456E280");
+            entity.HasKey(e => e.Id).HasName("PK__Branch__3214EC07A6A5C030");
 
             entity.HasOne(d => d.Sector).WithMany(p => p.Branches)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -62,12 +64,12 @@ public partial class InterviewContext : DbContext
 
         modelBuilder.Entity<Candidate>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Candidat__3214EC07FAA948F7");
+            entity.HasKey(e => e.Id).HasName("PK__Candidat__3214EC07392BCA18");
         });
 
         modelBuilder.Entity<CandidateQuestion>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Candidat__3214EC070F96EFAF");
+            entity.HasKey(e => e.Id).HasName("PK__Candidat__3214EC07058C4302");
 
             entity.HasOne(d => d.Candidate).WithMany(p => p.CandidateQuestions)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -80,7 +82,7 @@ public partial class InterviewContext : DbContext
 
         modelBuilder.Entity<CandidateVacancy>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Candidat__3214EC0759ED86D5");
+            entity.HasKey(e => e.Id).HasName("PK__Candidat__3214EC079F7FA392");
 
             entity.HasOne(d => d.Candidate).WithMany(p => p.CandidateVacancies)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -91,9 +93,14 @@ public partial class InterviewContext : DbContext
                 .HasConstraintName("FK_VacancyId_forCandidateVacancy");
         });
 
+        modelBuilder.Entity<Category>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Category__3214EC0751326446");
+        });
+
         modelBuilder.Entity<Department>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Departme__3214EC074970B656");
+            entity.HasKey(e => e.Id).HasName("PK__Departme__3214EC07599A2732");
 
             entity.HasOne(d => d.Branch).WithMany(p => p.Departments)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -102,60 +109,57 @@ public partial class InterviewContext : DbContext
 
         modelBuilder.Entity<JobDegree>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__JobDegre__3214EC07BDFCA2D7");
+            entity.HasKey(e => e.Id).HasName("PK__JobDegre__3214EC07732C6FCC");
+        });
+
+        modelBuilder.Entity<Level>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Level__3214EC07D6E00948");
         });
 
         modelBuilder.Entity<Question>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Question__3214EC0706F572C8");
+            entity.HasKey(e => e.Id).HasName("PK__Question__3214EC077A7CBCEC");
 
-            entity.HasOne(d => d.QuestionCategory).WithMany(p => p.Questions)
+            entity.HasOne(d => d.Category).WithMany(p => p.Questions)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_QuestionCategoryId_forQuestion");
+                .HasConstraintName("FK_CategoryId_forQuestion");
 
-            entity.HasOne(d => d.QuestionLevel).WithMany(p => p.Questions)
+            entity.HasOne(d => d.Level).WithMany(p => p.Questions)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_QuestionLevelId_forQuestion");
-
-            entity.HasOne(d => d.QuestionSession).WithMany(p => p.Questions)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_QuestionSessionId_forQuestion");
-
-            entity.HasOne(d => d.QuestionValue).WithMany(p => p.Questions)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_QuestionValueId_forQuestion");
+                .HasConstraintName("FK_LevelId_forQuestion");
         });
 
-        modelBuilder.Entity<QuestionCategory>(entity =>
+        modelBuilder.Entity<Result>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Question__3214EC0711A252E5");
-        });
+            entity.HasKey(e => e.Id).HasName("PK__Result__3214EC0730C0701E");
 
-        modelBuilder.Entity<QuestionLevel>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Question__3214EC070B59879D");
-        });
-
-        modelBuilder.Entity<QuestionSession>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Question__3214EC07A478E705");
-
-            entity.Property(e => e.Result).HasDefaultValueSql("((0))");
-        });
-
-        modelBuilder.Entity<QuestionValue>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Question__3214EC0771C5F972");
+            entity.HasOne(d => d.Candidate).WithMany(p => p.Results)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_CandidateId_forResult");
         });
 
         modelBuilder.Entity<Sector>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Sector__3214EC07C82168B9");
+            entity.HasKey(e => e.Id).HasName("PK__Sector__3214EC070C13900C");
+        });
+
+        modelBuilder.Entity<Session>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Session__3214EC07B312D4FA");
+
+            entity.HasOne(d => d.Question).WithMany(p => p.Sessions)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_QuestionId_forQuestionSession");
+
+            entity.HasOne(d => d.Value).WithMany(p => p.Sessions)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_ValueId_forQuestionSession");
         });
 
         modelBuilder.Entity<Vacancy>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Vacancy__3214EC07F01C6BD3");
+            entity.HasKey(e => e.Id).HasName("PK__Vacancy__3214EC0725ECE4C7");
 
             entity.HasOne(d => d.JobDegree).WithMany(p => p.Vacancies)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -163,7 +167,12 @@ public partial class InterviewContext : DbContext
 
             entity.HasOne(d => d.Sector).WithMany(p => p.Vacancies)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_DepartmentId_forVacancy");
+                .HasConstraintName("FK_SectorId_forVacancy");
+        });
+
+        modelBuilder.Entity<Value>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Value__3214EC07DE1599BF");
         });
 
         OnModelCreatingPartial(modelBuilder);

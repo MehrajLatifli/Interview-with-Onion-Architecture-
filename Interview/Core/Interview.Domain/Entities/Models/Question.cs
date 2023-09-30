@@ -16,30 +16,27 @@ public partial class Question : BaseEntity
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
 
-    public int QuestionSessionId { get; set; }
+    [Required]
+    public string QuestionTitle { get; set; }
 
-    public int QuestionValueId { get; set; }
+    [Required]
+    public string QuestionText { get; set; }
 
-    public int QuestionLevelId { get; set; }
+    public int LevelId { get; set; }
 
-    public int QuestionCategoryId { get; set; }
+    public int CategoryId { get; set; }
 
     [InverseProperty("Question")]
     public virtual ICollection<CandidateQuestion> CandidateQuestions { get; set; } = new List<CandidateQuestion>();
 
-    [ForeignKey("QuestionCategoryId")]
+    [ForeignKey("CategoryId")]
     [InverseProperty("Questions")]
-    public virtual QuestionCategory QuestionCategory { get; set; }
+    public virtual Category Category { get; set; }
 
-    [ForeignKey("QuestionLevelId")]
+    [ForeignKey("LevelId")]
     [InverseProperty("Questions")]
-    public virtual QuestionLevel QuestionLevel { get; set; }
+    public virtual Level Level { get; set; }
 
-    [ForeignKey("QuestionSessionId")]
-    [InverseProperty("Questions")]
-    public virtual QuestionSession QuestionSession { get; set; }
-
-    [ForeignKey("QuestionValueId")]
-    [InverseProperty("Questions")]
-    public virtual QuestionValue QuestionValue { get; set; }
+    [InverseProperty("Question")]
+    public virtual ICollection<Session> Sessions { get; set; } = new List<Session>();
 }
