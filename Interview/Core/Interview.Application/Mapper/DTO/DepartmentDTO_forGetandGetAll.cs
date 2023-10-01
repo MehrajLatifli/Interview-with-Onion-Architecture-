@@ -6,7 +6,7 @@
 
         public string DepartmentName { get; set; }
 
-        public int BranchIdForDepartment { get; set; }
+        public int BranchId { get; set; }
 
 
     }

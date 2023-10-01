@@ -10,7 +10,7 @@ namespace Interview.Application.Mapper.DTO
         public string BranchName { get; set; }
 
         [Required(ErrorMessage = "SectorId is required")]
-        public int SectorIdForBranch { get; set; }
+        public int SectorId { get; set; }
 
 
     }

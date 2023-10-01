@@ -1,6 +1,6 @@
 ﻿using Interview.Application.Repositories.Custom;
-using Interview.Application.Services.Admins.Abstract;
-using Interview.Application.Services.Admins.Concrete;
+using Interview.Application.Services.Abstract;
+using Interview.Application.Services.Concrete;
 using Interview.Persistence.Contexts.AuthDbContext.DbContext;
 using Interview.Persistence.Contexts.InterviewDbContext;
 using Interview.Persistence.Repositories.Custom;
@@ -64,7 +64,7 @@ namespace Interview.Persistence.ServiceExtensions
         {
             services.AddDbContext<InterviewContext>(options => options.UseSqlServer(ConnectionString));
 
-            services.AddScoped<IAdminService, AdminServiceManager>();
+            services.AddScoped<IService, ServiceManager>();
 
             services.AddScoped<ISectorWriteRepository, SectorWriteRepository>();
             services.AddScoped<ISectorReadRepository, SectorReadRepository>();

@@ -15,7 +15,7 @@ namespace Interview.Application.Mapper.DTO
         public string DepartmentName { get; set; }
 
         [Column("BranchId_forDepartment")]
-        public int BranchIdForDepartment { get; set; }
+        public int BranchId { get; set; }
 
 
 

@@ -2,7 +2,7 @@
 using Interview.Application.Exception;
 using Interview.Application.Mapper.DTO;
 using Interview.Application.Repositories.Custom;
-using Interview.Application.Services.Admins.Abstract;
+using Interview.Application.Services.Abstract;
 using Interview.Domain.AuthModels;
 using Interview.Domain.Entities.Models;
 using Interview.Persistence.Contexts.AuthDbContext.IdentityAuth;
@@ -24,15 +24,15 @@ namespace Interview.API.Controllers
         private readonly IConfiguration _configuration;
         private readonly SignInManager<CustomUser> _signInManager;
 
-        private readonly IAdminService _adminService;
+        private readonly IService _service;
 
-        public AdminController(UserManager<CustomUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration, SignInManager<CustomUser> signInManager, IAdminService adminService)
+        public AdminController(UserManager<CustomUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration, SignInManager<CustomUser> signInManager, IService service)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _configuration = configuration;
             _signInManager = signInManager;
-            _adminService = adminService;
+            _service = service;
         }
 
         [HttpGet("getAdmins")]
@@ -136,7 +136,7 @@ namespace Interview.API.Controllers
         public async Task<IActionResult> GetSectorById(int id)
         {
 
-            var data = await _adminService.GetSectorById(id);
+            var data = await _service.GetSectorById(id);
 
             return Ok(data);
 
@@ -147,7 +147,7 @@ namespace Interview.API.Controllers
         public async Task<IActionResult> GetSector()
         {
 
-          var data = await _adminService.GetSector();
+          var data = await _service.GetSector();
 
 
             return Ok(data);
@@ -160,7 +160,7 @@ namespace Interview.API.Controllers
         public async Task<IActionResult> SectorCreate([FromBody] SectorDTO_forCreate model)
         {
 
-            await _adminService.SectorCreate(model);
+            await _service.SectorCreate(model);
 
             return Ok(new Response { Status = "Success", Message = "The Sector created successfully!" });
 
@@ -173,7 +173,7 @@ namespace Interview.API.Controllers
         {
 
 
-            await _adminService.SectorUpdate(model);
+            await _service.SectorUpdate(model);
 
 
             return Ok(new Response { Status = "Success", Message = "The Sector updated successfully!" });
@@ -185,13 +185,150 @@ namespace Interview.API.Controllers
 
 
         [HttpDelete("sector/{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> SectorDelete(int id)
         {
 
-            await _adminService.DeleteSectorById(id);
+            await _service.DeleteSectorById(id);
 
             return Ok(new Response { Status = "Success", Message = "The Sector deleted successfully!" });
         }
+
+
+        #endregion
+
+
+        #region Branch
+
+
+        [HttpGet("branch/{id}")]
+        public async Task<IActionResult> GetBranchById(int id)
+        {
+
+            var data = await _service.GetBranchById(id);
+
+            return Ok(data);
+
+        }
+
+
+        [HttpGet("branch")]
+        public async Task<IActionResult> GetBranch()
+        {
+
+            var data = await _service.GetBranch();
+
+
+            return Ok(data);
+
+        }
+
+
+        [HttpPost]
+        [Route("branch")]
+        public async Task<IActionResult> BranchCreate([FromBody] BranchDTO_forCreate model)
+        {
+
+            await _service.BranchCreate(model);
+
+            return Ok(new Response { Status = "Success", Message = "The Branch created successfully!" });
+
+        }
+
+
+        [HttpPut]
+        [Route("branch")]
+        public async Task<IActionResult> BranchUpdate([FromBody] BranchDTO_forUpdate model)
+        {
+
+
+            await _service.BranchUpdate(model);
+
+
+            return Ok(new Response { Status = "Success", Message = "The Branch updated successfully!" });
+
+
+
+
+        }
+
+
+        [HttpDelete("branch/{id}")]
+        public async Task<IActionResult> BranchDelete(int id)
+        {
+
+            await _service.DeleteBranchById(id);
+
+            return Ok(new Response { Status = "Success", Message = "The Branch deleted successfully!" });
+        }
+
+
+        #endregion
+
+
+        #region Department
+
+
+        [HttpGet("department/{id}")]
+        public async Task<IActionResult> GetDepartmentById(int id)
+        {
+
+            var data = await _service.GetDepartmentById(id);
+
+            return Ok(data);
+
+        }
+
+
+        [HttpGet("department")]
+        public async Task<IActionResult> GetDepartment()
+        {
+
+            var data = await _service.GetDepartment();
+
+
+            return Ok(data);
+
+        }
+
+
+        [HttpPost]
+        [Route("department")]
+        public async Task<IActionResult> DepartmentCreate([FromBody] DepartmentDTO_forCreate model)
+        {
+
+            await _service.DepartmentCreate(model);
+
+            return Ok(new Response { Status = "Success", Message = "The Department created successfully!" });
+
+        }
+
+
+        [HttpPut]
+        [Route("department")]
+        public async Task<IActionResult> DepartmentUpdate([FromBody] DepartmentDTO_forUpdate model)
+        {
+
+
+            await _service.DepartmentUpdate(model);
+
+
+            return Ok(new Response { Status = "Success", Message = "The Department updated successfully!" });
+
+
+
+
+        }
+
+
+        [HttpDelete("department/{id}")]
+        public async Task<IActionResult> DepartmentDelete(int id)
+        {
+
+            await _service.DeleteDepartmentById(id);
+
+            return Ok(new Response { Status = "Success", Message = "The Department deleted successfully!" });
+        }
+
 
         #endregion
 

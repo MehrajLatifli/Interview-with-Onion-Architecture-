@@ -14,7 +14,7 @@ namespace Interview.Application.Mapper.DTO
 
 
         [Required(ErrorMessage = "SectorId is required")]
-        public int SectorIdForBranch { get; set; }
+        public int SectorId { get; set; }
 
 
 
