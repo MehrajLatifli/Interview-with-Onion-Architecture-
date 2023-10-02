@@ -9,7 +9,7 @@ namespace Interview.Application.Mapper.DTO
         public int Id { get; set; }
 
 
-        [Required(ErrorMessage = "BranchName is required")]
+        [Required(ErrorMessage = "Branch name is required")]
         public string BranchName { get; set; }
 
 

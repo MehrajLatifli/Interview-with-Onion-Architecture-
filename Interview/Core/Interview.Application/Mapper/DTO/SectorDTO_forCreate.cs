@@ -13,7 +13,7 @@ namespace Interview.Application.Mapper.DTO
     {
 
 
-        [Required(ErrorMessage = "SectorName is required")]
+        [Required(ErrorMessage = "Sector name is required")]
         public string SectorName { get; set; }
 
 

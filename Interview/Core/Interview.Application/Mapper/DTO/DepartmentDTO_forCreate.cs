@@ -6,7 +6,7 @@ namespace Interview.Application.Mapper.DTO
     public class DepartmentDTO_forCreate
     {
 
-        [Required(ErrorMessage = "DepartmentName is required")]
+        [Required(ErrorMessage = "Department name is required")]
         public string DepartmentName { get; set; }
 
         [Column("BranchId_forDepartment")]

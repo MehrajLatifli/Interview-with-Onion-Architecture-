@@ -18,6 +18,7 @@ namespace Interview.Application.Services.Abstract
 
         #endregion
 
+
         #region Branch service
 
         public Task BranchCreate(BranchDTO_forCreate model);
@@ -32,6 +33,7 @@ namespace Interview.Application.Services.Abstract
 
         #endregion
 
+
         #region Department service
 
         public Task DepartmentCreate(DepartmentDTO_forCreate model);
@@ -43,6 +45,36 @@ namespace Interview.Application.Services.Abstract
         public Task DepartmentUpdate(DepartmentDTO_forUpdate model);
 
         public Task<DepartmentDTO_forGetandGetAll> DeleteDepartmentById(int id);
+
+        #endregion
+
+
+        #region JobDegree service
+
+        public Task JobDegreeCreate(JobDegreeDTO_forCreate model);
+
+        public Task<List<JobDegreeDTO_forGetandGetAll>> GetJobDegree();
+
+        public Task<JobDegreeDTO_forGetandGetAll> GetJobDegreeById(int id);
+
+        public Task JobDegreeUpdate(JobDegreeDTO_forUpdate model);
+
+        public Task<JobDegreeDTO_forGetandGetAll> DeleteJobDegreeById(int id);
+
+        #endregion
+
+
+        #region Vacancy service
+
+        public Task VacancyCreate(VacancyDTO_forCreate model);
+
+        public Task<List<VacancyDTO_forGetandGetAll>> GetVacancy();
+
+        public Task<VacancyDTO_forGetandGetAll> GetVacancyById(int id);
+
+        public Task VacancyUpdate(VacancyDTO_forUpdate model);
+
+        public Task<VacancyDTO_forGetandGetAll> DeleteVacancyById(int id);
 
         #endregion
     }

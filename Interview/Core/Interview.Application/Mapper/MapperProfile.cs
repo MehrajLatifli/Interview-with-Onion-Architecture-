@@ -39,7 +39,23 @@ namespace Interview.Application.Mapper
             CreateMap<Department, DepartmentDTO_forGetandGetAll>();
             CreateMap<DepartmentDTO_forGetandGetAll, Department>();
 
-  
+
+            CreateMap<JobDegree, JobDegreeDTO_forCreate>();
+            CreateMap<JobDegreeDTO_forCreate, JobDegree>();
+            CreateMap<JobDegree, JobDegreeDTO_forUpdate>();
+            CreateMap<JobDegreeDTO_forUpdate, JobDegree>();
+            CreateMap<JobDegree, JobDegreeDTO_forGetandGetAll>();
+            CreateMap<JobDegreeDTO_forGetandGetAll, JobDegree>();
+
+
+            CreateMap<Vacancy, VacancyDTO_forCreate>();
+            CreateMap<VacancyDTO_forCreate, Vacancy>();
+            CreateMap<Vacancy, VacancyDTO_forUpdate>();
+            CreateMap<VacancyDTO_forUpdate, Vacancy>();
+            CreateMap<Vacancy, VacancyDTO_forGetandGetAll>();
+            CreateMap<VacancyDTO_forGetandGetAll, Vacancy>();
+
+
         }
     }
 }

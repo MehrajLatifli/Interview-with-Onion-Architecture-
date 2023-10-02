@@ -332,6 +332,141 @@ namespace Interview.API.Controllers
 
         #endregion
 
+
+        #region JobDegree
+
+
+        [HttpGet("jobdegree/{id}")]
+        public async Task<IActionResult> GetJobDegreeById(int id)
+        {
+
+            var data = await _service.GetJobDegreeById(id);
+
+            return Ok(data);
+
+        }
+
+
+        [HttpGet("jobdegree")]
+        public async Task<IActionResult> GetJobDegree()
+        {
+
+            var data = await _service.GetJobDegree();
+
+
+            return Ok(data);
+
+        }
+
+
+        [HttpPost]
+        [Route("jobdegree")]
+        public async Task<IActionResult> JobDegreeCreate([FromBody] JobDegreeDTO_forCreate model)
+        {
+
+            await _service.JobDegreeCreate(model);
+
+            return Ok(new Response { Status = "Success", Message = "The JobDegree created successfully!" });
+
+        }
+
+
+        [HttpPut]
+        [Route("jobdegree")]
+        public async Task<IActionResult> JobDegreeUpdate([FromBody] JobDegreeDTO_forUpdate model)
+        {
+
+
+            await _service.JobDegreeUpdate(model);
+
+
+            return Ok(new Response { Status = "Success", Message = "The JobDegree updated successfully!" });
+
+
+
+
+        }
+
+
+        [HttpDelete("jobdegree/{id}")]
+        public async Task<IActionResult> JobDegreeDelete(int id)
+        {
+
+            await _service.DeleteJobDegreeById(id);
+
+            return Ok(new Response { Status = "Success", Message = "The JobDegree deleted successfully!" });
+        }
+
+
+        #endregion
+
+
+        #region Vacancy
+
+
+        [HttpGet("vacancy/{id}")]
+        public async Task<IActionResult> GetVacancyById(int id)
+        {
+
+            var data = await _service.GetVacancyById(id);
+
+            return Ok(data);
+
+        }
+
+
+        [HttpGet("vacancy")]
+        public async Task<IActionResult> GetVacancy()
+        {
+
+            var data = await _service.GetVacancy();
+
+
+            return Ok(data);
+
+        }
+
+
+        [HttpPost]
+        [Route("vacancy")]
+        public async Task<IActionResult> VacancyCreate([FromBody] VacancyDTO_forCreate model)
+        {
+
+            await _service.VacancyCreate(model);
+
+            return Ok(new Response { Status = "Success", Message = "The Vacancy created successfully!" });
+
+        }
+
+
+        [HttpPut]
+        [Route("vacancy")]
+        public async Task<IActionResult> VacancyUpdate([FromBody] VacancyDTO_forUpdate model)
+        {
+
+
+            await _service.VacancyUpdate(model);
+
+
+            return Ok(new Response { Status = "Success", Message = "The Vacancy updated successfully!" });
+
+
+
+
+        }
+
+
+        [HttpDelete("vacancy/{id}")]
+        public async Task<IActionResult> VacancyDelete(int id)
+        {
+
+            await _service.DeleteVacancyById(id);
+
+            return Ok(new Response { Status = "Success", Message = "The Vacancy deleted successfully!" });
+        }
+
+
+        #endregion
     }
 }
 

@@ -18,8 +18,12 @@ namespace Interview.Application.Services.Concrete
         private readonly IBranchReadRepository  _branchReadRepository;
         private readonly IDepartmentWriteRepository _departmentWriteRepository;
         private readonly IDepartmentReadRepository _departmentReadRepository;
+        private readonly IVacancyWriteRepository _vacancyWriteRepository;
+        private readonly IVacancyReadRepository _vacancyReadRepository;
+        private readonly IJobDegreeWriteRepository _jobDegreeWriteRepository;
+        private readonly IJobDegreeReadRepository _jobDegreeReadRepository;
 
-        public ServiceManager(IMapper mapper, ISectorWriteRepository sectorWriteRepository, ISectorReadRepository sectorReadRepository, IBranchWriteRepository branchWriteRepository, IBranchReadRepository branchReadRepository, IDepartmentWriteRepository departmentWriteRepository, IDepartmentReadRepository departmentReadRepository)
+        public ServiceManager(IMapper mapper, ISectorWriteRepository sectorWriteRepository, ISectorReadRepository sectorReadRepository, IBranchWriteRepository branchWriteRepository, IBranchReadRepository branchReadRepository, IDepartmentWriteRepository departmentWriteRepository, IDepartmentReadRepository departmentReadRepository, IVacancyWriteRepository vacancyWriteRepository, IVacancyReadRepository vacancyReadRepository, IJobDegreeWriteRepository jobDegreeWriteRepository, IJobDegreeReadRepository jobDegreeReadRepository)
         {
             _mapper = mapper;
             _sectorWriteRepository = sectorWriteRepository;
@@ -28,7 +32,14 @@ namespace Interview.Application.Services.Concrete
             _branchReadRepository = branchReadRepository;
             _departmentWriteRepository = departmentWriteRepository;
             _departmentReadRepository = departmentReadRepository;
+            _vacancyWriteRepository = vacancyWriteRepository;
+            _vacancyReadRepository = vacancyReadRepository;
+            _jobDegreeWriteRepository = jobDegreeWriteRepository;
+            _jobDegreeReadRepository = jobDegreeReadRepository;
         }
+
+
+
 
 
 
@@ -233,7 +244,7 @@ namespace Interview.Application.Services.Concrete
         #endregion
 
 
-         #region Department service manager
+        #region Department service manager
 
         public async Task DepartmentCreate(DepartmentDTO_forCreate model)
         {
@@ -326,6 +337,221 @@ namespace Interview.Application.Services.Concrete
 
                 await _departmentWriteRepository.RemoveByIdAsync(id.ToString());
                 await _departmentWriteRepository.SaveAsync();
+
+                return null;
+
+            }
+
+            else
+            {
+                throw new NotFoundException("Sector not found");
+            }
+        }
+
+        #endregion
+
+
+        #region JobDegree service manager
+
+        public async Task JobDegreeCreate(JobDegreeDTO_forCreate model)
+        {
+
+            var entity = _mapper.Map<JobDegree>(model);
+
+            await _jobDegreeWriteRepository.AddAsync(entity);
+
+            await _jobDegreeWriteRepository.SaveAsync();
+        }
+
+        public async Task<List<JobDegreeDTO_forGetandGetAll>> GetJobDegree()
+        {
+            List<JobDegreeDTO_forGetandGetAll> datas = null;
+
+            await Task.Run(() =>
+            {
+                datas = _mapper.Map<List<JobDegreeDTO_forGetandGetAll>>(_jobDegreeReadRepository.GetAll(false));
+            });
+
+            if (datas.Count <= 0)
+            {
+                throw new NotFoundException("JobDegree not found");
+            }
+
+            return datas;
+        }
+
+        public async Task<JobDegreeDTO_forGetandGetAll> GetJobDegreeById(int id)
+        {
+            JobDegreeDTO_forGetandGetAll item = null;
+
+
+            item = _mapper.Map<JobDegreeDTO_forGetandGetAll>(await _jobDegreeReadRepository.GetByIdAsync(id.ToString(), false));
+
+
+            if (item == null)
+            {
+                throw new NotFoundException("JobDegree not found");
+            }
+
+            return item;
+        }
+
+        public async Task JobDegreeUpdate(JobDegreeDTO_forUpdate model)
+        {
+
+            var existing = await _jobDegreeReadRepository.GetByIdAsync(model.Id.ToString(), false);
+
+
+            if (existing is null)
+            {
+                throw new NotFoundException("JobDegree not found");
+
+            }
+
+
+            var update = new JobDegree
+            {
+                Id = model.Id,
+                Degree = model.Degree,
+
+            };
+
+            _jobDegreeWriteRepository.Update(update);
+            await _jobDegreeWriteRepository.SaveAsync();
+
+        }
+
+        public async Task<JobDegreeDTO_forGetandGetAll> DeleteJobDegreeById(int id)
+        {
+
+            if (_jobDegreeReadRepository.GetAll().Any(i => i.Id == Convert.ToInt32(id)))
+            {
+
+                await _jobDegreeWriteRepository.RemoveByIdAsync(id.ToString());
+                await _jobDegreeWriteRepository.SaveAsync();
+
+                return null;
+
+            }
+
+            else
+            {
+                throw new NotFoundException("JobDegree not found");
+            }
+        }
+
+        #endregion
+
+
+        #region Vacancy service manager
+
+        public async Task VacancyCreate(VacancyDTO_forCreate model)
+        {
+
+            var existing = _mapper.Map<JobDegreeDTO_forGetandGetAll>(await _jobDegreeReadRepository.GetByIdAsync(model.JobDegreeId.ToString(), false));
+
+            var existing2 = _mapper.Map<SectorDTO_forGetandGetAll>(await _sectorReadRepository.GetByIdAsync(model.SectorId.ToString(), false));
+
+            if (existing is null)
+            {
+                throw new NotFoundException("JobDegree not found");
+            }
+
+            if (existing2 is null)
+            {
+                throw new NotFoundException("Sector not found");
+            }
+
+            else
+            {
+                var entity = _mapper.Map<Vacancy>(model);
+
+
+                await _vacancyWriteRepository.AddAsync(entity);
+
+                await _vacancyWriteRepository.SaveAsync();
+            }
+        }
+
+        public async Task<List<VacancyDTO_forGetandGetAll>> GetVacancy()
+        {
+            List<VacancyDTO_forGetandGetAll> datas = null;
+
+            await Task.Run(() =>
+            {
+                datas = _mapper.Map<List<VacancyDTO_forGetandGetAll>>(_vacancyReadRepository.GetAll(false));
+            });
+
+            if (datas.Count <= 0)
+            {
+                throw new NotFoundException("Vacancy not found");
+            }
+
+            return datas;
+        }
+
+        public async Task<VacancyDTO_forGetandGetAll> GetVacancyById(int id)
+        {
+            VacancyDTO_forGetandGetAll item = null;
+
+
+            item = _mapper.Map<VacancyDTO_forGetandGetAll>(await _vacancyReadRepository.GetByIdAsync(id.ToString(), false));
+
+
+            if (item == null)
+            {
+                throw new NotFoundException("Vacancy not found");
+            }
+
+            return item;
+        }
+
+        public async Task VacancyUpdate(VacancyDTO_forUpdate model)
+        {
+            var existing = await _vacancyReadRepository.GetByIdAsync(model.Id.ToString(), false);
+
+            var existing2 = _mapper.Map<JobDegreeDTO_forGetandGetAll>(await _jobDegreeReadRepository.GetByIdAsync(model.JobDegreeId.ToString(), false));
+
+            var existing3 = _mapper.Map<SectorDTO_forGetandGetAll>(await _sectorReadRepository.GetByIdAsync(model.SectorId.ToString(), false));
+
+
+            if (existing is null)
+            {
+                throw new NotFoundException("Vacancy not found");
+
+            }
+
+            if (existing2 is null)
+            {
+                throw new NotFoundException("Job Degree not found");
+            }
+
+            if (existing3 is null)
+            {
+                throw new NotFoundException("Sector not found");
+            }
+
+            var update = new Vacancy
+            {
+                Id = model.Id,
+                Title = model.Title,
+                Description = model.Description,
+                JobDegreeId=model.JobDegreeId,
+                SectorId=model.SectorId,
+
+            };
+
+            _vacancyWriteRepository.Update(update);
+            await _vacancyWriteRepository.SaveAsync();
+        }
+
+        public async Task<VacancyDTO_forGetandGetAll> DeleteVacancyById(int id)
+        {
+            if (_vacancyReadRepository.GetAll().Any(i => i.Id == Convert.ToInt32(id)))
+            {
+
+                await _vacancyWriteRepository.RemoveByIdAsync(id.ToString());
+                await _vacancyWriteRepository.SaveAsync();
 
                 return null;
 

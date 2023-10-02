@@ -6,7 +6,7 @@ namespace Interview.Application.Mapper.DTO
     {
 
 
-        [Required(ErrorMessage = "BranchName is required")]
+        [Required(ErrorMessage = "Branch name is required")]
         public string BranchName { get; set; }
 
         [Required(ErrorMessage = "SectorId is required")]

@@ -75,6 +75,12 @@ namespace Interview.Persistence.ServiceExtensions
             services.AddScoped<IBranchWriteRepository, BranchWriteRepository>();
             services.AddScoped<IBranchReadRepository, BranchReadRepository>();
 
+            services.AddScoped<IJobDegreeWriteRepository, JobDegreeWriteRepository>();
+            services.AddScoped<IJobDegreeReadRepository, JobDegreeReadRepository>();
+
+            services.AddScoped<IVacancyWriteRepository, VacancyWriteRepository>();
+            services.AddScoped<IVacancyReadRepository, VacancyReadRepository>();
+
 
 
         }
