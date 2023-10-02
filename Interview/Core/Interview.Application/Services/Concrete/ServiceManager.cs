@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
 using Interview.Application.Exception;
 using Interview.Application.Mapper.DTO;
 using Interview.Application.Repositories.Custom;
@@ -22,8 +24,10 @@ namespace Interview.Application.Services.Concrete
         private readonly IVacancyReadRepository _vacancyReadRepository;
         private readonly IJobDegreeWriteRepository _jobDegreeWriteRepository;
         private readonly IJobDegreeReadRepository _jobDegreeReadRepository;
+        private readonly ICandidateWriteRepository  _candidateWriteRepository;
+        private readonly ICandidateReadRepository  _candidateReadRepository;
 
-        public ServiceManager(IMapper mapper, ISectorWriteRepository sectorWriteRepository, ISectorReadRepository sectorReadRepository, IBranchWriteRepository branchWriteRepository, IBranchReadRepository branchReadRepository, IDepartmentWriteRepository departmentWriteRepository, IDepartmentReadRepository departmentReadRepository, IVacancyWriteRepository vacancyWriteRepository, IVacancyReadRepository vacancyReadRepository, IJobDegreeWriteRepository jobDegreeWriteRepository, IJobDegreeReadRepository jobDegreeReadRepository)
+        public ServiceManager(IMapper mapper, ISectorWriteRepository sectorWriteRepository, ISectorReadRepository sectorReadRepository, IBranchWriteRepository branchWriteRepository, IBranchReadRepository branchReadRepository, IDepartmentWriteRepository departmentWriteRepository, IDepartmentReadRepository departmentReadRepository, IVacancyWriteRepository vacancyWriteRepository, IVacancyReadRepository vacancyReadRepository, IJobDegreeWriteRepository jobDegreeWriteRepository, IJobDegreeReadRepository jobDegreeReadRepository, ICandidateWriteRepository candidateWriteRepository, ICandidateReadRepository candidateReadRepository)
         {
             _mapper = mapper;
             _sectorWriteRepository = sectorWriteRepository;
@@ -36,11 +40,9 @@ namespace Interview.Application.Services.Concrete
             _vacancyReadRepository = vacancyReadRepository;
             _jobDegreeWriteRepository = jobDegreeWriteRepository;
             _jobDegreeReadRepository = jobDegreeReadRepository;
+            _candidateWriteRepository = candidateWriteRepository;
+            _candidateReadRepository = candidateReadRepository;
         }
-
-
-
-
 
 
 
@@ -560,6 +562,166 @@ namespace Interview.Application.Services.Concrete
             else
             {
                 throw new NotFoundException("Sector not found");
+            }
+        }
+
+        #endregion
+
+
+        #region Candidate service manager
+
+        public async Task CandidateCreate(CandidateDTO_forCreate model, string AzureconnectionString)
+        {
+
+            string connectionString = AzureconnectionString;
+
+            string azuriteConnectionString = Environment.GetEnvironmentVariable("CUSTOMCONNSTR_AZURE_STORAGE_CONNECTION_STRING");
+            if (!string.IsNullOrEmpty(azuriteConnectionString))
+            {
+                connectionString = azuriteConnectionString;
+            }
+
+            string containerName = "cv-files";
+
+            string blobName = model.CandidateSurname + "_" + model.CandidateName + "_" + Guid.NewGuid().ToString() + Path.GetExtension(model.CurriculumVitae.FileName);
+
+            BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
+            BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
+
+            await containerClient.CreateIfNotExistsAsync(PublicAccessType.Blob);
+
+            BlobClient blobClient = containerClient.GetBlobClient(blobName);
+
+            using (Stream stream = model.CurriculumVitae.OpenReadStream())
+            {
+                await blobClient.UploadAsync(stream, true);
+            }
+
+            string imageUrl = blobClient.Uri.ToString();
+
+       
+
+            var entity = _mapper.Map<Candidate>(model);
+
+            entity = new Candidate()
+            {
+                CandidateSurname = model.CandidateSurname,
+                CandidateName = model.CandidateName,
+                CandidatePhonenumber = model.CandidatePhonenumber,
+                CandidateEmail = model.CandidateEmail,
+                CurriculumVitae = imageUrl,
+                Address = model.Address,
+            };
+
+            await _candidateWriteRepository.AddAsync(entity);
+
+            await _candidateWriteRepository.SaveAsync();
+        }
+
+        public async Task<List<CandidateDTO_forGetandGetAll>> GetCandidate()
+        {
+            List<CandidateDTO_forGetandGetAll> datas = null;
+
+            await Task.Run(() =>
+            {
+                datas = _mapper.Map<List<CandidateDTO_forGetandGetAll>>(_candidateReadRepository.GetAll(false));
+            });
+
+            if (datas.Count <= 0)
+            {
+                throw new NotFoundException("Candidate not found");
+            }
+
+            return datas;
+        }
+
+        public async Task<CandidateDTO_forGetandGetAll> GetCandidateById(int id)
+        {
+            CandidateDTO_forGetandGetAll item = null;
+
+
+            item = _mapper.Map<CandidateDTO_forGetandGetAll>(await _candidateReadRepository.GetByIdAsync(id.ToString(), false));
+
+
+            if (item == null)
+            {
+                throw new NotFoundException("Candidate not found");
+            }
+
+            return item;
+        }
+
+        public async Task CandidateUpdate(CandidateDTO_forUpdate model, string AzureconnectionString)
+        {
+
+            var existing = await _candidateReadRepository.GetByIdAsync(model.Id.ToString(), false);
+
+
+            if (existing is null)
+            {
+                throw new NotFoundException("Candidate not found");
+
+            }
+
+            string connectionString = AzureconnectionString;
+
+            string azuriteConnectionString = Environment.GetEnvironmentVariable("CUSTOMCONNSTR_AZURE_STORAGE_CONNECTION_STRING");
+            if (!string.IsNullOrEmpty(azuriteConnectionString))
+            {
+                connectionString = azuriteConnectionString;
+            }
+
+            string containerName = "cv-files";
+
+            string blobName = model.CandidateSurname + "_"+ model.CandidateName + "_" + Guid.NewGuid().ToString() + Path.GetExtension(model.CurriculumVitae.FileName);
+
+            BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
+            BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
+
+            await containerClient.CreateIfNotExistsAsync(PublicAccessType.Blob);
+
+            BlobClient blobClient = containerClient.GetBlobClient(blobName);
+
+            using (Stream stream = model.CurriculumVitae.OpenReadStream())
+            {
+                await blobClient.UploadAsync(stream, true);
+            }
+
+            string imageUrl = blobClient.Uri.ToString();
+
+            var update = new Candidate
+            {
+                Id = model.Id,
+                CandidateSurname=model.CandidateSurname,
+                CandidateName = model.CandidateName,
+                CandidatePhonenumber=model.CandidatePhonenumber,
+                CandidateEmail=model.CandidateEmail,
+                CurriculumVitae=imageUrl,
+                Address=model.Address,
+
+            };
+
+            _candidateWriteRepository.Update(update);
+            await _candidateWriteRepository.SaveAsync();
+
+        }
+
+        public async Task<CandidateDTO_forGetandGetAll> DeleteCandidateById(int id)
+        {
+
+            if (_candidateReadRepository.GetAll().Any(i => i.Id == Convert.ToInt32(id)))
+            {
+
+                await _candidateWriteRepository.RemoveByIdAsync(id.ToString());
+                await _candidateWriteRepository.SaveAsync();
+
+                return null;
+
+            }
+
+            else
+            {
+                throw new NotFoundException("Candidate not found");
             }
         }
 

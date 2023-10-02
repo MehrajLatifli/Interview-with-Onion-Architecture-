@@ -7,6 +7,7 @@ using Interview.Domain.AuthModels;
 using Interview.Domain.Entities.Models;
 using Interview.Persistence.Contexts.AuthDbContext.IdentityAuth;
 using Interview.Persistence.Repositories.Custom;
+using Interview.Persistence.ServiceExtensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -463,6 +464,74 @@ namespace Interview.API.Controllers
             await _service.DeleteVacancyById(id);
 
             return Ok(new Response { Status = "Success", Message = "The Vacancy deleted successfully!" });
+        }
+
+
+        #endregion
+
+
+        #region Candidate
+
+
+        [HttpGet("candidate/{id}")]
+        public async Task<IActionResult> GetCandidateById(int id)
+        {
+
+            var data = await _service.GetCandidateById(id);
+
+            return Ok(data);
+
+        }
+
+
+        [HttpGet("candidate")]
+        public async Task<IActionResult> GetCandidate()
+        {
+
+            var data = await _service.GetCandidate();
+
+
+            return Ok(data);
+
+        }
+
+
+        [HttpPost]
+        [Route("candidate")]
+        public async Task<IActionResult> CandidateCreate([FromForm] CandidateDTO_forCreate model)
+        {
+
+            await _service.CandidateCreate(model, ServiceExtension.ConnectionStringAzure);
+
+            return Ok(new Response { Status = "Success", Message = "The Candidate created successfully!" });
+
+        }
+
+
+        [HttpPut]
+        [Route("candidate")]
+        public async Task<IActionResult> CandidateUpdate([FromForm] CandidateDTO_forUpdate model)
+        {
+
+
+            await _service.CandidateUpdate(model, ServiceExtension.ConnectionStringAzure);
+
+
+            return Ok(new Response { Status = "Success", Message = "The Candidate updated successfully!" });
+
+
+
+
+        }
+
+
+        [HttpDelete("candidate/{id}")]
+        public async Task<IActionResult> CandidateDelete(int id)
+        {
+
+            await _service.DeleteCandidateById(id);
+
+            return Ok(new Response { Status = "Success", Message = "The Candidate deleted successfully!" });
         }
 
 

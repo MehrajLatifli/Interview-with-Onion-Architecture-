@@ -77,5 +77,20 @@ namespace Interview.Application.Services.Abstract
         public Task<VacancyDTO_forGetandGetAll> DeleteVacancyById(int id);
 
         #endregion
+
+
+        #region Candidate service
+
+        public Task CandidateCreate(CandidateDTO_forCreate model, string AzureconnectionString);
+
+        public Task<List<CandidateDTO_forGetandGetAll>> GetCandidate();
+
+        public Task<CandidateDTO_forGetandGetAll> GetCandidateById(int id);
+
+        public Task CandidateUpdate(CandidateDTO_forUpdate model, string AzureconnectionString);
+
+        public Task<CandidateDTO_forGetandGetAll> DeleteCandidateById(int id);
+
+        #endregion
     }
 }

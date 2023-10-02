@@ -55,6 +55,13 @@ namespace Interview.Application.Mapper
             CreateMap<Vacancy, VacancyDTO_forGetandGetAll>();
             CreateMap<VacancyDTO_forGetandGetAll, Vacancy>();
 
+            CreateMap<Candidate, CandidateDTO_forCreate>();
+            CreateMap<CandidateDTO_forCreate, Candidate>();
+            CreateMap<Candidate, CandidateDTO_forUpdate>();
+            CreateMap<CandidateDTO_forUpdate, Candidate>();
+            CreateMap<Candidate, CandidateDTO_forGetandGetAll>();
+            CreateMap<CandidateDTO_forGetandGetAll, Candidate>();
+
 
         }
     }

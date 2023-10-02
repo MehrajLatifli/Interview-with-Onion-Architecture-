@@ -82,6 +82,10 @@ namespace Interview.Persistence.ServiceExtensions
             services.AddScoped<IVacancyReadRepository, VacancyReadRepository>();
 
 
+            services.AddScoped<ICandidateWriteRepository, CandidateWriteRepository>();
+            services.AddScoped<ICandidateReadRepository, CandidateReadRepository>();
+
+
 
         }
 
