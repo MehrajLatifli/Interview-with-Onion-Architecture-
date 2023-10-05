@@ -18,10 +18,12 @@ docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=admin1234@" -p 1430:1433 --n
 <h1> Migration </h1>
 add-migration CustomDbContextMigration -Context Interview.Persistence.Contexts.AuthDbContext.DbContext.CustomDbContext 
 </br>
+</br>
 update-database -Context Interview.Persistence.Contexts.AuthDbContext.DbContext.CustomDbContext 
 </br>
 </br>
 add-migration InterviewContextMigration -Context Interview.Persistence.Contexts.InterviewDbContext.InterviewContext
+</br>
 </br>
 update-database -Context Interview.Persistence.Contexts.InterviewDbContext.InterviewContext
 </br>
