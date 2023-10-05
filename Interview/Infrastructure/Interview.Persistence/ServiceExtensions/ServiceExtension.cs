@@ -1,4 +1,5 @@
-﻿using Interview.Application.Repositories.Custom;
+﻿
+using Interview.Application.Repositories.Custom;
 using Interview.Application.Services.Abstract;
 using Interview.Application.Services.Concrete;
 using Interview.Persistence.Contexts.AuthDbContext.DbContext;
@@ -66,24 +67,9 @@ namespace Interview.Persistence.ServiceExtensions
 
             services.AddScoped<IService, ServiceManager>();
 
-            services.AddScoped<ISectorWriteRepository, SectorWriteRepository>();
-            services.AddScoped<ISectorReadRepository, SectorReadRepository>();
+            services.AddScoped<ICandidateDocumentWriteRepository, CandidateDocumentWriteRepository>();
+            services.AddScoped<ICandidateDocumentReadRepository, CandidateDocumentReadRepository>();
 
-            services.AddScoped<IDepartmentWriteRepository, DepartmentWriteRepository>();
-            services.AddScoped<IDepartmentReadRepository, DepartmentReadRepository>();
-
-            services.AddScoped<IBranchWriteRepository, BranchWriteRepository>();
-            services.AddScoped<IBranchReadRepository, BranchReadRepository>();
-
-            services.AddScoped<IJobDegreeWriteRepository, JobDegreeWriteRepository>();
-            services.AddScoped<IJobDegreeReadRepository, JobDegreeReadRepository>();
-
-            services.AddScoped<IVacancyWriteRepository, VacancyWriteRepository>();
-            services.AddScoped<IVacancyReadRepository, VacancyReadRepository>();
-
-
-            services.AddScoped<ICandidateWriteRepository, CandidateWriteRepository>();
-            services.AddScoped<ICandidateReadRepository, CandidateReadRepository>();
 
 
 

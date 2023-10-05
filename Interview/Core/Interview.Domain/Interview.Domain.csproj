@@ -51,7 +51,7 @@
   </ItemGroup>
 
 	<ItemGroup>
-
+	  <Folder Include="Entities\Models\" />
 	</ItemGroup>
 
 </Project>

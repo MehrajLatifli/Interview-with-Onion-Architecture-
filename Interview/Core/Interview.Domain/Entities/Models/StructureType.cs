@@ -9,19 +9,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Interview.Domain.Entities.Models;
 
-[Table("Candidate")]
-public class Candidate : BaseEntity
+[Table("StructureType")]
+public class StructureType : BaseEntity
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
 
-    public int CandidateDocumentId { get; set; }
+    [Required]
+    public string Name { get; set; }
 
-    [ForeignKey("CandidateDocumentId")]
-    [InverseProperty("Candidates")]
-    public virtual CandidateDocument CandidateDocument { get; set; }
-
-    [InverseProperty("Candidate")]
-    public virtual ICollection<Session> Sessions { get; set; } = new List<Session>();
+    [InverseProperty("StructureType")]
+    public virtual ICollection<Structure> Structures { get; set; } = new List<Structure>();
 }

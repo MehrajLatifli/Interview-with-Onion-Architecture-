@@ -1,12 +1,10 @@
 ﻿using AutoMapper;
 using Interview.Application.Exception;
 using Interview.Application.Mapper.DTO;
-using Interview.Application.Repositories.Custom;
 using Interview.Application.Services.Abstract;
 using Interview.Domain.AuthModels;
 using Interview.Domain.Entities.Models;
 using Interview.Persistence.Contexts.AuthDbContext.IdentityAuth;
-using Interview.Persistence.Repositories.Custom;
 using Interview.Persistence.ServiceExtensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -36,6 +34,7 @@ namespace Interview.API.Controllers
             _service = service;
         }
 
+
         [HttpGet("getAdmins")]
         public async Task<IActionResult> GetAdmins()
         {
@@ -57,8 +56,6 @@ namespace Interview.API.Controllers
                         Email = user.Email,
                         ImagePath = user.ImagePath,
                         Roles = user.Roles,
-
-
 
                     });
                 }
@@ -130,93 +127,25 @@ namespace Interview.API.Controllers
         }
 
 
-        #region Sector
+        #region CandidateDocument
 
 
-        [HttpGet("sector/{id}")]
-        public async Task<IActionResult> GetSectorById(int id)
+        [HttpGet("CandidateDocument/{id}")]
+        public async Task<IActionResult> GetCandidateDocumentById(int id)
         {
 
-            var data = await _service.GetSectorById(id);
+            var data = await _service.GetCandidateDocumentById(id);
 
             return Ok(data);
 
         }
 
 
-        [HttpGet("sector")]
-        public async Task<IActionResult> GetSector()
+        [HttpGet("CandidateDocument")]
+        public async Task<IActionResult> GetCandidateDocument()
         {
 
-          var data = await _service.GetSector();
-
-
-            return Ok(data);
-
-        }
-
-
-        [HttpPost]
-        [Route("sector")]
-        public async Task<IActionResult> SectorCreate([FromBody] SectorDTO_forCreate model)
-        {
-
-            await _service.SectorCreate(model);
-
-            return Ok(new Response { Status = "Success", Message = "The Sector created successfully!" });
-
-        }
-
-
-        [HttpPut]
-        [Route("sector")]
-        public async Task<IActionResult> SectorUpdate([FromBody] SectorDTO_forUpdate model)
-        {
-
-
-            await _service.SectorUpdate(model);
-
-
-            return Ok(new Response { Status = "Success", Message = "The Sector updated successfully!" });
-
-
-
-
-        }
-
-
-        [HttpDelete("sector/{id}")]
-        public async Task<IActionResult> SectorDelete(int id)
-        {
-
-            await _service.DeleteSectorById(id);
-
-            return Ok(new Response { Status = "Success", Message = "The Sector deleted successfully!" });
-        }
-
-
-        #endregion
-
-
-        #region Branch
-
-
-        [HttpGet("branch/{id}")]
-        public async Task<IActionResult> GetBranchById(int id)
-        {
-
-            var data = await _service.GetBranchById(id);
-
-            return Ok(data);
-
-        }
-
-
-        [HttpGet("branch")]
-        public async Task<IActionResult> GetBranch()
-        {
-
-            var data = await _service.GetBranch();
+            var data = await _service.GetCandidateDocument();
 
 
             return Ok(data);
@@ -225,27 +154,27 @@ namespace Interview.API.Controllers
 
 
         [HttpPost]
-        [Route("branch")]
-        public async Task<IActionResult> BranchCreate([FromBody] BranchDTO_forCreate model)
+        [Route("CandidateDocument")]
+        public async Task<IActionResult> CandidateDocumentCreate([FromForm] CandidateDocumentDTO_forCreate model)
         {
 
-            await _service.BranchCreate(model);
+            await _service.CandidateDocumentCreate(model, ServiceExtension.ConnectionStringAzure);
 
-            return Ok(new Response { Status = "Success", Message = "The Branch created successfully!" });
+            return Ok(new Response { Status = "Success", Message = "The CandidateDocument created successfully!" });
 
         }
 
 
         [HttpPut]
-        [Route("branch")]
-        public async Task<IActionResult> BranchUpdate([FromBody] BranchDTO_forUpdate model)
+        [Route("CandidateDocument")]
+        public async Task<IActionResult> CandidateDocumentUpdate([FromForm] CandidateDocumentDTO_forUpdate model)
         {
 
 
-            await _service.BranchUpdate(model);
+            await _service.CandidateDocumentUpdate(model, ServiceExtension.ConnectionStringAzure);
 
 
-            return Ok(new Response { Status = "Success", Message = "The Branch updated successfully!" });
+            return Ok(new Response { Status = "Success", Message = "The CandidateDocument updated successfully!" });
 
 
 
@@ -253,290 +182,20 @@ namespace Interview.API.Controllers
         }
 
 
-        [HttpDelete("branch/{id}")]
-        public async Task<IActionResult> BranchDelete(int id)
+        [HttpDelete("CandidateDocument/{id}")]
+        public async Task<IActionResult> CandidateDocumentDelete(int id)
         {
 
-            await _service.DeleteBranchById(id);
+            await _service.DeleteCandidateDocumentById(id);
 
-            return Ok(new Response { Status = "Success", Message = "The Branch deleted successfully!" });
-        }
-
-
-        #endregion
-
-
-        #region Department
-
-
-        [HttpGet("department/{id}")]
-        public async Task<IActionResult> GetDepartmentById(int id)
-        {
-
-            var data = await _service.GetDepartmentById(id);
-
-            return Ok(data);
-
-        }
-
-
-        [HttpGet("department")]
-        public async Task<IActionResult> GetDepartment()
-        {
-
-            var data = await _service.GetDepartment();
-
-
-            return Ok(data);
-
-        }
-
-
-        [HttpPost]
-        [Route("department")]
-        public async Task<IActionResult> DepartmentCreate([FromBody] DepartmentDTO_forCreate model)
-        {
-
-            await _service.DepartmentCreate(model);
-
-            return Ok(new Response { Status = "Success", Message = "The Department created successfully!" });
-
-        }
-
-
-        [HttpPut]
-        [Route("department")]
-        public async Task<IActionResult> DepartmentUpdate([FromBody] DepartmentDTO_forUpdate model)
-        {
-
-
-            await _service.DepartmentUpdate(model);
-
-
-            return Ok(new Response { Status = "Success", Message = "The Department updated successfully!" });
-
-
-
-
-        }
-
-
-        [HttpDelete("department/{id}")]
-        public async Task<IActionResult> DepartmentDelete(int id)
-        {
-
-            await _service.DeleteDepartmentById(id);
-
-            return Ok(new Response { Status = "Success", Message = "The Department deleted successfully!" });
+            return Ok(new Response { Status = "Success", Message = "The CandidateDocument deleted successfully!" });
         }
 
 
         #endregion
+    
 
-
-        #region JobDegree
-
-
-        [HttpGet("jobdegree/{id}")]
-        public async Task<IActionResult> GetJobDegreeById(int id)
-        {
-
-            var data = await _service.GetJobDegreeById(id);
-
-            return Ok(data);
-
-        }
-
-
-        [HttpGet("jobdegree")]
-        public async Task<IActionResult> GetJobDegree()
-        {
-
-            var data = await _service.GetJobDegree();
-
-
-            return Ok(data);
-
-        }
-
-
-        [HttpPost]
-        [Route("jobdegree")]
-        public async Task<IActionResult> JobDegreeCreate([FromBody] JobDegreeDTO_forCreate model)
-        {
-
-            await _service.JobDegreeCreate(model);
-
-            return Ok(new Response { Status = "Success", Message = "The JobDegree created successfully!" });
-
-        }
-
-
-        [HttpPut]
-        [Route("jobdegree")]
-        public async Task<IActionResult> JobDegreeUpdate([FromBody] JobDegreeDTO_forUpdate model)
-        {
-
-
-            await _service.JobDegreeUpdate(model);
-
-
-            return Ok(new Response { Status = "Success", Message = "The JobDegree updated successfully!" });
-
-
-
-
-        }
-
-
-        [HttpDelete("jobdegree/{id}")]
-        public async Task<IActionResult> JobDegreeDelete(int id)
-        {
-
-            await _service.DeleteJobDegreeById(id);
-
-            return Ok(new Response { Status = "Success", Message = "The JobDegree deleted successfully!" });
-        }
-
-
-        #endregion
-
-
-        #region Vacancy
-
-
-        [HttpGet("vacancy/{id}")]
-        public async Task<IActionResult> GetVacancyById(int id)
-        {
-
-            var data = await _service.GetVacancyById(id);
-
-            return Ok(data);
-
-        }
-
-
-        [HttpGet("vacancy")]
-        public async Task<IActionResult> GetVacancy()
-        {
-
-            var data = await _service.GetVacancy();
-
-
-            return Ok(data);
-
-        }
-
-
-        [HttpPost]
-        [Route("vacancy")]
-        public async Task<IActionResult> VacancyCreate([FromBody] VacancyDTO_forCreate model)
-        {
-
-            await _service.VacancyCreate(model);
-
-            return Ok(new Response { Status = "Success", Message = "The Vacancy created successfully!" });
-
-        }
-
-
-        [HttpPut]
-        [Route("vacancy")]
-        public async Task<IActionResult> VacancyUpdate([FromBody] VacancyDTO_forUpdate model)
-        {
-
-
-            await _service.VacancyUpdate(model);
-
-
-            return Ok(new Response { Status = "Success", Message = "The Vacancy updated successfully!" });
-
-
-
-
-        }
-
-
-        [HttpDelete("vacancy/{id}")]
-        public async Task<IActionResult> VacancyDelete(int id)
-        {
-
-            await _service.DeleteVacancyById(id);
-
-            return Ok(new Response { Status = "Success", Message = "The Vacancy deleted successfully!" });
-        }
-
-
-        #endregion
-
-
-        #region Candidate
-
-
-        [HttpGet("candidate/{id}")]
-        public async Task<IActionResult> GetCandidateById(int id)
-        {
-
-            var data = await _service.GetCandidateById(id);
-
-            return Ok(data);
-
-        }
-
-
-        [HttpGet("candidate")]
-        public async Task<IActionResult> GetCandidate()
-        {
-
-            var data = await _service.GetCandidate();
-
-
-            return Ok(data);
-
-        }
-
-
-        [HttpPost]
-        [Route("candidate")]
-        public async Task<IActionResult> CandidateCreate([FromForm] CandidateDTO_forCreate model)
-        {
-
-            await _service.CandidateCreate(model, ServiceExtension.ConnectionStringAzure);
-
-            return Ok(new Response { Status = "Success", Message = "The Candidate created successfully!" });
-
-        }
-
-
-        [HttpPut]
-        [Route("candidate")]
-        public async Task<IActionResult> CandidateUpdate([FromForm] CandidateDTO_forUpdate model)
-        {
-
-
-            await _service.CandidateUpdate(model, ServiceExtension.ConnectionStringAzure);
-
-
-            return Ok(new Response { Status = "Success", Message = "The Candidate updated successfully!" });
-
-
-
-
-        }
-
-
-        [HttpDelete("candidate/{id}")]
-        public async Task<IActionResult> CandidateDelete(int id)
-        {
-
-            await _service.DeleteCandidateById(id);
-
-            return Ok(new Response { Status = "Success", Message = "The Candidate deleted successfully!" });
-        }
-
-
-        #endregion
-    }
+}
 }
 
 

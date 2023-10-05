@@ -14,54 +14,13 @@ namespace Interview.Application.Mapper
     {
         public MapperProfile()
         {
-            CreateMap<Sector, SectorDTO_forCreate>();
-            CreateMap<SectorDTO_forCreate, Sector>();
-            CreateMap<Sector, SectorDTO_forUpdate>();
-            CreateMap<SectorDTO_forUpdate, Sector>();
-            CreateMap<Sector, SectorDTO_forGetandGetAll>()
-                       .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-                       .ForMember(dest => dest.SectorName, opt => opt.MapFrom(src => src.SectorName));
-            CreateMap<SectorDTO_forGetandGetAll, Sector>()
-                      .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-                      .ForMember(dest => dest.SectorName, opt => opt.MapFrom(src => src.SectorName));
 
-            CreateMap<Branch, BranchDTO_forCreate>();
-            CreateMap<BranchDTO_forCreate, Branch>();
-            CreateMap<Branch, BranchDTO_forUpdate>();
-            CreateMap<BranchDTO_forUpdate, Branch>();
-            CreateMap<Branch, BranchDTO_forGetandGetAll>();
-            CreateMap<BranchDTO_forGetandGetAll, Branch>();
-
-            CreateMap<Department, DepartmentDTO_forCreate>();
-            CreateMap<DepartmentDTO_forCreate, Department>();
-            CreateMap<Department, DepartmentDTO_forUpdate>();
-            CreateMap<DepartmentDTO_forUpdate, Department>();
-            CreateMap<Department, DepartmentDTO_forGetandGetAll>();
-            CreateMap<DepartmentDTO_forGetandGetAll, Department>();
-
-
-            CreateMap<JobDegree, JobDegreeDTO_forCreate>();
-            CreateMap<JobDegreeDTO_forCreate, JobDegree>();
-            CreateMap<JobDegree, JobDegreeDTO_forUpdate>();
-            CreateMap<JobDegreeDTO_forUpdate, JobDegree>();
-            CreateMap<JobDegree, JobDegreeDTO_forGetandGetAll>();
-            CreateMap<JobDegreeDTO_forGetandGetAll, JobDegree>();
-
-
-            CreateMap<Vacancy, VacancyDTO_forCreate>();
-            CreateMap<VacancyDTO_forCreate, Vacancy>();
-            CreateMap<Vacancy, VacancyDTO_forUpdate>();
-            CreateMap<VacancyDTO_forUpdate, Vacancy>();
-            CreateMap<Vacancy, VacancyDTO_forGetandGetAll>();
-            CreateMap<VacancyDTO_forGetandGetAll, Vacancy>();
-
-            CreateMap<Candidate, CandidateDTO_forCreate>();
-            CreateMap<CandidateDTO_forCreate, Candidate>();
-            CreateMap<Candidate, CandidateDTO_forUpdate>();
-            CreateMap<CandidateDTO_forUpdate, Candidate>();
-            CreateMap<Candidate, CandidateDTO_forGetandGetAll>();
-            CreateMap<CandidateDTO_forGetandGetAll, Candidate>();
-
+            CreateMap<CandidateDocument, CandidateDocumentDTO_forCreate>();
+            CreateMap<CandidateDocumentDTO_forCreate, CandidateDocument>();
+            CreateMap<CandidateDocument, CandidateDocumentDTO_forUpdate>();
+            CreateMap<CandidateDocumentDTO_forUpdate, CandidateDocument>();
+            CreateMap<CandidateDocument, CandidateDocumentDTO_forGetandGetAll>();
+            CreateMap<CandidateDocumentDTO_forGetandGetAll, CandidateDocument>();
 
         }
     }

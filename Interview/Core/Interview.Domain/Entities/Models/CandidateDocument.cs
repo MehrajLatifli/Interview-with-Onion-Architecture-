@@ -9,20 +9,31 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Interview.Domain.Entities.Models;
 
-[Table("Level")]
-public class Level : BaseEntity
+[Table("CandidateDocument")]
+public  class CandidateDocument : BaseEntity
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
 
+    public string Surname { get; set; }
+
     [Required]
-    [Column("Name")]
     public string Name { get; set; }
 
-    [Column(TypeName = "decimal(18, 2)")]
-    public decimal Coefficient { get; set; }
+    public string Patronymic { get; set; }
 
-    [InverseProperty("Level")]
-    public virtual ICollection<Question> Questions { get; set; } = new List<Question>();
+    public string Phonenumber { get; set; }
+
+    [Required]
+    public string Email { get; set; }
+
+    [Required]
+    [Column("CV")]
+    public string Cv { get; set; }
+
+    public string Address { get; set; }
+
+    [InverseProperty("CandidateDocument")]
+    public virtual ICollection<Candidate> Candidates { get; set; } = new List<Candidate>();
 }

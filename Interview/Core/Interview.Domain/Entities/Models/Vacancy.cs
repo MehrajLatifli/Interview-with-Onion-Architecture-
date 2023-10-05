@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Interview.Domain.Entities.Models;
 
 [Table("Vacancy")]
-public partial class Vacancy : BaseEntity
+public class Vacancy : BaseEntity
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -22,18 +22,22 @@ public partial class Vacancy : BaseEntity
     [Required]
     public string Description { get; set; }
 
-    public int JobDegreeId { get; set; }
+    public DateTime StartDate { get; set; }
 
-    public int SectorId { get; set; }
+    public DateTime EndDate { get; set; }
+
+    public int PositionId { get; set; }
+
+    public int StructureId { get; set; }
+
+    [ForeignKey("PositionId")]
+    [InverseProperty("Vacancies")]
+    public virtual Position Position { get; set; }
 
     [InverseProperty("Vacancy")]
-    public virtual ICollection<CandidateVacancy> CandidateVacancies { get; set; } = new List<CandidateVacancy>();
+    public virtual ICollection<Session> Sessions { get; set; } = new List<Session>();
 
-    [ForeignKey("JobDegreeId")]
+    [ForeignKey("StructureId")]
     [InverseProperty("Vacancies")]
-    public virtual JobDegree JobDegree { get; set; }
-
-    [ForeignKey("SectorId")]
-    [InverseProperty("Vacancies")]
-    public virtual Sector Sector { get; set; }
+    public virtual Structure Structure { get; set; }
 }

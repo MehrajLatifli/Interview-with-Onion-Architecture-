@@ -1,95 +1,22 @@
-﻿using Interview.Application.Mapper.DTO;
+﻿
+
+using Interview.Application.Mapper.DTO;
 
 namespace Interview.Application.Services.Abstract
 {
     public interface IService
     {
-        #region Sector service
+        #region CandidateDocument service
 
-        public Task SectorCreate(SectorDTO_forCreate model);
+        public Task CandidateDocumentCreate(CandidateDocumentDTO_forCreate model, string connection);
 
-        public Task<List<SectorDTO_forGetandGetAll>> GetSector();
+        public Task<List<CandidateDocumentDTO_forGetandGetAll>> GetCandidateDocument();
 
-        public Task<SectorDTO_forGetandGetAll> GetSectorById(int id);
+        public Task<CandidateDocumentDTO_forGetandGetAll> GetCandidateDocumentById(int id);
 
-        public Task SectorUpdate(SectorDTO_forUpdate model);
+        public Task CandidateDocumentUpdate(CandidateDocumentDTO_forUpdate model, string connection);
 
-        public Task<SectorDTO_forGetandGetAll> DeleteSectorById(int id);
-
-        #endregion
-
-
-        #region Branch service
-
-        public Task BranchCreate(BranchDTO_forCreate model);
-
-        public Task<List<BranchDTO_forGetandGetAll>> GetBranch();
-
-        public Task<BranchDTO_forGetandGetAll> GetBranchById(int id);
-
-        public Task BranchUpdate(BranchDTO_forUpdate model);
-
-        public Task<BranchDTO_forGetandGetAll> DeleteBranchById(int id);
-
-        #endregion
-
-
-        #region Department service
-
-        public Task DepartmentCreate(DepartmentDTO_forCreate model);
-
-        public Task<List<DepartmentDTO_forGetandGetAll>> GetDepartment();
-
-        public Task<DepartmentDTO_forGetandGetAll> GetDepartmentById(int id);
-
-        public Task DepartmentUpdate(DepartmentDTO_forUpdate model);
-
-        public Task<DepartmentDTO_forGetandGetAll> DeleteDepartmentById(int id);
-
-        #endregion
-
-
-        #region JobDegree service
-
-        public Task JobDegreeCreate(JobDegreeDTO_forCreate model);
-
-        public Task<List<JobDegreeDTO_forGetandGetAll>> GetJobDegree();
-
-        public Task<JobDegreeDTO_forGetandGetAll> GetJobDegreeById(int id);
-
-        public Task JobDegreeUpdate(JobDegreeDTO_forUpdate model);
-
-        public Task<JobDegreeDTO_forGetandGetAll> DeleteJobDegreeById(int id);
-
-        #endregion
-
-
-        #region Vacancy service
-
-        public Task VacancyCreate(VacancyDTO_forCreate model);
-
-        public Task<List<VacancyDTO_forGetandGetAll>> GetVacancy();
-
-        public Task<VacancyDTO_forGetandGetAll> GetVacancyById(int id);
-
-        public Task VacancyUpdate(VacancyDTO_forUpdate model);
-
-        public Task<VacancyDTO_forGetandGetAll> DeleteVacancyById(int id);
-
-        #endregion
-
-
-        #region Candidate service
-
-        public Task CandidateCreate(CandidateDTO_forCreate model, string AzureconnectionString);
-
-        public Task<List<CandidateDTO_forGetandGetAll>> GetCandidate();
-
-        public Task<CandidateDTO_forGetandGetAll> GetCandidateById(int id);
-
-        public Task CandidateUpdate(CandidateDTO_forUpdate model, string AzureconnectionString);
-
-        public Task<CandidateDTO_forGetandGetAll> DeleteCandidateById(int id);
+        public Task<CandidateDocumentDTO_forGetandGetAll> DeleteCandidateDocumentById(int id);
 
         #endregion
     }

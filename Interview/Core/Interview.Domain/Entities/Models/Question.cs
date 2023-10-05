@@ -10,33 +10,33 @@ using Microsoft.EntityFrameworkCore;
 namespace Interview.Domain.Entities.Models;
 
 [Table("Question")]
-public partial class Question : BaseEntity
+public  class Question : BaseEntity
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
 
     [Required]
-    public string QuestionTitle { get; set; }
-
-    [Required]
-    public string QuestionText { get; set; }
+    public string Text { get; set; }
 
     public int LevelId { get; set; }
 
-    public int CategoryId { get; set; }
+    public int SessionTypeId { get; set; }
 
-    [InverseProperty("Question")]
-    public virtual ICollection<CandidateQuestion> CandidateQuestions { get; set; } = new List<CandidateQuestion>();
-
-    [ForeignKey("CategoryId")]
-    [InverseProperty("Questions")]
-    public virtual Category Category { get; set; }
+    public int StructureId { get; set; }
 
     [ForeignKey("LevelId")]
     [InverseProperty("Questions")]
     public virtual Level Level { get; set; }
 
     [InverseProperty("Question")]
-    public virtual ICollection<Session> Sessions { get; set; } = new List<Session>();
+    public virtual ICollection<SessionQuestion> SessionQuestions { get; set; } = new List<SessionQuestion>();
+
+    [ForeignKey("SessionTypeId")]
+    [InverseProperty("Questions")]
+    public virtual SessionType SessionType { get; set; }
+
+    [ForeignKey("StructureId")]
+    [InverseProperty("Questions")]
+    public virtual Structure Structure { get; set; }
 }

@@ -9,20 +9,28 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Interview.Domain.Entities.Models;
 
-[Table("Level")]
-public class Level : BaseEntity
+[Table("Structure")]
+public class Structure : BaseEntity
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
 
     [Required]
-    [Column("Name")]
     public string Name { get; set; }
 
-    [Column(TypeName = "decimal(18, 2)")]
-    public decimal Coefficient { get; set; }
+    [Required]
+    public string ParentId { get; set; }
 
-    [InverseProperty("Level")]
+    public int StructureTypeId { get; set; }
+
+    [InverseProperty("Structure")]
     public virtual ICollection<Question> Questions { get; set; } = new List<Question>();
+
+    [ForeignKey("StructureTypeId")]
+    [InverseProperty("Structures")]
+    public virtual StructureType StructureType { get; set; }
+
+    [InverseProperty("Structure")]
+    public virtual ICollection<Vacancy> Vacancies { get; set; } = new List<Vacancy>();
 }

@@ -10,23 +10,31 @@ using Microsoft.EntityFrameworkCore;
 namespace Interview.Domain.Entities.Models;
 
 [Table("Session")]
-public partial class Session : BaseEntity
+public class Session : BaseEntity
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
 
-    public DateTime? SessionTime { get; set; }
+    [Column(TypeName = "decimal(18, 4)")]
+    public decimal EndValue { get; set; }
 
-    public int QuestionId { get; set; }
+    public DateTime? StartDate { get; set; }
 
-    public int ValueId { get; set; }
+    public DateTime? EndDate { get; set; }
 
-    [ForeignKey("QuestionId")]
+    public int VacancyId { get; set; }
+
+    public int CandidateId { get; set; }
+
+    [ForeignKey("CandidateId")]
     [InverseProperty("Sessions")]
-    public virtual Question Question { get; set; }
+    public virtual Candidate Candidate { get; set; }
 
-    [ForeignKey("ValueId")]
+    [InverseProperty("Session")]
+    public virtual ICollection<SessionQuestion> SessionQuestions { get; set; } = new List<SessionQuestion>();
+
+    [ForeignKey("VacancyId")]
     [InverseProperty("Sessions")]
-    public virtual Value Value { get; set; }
+    public virtual Vacancy Vacancy { get; set; }
 }

@@ -16,12 +16,15 @@ docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=admin1234@" -p 1430:1433 --n
 </br>
 
 <h1> Migration </h1>
-add-migration AnyMigration -Context Interview.Persistence.Contexts.AuthDbContext.DbContext.CustomDbContext 
+add-migration CustomDbContextMigration -Context Interview.Persistence.Contexts.AuthDbContext.DbContext.CustomDbContext 
 </br>
 update-database -Context Interview.Persistence.Contexts.AuthDbContext.DbContext.CustomDbContext 
-
 </br>
-
+</br>
+add-migration InterviewContextMigration -Context Interview.Persistence.Contexts.InterviewDbContext.InterviewContext
+</br>
+update-database -Context Interview.Persistence.Contexts.InterviewDbContext.InterviewContext
+</br>
 <h1> Azure Blob Storage </h1>
 
 docker run -p 10000:10000 -p 10001:10001 -p 10002:10002 --name some-azurite mcr.microsoft.com/azure-storage/azurite

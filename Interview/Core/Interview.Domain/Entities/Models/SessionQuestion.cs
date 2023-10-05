@@ -9,19 +9,24 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Interview.Domain.Entities.Models;
 
-[Table("Candidate")]
-public class Candidate : BaseEntity
+[Table("SessionQuestion")]
+public class SessionQuestion : BaseEntity
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
 
-    public int CandidateDocumentId { get; set; }
+    public int Value { get; set; }
 
-    [ForeignKey("CandidateDocumentId")]
-    [InverseProperty("Candidates")]
-    public virtual CandidateDocument CandidateDocument { get; set; }
+    public int SessionId { get; set; }
 
-    [InverseProperty("Candidate")]
-    public virtual ICollection<Session> Sessions { get; set; } = new List<Session>();
+    public int QuestionId { get; set; }
+
+    [ForeignKey("QuestionId")]
+    [InverseProperty("SessionQuestions")]
+    public virtual Question Question { get; set; }
+
+    [ForeignKey("SessionId")]
+    [InverseProperty("SessionQuestions")]
+    public virtual Session Session { get; set; }
 }
