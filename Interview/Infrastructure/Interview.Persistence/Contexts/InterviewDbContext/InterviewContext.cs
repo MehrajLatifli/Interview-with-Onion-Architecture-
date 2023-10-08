@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Interview.Persistence.ServiceExtensions;
 using Interview.Domain.Entities.Models;
 using Microsoft.EntityFrameworkCore;
+using Interview.Domain.EntityFrameworkConfigurations;
 
 namespace Interview.Persistence.Contexts.InterviewDbContext;
 
@@ -19,27 +20,27 @@ public class InterviewContext : DbContext
     {
     }
 
-    public virtual DbSet<Candidate> Candidates { get; set; }
+    public  DbSet<Candidate> Candidates { get; set; }
 
-    public virtual DbSet<CandidateDocument> CandidateDocuments { get; set; }
+    public  DbSet<CandidateDocument> CandidateDocuments { get; set; }
 
-    public virtual DbSet<Level> Levels { get; set; }
+    public  DbSet<Level> Levels { get; set; }
 
-    public virtual DbSet<Position> Positions { get; set; }
+    public  DbSet<Position> Positions { get; set; }
 
-    public virtual DbSet<Question> Questions { get; set; }
+    public  DbSet<Question> Questions { get; set; }
 
-    public virtual DbSet<Session> Sessions { get; set; }
+    public  DbSet<Session> Sessions { get; set; }
 
-    public virtual DbSet<SessionQuestion> SessionQuestions { get; set; }
+    public  DbSet<SessionQuestion> SessionQuestions { get; set; }
 
-    public virtual DbSet<SessionType> SessionTypes { get; set; }
+    public  DbSet<SessionType> SessionTypes { get; set; }
 
-    public virtual DbSet<Structure> Structures { get; set; }
+    public  DbSet<Structure> Structures { get; set; }
 
-    public virtual DbSet<StructureType> StructureTypes { get; set; }
+    public  DbSet<StructureType> StructureTypes { get; set; }
 
-    public virtual DbSet<Vacancy> Vacancies { get; set; }
+    public  DbSet<Vacancy> Vacancies { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 
@@ -47,104 +48,128 @@ public class InterviewContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Candidate>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Candidate");
 
-            entity.HasOne(d => d.CandidateDocument).WithMany(p => p.Candidates)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_CandidateDocument_forCandidates");
-        });
+        modelBuilder.ApplyConfiguration(new CandidateConfiguration());
 
-        modelBuilder.Entity<CandidateDocument>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__CandidateDocument");
-        });
+        modelBuilder.ApplyConfiguration(new CandidateDocumentConfiguration());
 
-        modelBuilder.Entity<Level>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Level");
-        });
+        modelBuilder.ApplyConfiguration(new LevelConfiguration());
 
-        modelBuilder.Entity<Position>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Position");
-        });
+        modelBuilder.ApplyConfiguration(new PositionConfiguration());
 
-        modelBuilder.Entity<Question>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Question");
+        modelBuilder.ApplyConfiguration(new QuestionConfiguration());
 
-            entity.HasOne(d => d.Level).WithMany(p => p.Questions)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_LevelId_forQuestion");
+        modelBuilder.ApplyConfiguration(new SessionConfiguration());
 
-            entity.HasOne(d => d.SessionType).WithMany(p => p.Questions)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_SessionTypeId_forQuestion");
+        modelBuilder.ApplyConfiguration(new SessionQuestionConfiguration());
 
-            entity.HasOne(d => d.Structure).WithMany(p => p.Questions)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_StructureId_forQuestion");
-        });
+        modelBuilder.ApplyConfiguration(new SessionTypeConfiguration());
 
-        modelBuilder.Entity<Session>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Session");
+        modelBuilder.ApplyConfiguration(new StructureConfiguration());
 
-            entity.HasOne(d => d.Candidate).WithMany(p => p.Sessions)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_CandidateId_forSession");
+        modelBuilder.ApplyConfiguration(new StructureTypeConfiguration());
 
-            entity.HasOne(d => d.Vacancy).WithMany(p => p.Sessions)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_VacancyId_forSession");
-        });
+        modelBuilder.ApplyConfiguration(new VacancyConfiguration());
 
-        modelBuilder.Entity<SessionQuestion>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__SessionQuestion");
 
-            entity.HasOne(d => d.Question).WithMany(p => p.SessionQuestions)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_QuestionId_forSessionQuestion");
+        //modelBuilder.Entity<Candidate>(entity =>
+        //{
+        //    entity.HasKey(e => e.Id).HasName("PK__Candidate");
 
-            entity.HasOne(d => d.Session).WithMany(p => p.SessionQuestions)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_SessionId_forSessionQuestion");
-        });
+        //    entity.HasOne(d => d.CandidateDocument).WithMany(p => p.Candidates)
+        //        .OnDelete(DeleteBehavior.ClientSetNull)
+        //        .HasConstraintName("FK_CandidateDocument_forCandidates");
+        //});
 
-        modelBuilder.Entity<SessionType>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__SessionType");
-        });
+        //modelBuilder.Entity<CandidateDocument>(entity =>
+        //{
+        //    entity.HasKey(e => e.Id).HasName("PK__CandidateDocument");
+        //});
 
-        modelBuilder.Entity<Structure>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Structure");
+        //modelBuilder.Entity<Level>(entity =>
+        //{
+        //    entity.HasKey(e => e.Id).HasName("PK__Level");
+        //});
 
-            entity.HasOne(d => d.StructureType).WithMany(p => p.Structures)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_StructureType_forStructure");
-        });
+        //modelBuilder.Entity<Position>(entity =>
+        //{
+        //    entity.HasKey(e => e.Id).HasName("PK__Position");
+        //});
 
-        modelBuilder.Entity<StructureType>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__StructureType");
-        });
+        //modelBuilder.Entity<Question>(entity =>
+        //{
+        //    entity.HasKey(e => e.Id).HasName("PK__Question");
 
-        modelBuilder.Entity<Vacancy>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Vacancy");
+        //    entity.HasOne(d => d.Level).WithMany(p => p.Questions)
+        //        .OnDelete(DeleteBehavior.ClientSetNull)
+        //        .HasConstraintName("FK_LevelId_forQuestion");
 
-            entity.HasOne(d => d.Position).WithMany(p => p.Vacancies)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_PositionId_forVacancy");
+        //    entity.HasOne(d => d.SessionType).WithMany(p => p.Questions)
+        //        .OnDelete(DeleteBehavior.ClientSetNull)
+        //        .HasConstraintName("FK_SessionTypeId_forQuestion");
 
-            entity.HasOne(d => d.Structure).WithMany(p => p.Vacancies)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_StructureId_forVacancy");
-        });
+        //    entity.HasOne(d => d.Structure).WithMany(p => p.Questions)
+        //        .OnDelete(DeleteBehavior.ClientSetNull)
+        //        .HasConstraintName("FK_StructureId_forQuestion");
+        //});
+
+        //modelBuilder.Entity<Session>(entity =>
+        //{
+        //    entity.HasKey(e => e.Id).HasName("PK__Session");
+
+        //    entity.HasOne(d => d.Candidate).WithMany(p => p.Sessions)
+        //        .OnDelete(DeleteBehavior.ClientSetNull)
+        //        .HasConstraintName("FK_CandidateId_forSession");
+
+        //    entity.HasOne(d => d.Vacancy).WithMany(p => p.Sessions)
+        //        .OnDelete(DeleteBehavior.ClientSetNull)
+        //        .HasConstraintName("FK_VacancyId_forSession");
+        //});
+
+        //modelBuilder.Entity<SessionQuestion>(entity =>
+        //{
+        //    entity.HasKey(e => e.Id).HasName("PK__SessionQuestion");
+
+        //    entity.HasOne(d => d.Question).WithMany(p => p.SessionQuestions)
+        //        .OnDelete(DeleteBehavior.ClientSetNull)
+        //        .HasConstraintName("FK_QuestionId_forSessionQuestion");
+
+        //    entity.HasOne(d => d.Session).WithMany(p => p.SessionQuestions)
+        //        .OnDelete(DeleteBehavior.ClientSetNull)
+        //        .HasConstraintName("FK_SessionId_forSessionQuestion");
+        //});
+
+        //modelBuilder.Entity<SessionType>(entity =>
+        //{
+        //    entity.HasKey(e => e.Id).HasName("PK__SessionType");
+        //});
+
+        //modelBuilder.Entity<Structure>(entity =>
+        //{
+        //    entity.HasKey(e => e.Id).HasName("PK__Structure");
+
+        //    entity.HasOne(d => d.StructureType).WithMany(p => p.Structures)
+        //        .OnDelete(DeleteBehavior.ClientSetNull)
+        //        .HasConstraintName("FK_StructureType_forStructure");
+        //});
+
+        //modelBuilder.Entity<StructureType>(entity =>
+        //{
+        //    entity.HasKey(e => e.Id).HasName("PK__StructureType");
+        //});
+
+        //modelBuilder.Entity<Vacancy>(entity =>
+        //{
+        //    entity.HasKey(e => e.Id).HasName("PK__Vacancy");
+
+        //    entity.HasOne(d => d.Position).WithMany(p => p.Vacancies)
+        //        .OnDelete(DeleteBehavior.ClientSetNull)
+        //        .HasConstraintName("FK_PositionId_forVacancy");
+
+        //    entity.HasOne(d => d.Structure).WithMany(p => p.Vacancies)
+        //        .OnDelete(DeleteBehavior.ClientSetNull)
+        //        .HasConstraintName("FK_StructureId_forVacancy");
+        //});
 
     }
 
