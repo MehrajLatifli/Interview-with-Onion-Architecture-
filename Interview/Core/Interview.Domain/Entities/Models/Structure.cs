@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Interview.Domain.Entities.Models;
 
-[Table("Structure")]
+[Table("Structures")]
 public class Structure : BaseEntity
 {
     [Key]
@@ -21,6 +21,7 @@ public class Structure : BaseEntity
 
     [Required]
     public string ParentId { get; set; }
+
 
     public int StructureTypeId { get; set; }
 

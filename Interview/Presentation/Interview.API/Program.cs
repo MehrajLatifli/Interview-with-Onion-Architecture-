@@ -1,5 +1,4 @@
 using Interview.Application.Mapper;
-using Interview.Domain.AuthModels;
 using Interview.Persistence;
 using Interview.Persistence.Contexts.AuthDbContext.DbContext;
 using Interview.Persistence.Contexts.AuthDbContext.IdentityAuth;
@@ -14,6 +13,7 @@ using System.Text.Json;
 using Interview.Persistence.ServiceExtensions;
 using Microsoft.Extensions.Azure;
 using Interview.API.Attribute;
+using Interview.Domain.Entities.AuthModels;
 
 var builder = WebApplication.CreateBuilder(args);
 

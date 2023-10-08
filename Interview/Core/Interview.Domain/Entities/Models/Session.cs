@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Interview.Domain.Entities.Models;
 
-[Table("Session")]
+[Table("Sessions")]
 public class Session : BaseEntity
 {
     [Key]
@@ -20,7 +20,7 @@ public class Session : BaseEntity
     public decimal EndValue { get; set; }
 
     public DateTime? StartDate { get; set; }
-
+  
     public DateTime? EndDate { get; set; }
 
     public int VacancyId { get; set; }

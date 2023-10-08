@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Interview.Domain.Entities.Models;
 
-[Table("StructureType")]
+[Table("StructureTypes")]
 public class StructureType : BaseEntity
 {
     [Key]

@@ -1,6 +1,9 @@
-﻿using Azure.Storage.Blobs;
+﻿using AutoMapper;
+using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
-using Interview.Domain.AuthModels;
+using Interview.Application.Mapper.AuthDTO;
+using Interview.Domain.Entities.AuthModels;
+using Interview.Domain.Entities.Models;
 using Interview.Persistence.Contexts.AuthDbContext.IdentityAuth;
 using Interview.Persistence.ServiceExtensions;
 using Microsoft.AspNetCore.Authorization;
@@ -24,21 +27,25 @@ namespace Interview.API.Controllers
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _configuration;
         private readonly SignInManager<CustomUser> _signInManager;
-        List<IdentityError> errorList = new List<IdentityError>();
+        public readonly IMapper _mapper;
 
-        public AdminAuthController(UserManager<CustomUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration, SignInManager<CustomUser> signInManager)
+        public AdminAuthController(UserManager<CustomUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration, SignInManager<CustomUser> signInManager, IMapper mapper)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _configuration = configuration;
             _signInManager = signInManager;
+            _mapper = mapper;
         }
 
         [HttpPost]
         [Route("register")]
-        public async Task<IActionResult> RegisterAdmin([FromForm] RegisterModel model)
+        public async Task<IActionResult> RegisterAdmin([FromForm] RegisterDTO model)
         {
-            var userExists = await _userManager.FindByNameAsync(model.Username);
+
+            var entity = _mapper.Map<Register>(model);
+
+            var userExists = await _userManager.FindByNameAsync(entity.Username);
 
             if (userExists != null)
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User already exists!" });
@@ -55,7 +62,7 @@ namespace Interview.API.Controllers
 
             string containerName = "profile-images";
          
-            string blobName = model.Username + "_" + Guid.NewGuid().ToString() + Path.GetExtension(model.ImagePath.FileName); 
+            string blobName = entity.Username + "_" + Guid.NewGuid().ToString() + Path.GetExtension(entity.ImagePath.FileName); 
 
             BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
             BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
@@ -64,7 +71,7 @@ namespace Interview.API.Controllers
 
             BlobClient blobClient = containerClient.GetBlobClient(blobName);
 
-            using (Stream stream = model.ImagePath.OpenReadStream())
+            using (Stream stream = entity.ImagePath.OpenReadStream())
             {
                 await blobClient.UploadAsync(stream, true);
             }
@@ -75,15 +82,15 @@ namespace Interview.API.Controllers
 
             CustomUser user = new()
             {
-                Email = model.Email,
+                Email = entity.Email,
                 SecurityStamp = Guid.NewGuid().ToString(),
-                UserName = model.Username,
-                PhoneNumber = model.PhoneNumber,
+                UserName = entity.Username,
+                PhoneNumber = entity.PhoneNumber,
                 ImagePath = imageUrl,
                 Roles = $"{UserRoles.Admin}",
             };
 
-            var result = await _userManager.CreateAsync(user, model.Password);
+            var result = await _userManager.CreateAsync(user, entity.Password);
 
             if (!result.Succeeded)
             {
@@ -119,10 +126,13 @@ namespace Interview.API.Controllers
 
         [HttpPost]
         [Route("login")]
-        public async Task<IActionResult> Login([FromBody] LoginModel model)
+        public async Task<IActionResult> Login([FromBody] LoginDTO model)
         {
-            var user = await _userManager.FindByNameAsync(model.Username);
-            if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
+
+            var entity = _mapper.Map<Login>(model);
+
+            var user = await _userManager.FindByNameAsync(entity.Username);
+            if (user != null && await _userManager.CheckPasswordAsync(user, entity.Password))
             {
                 var userRoles = await _userManager.GetRolesAsync(user);
 
@@ -174,7 +184,7 @@ namespace Interview.API.Controllers
 
         [HttpPost]
         [Route("logout")]
-        public async Task<IActionResult> Logout([FromBody] LoginModel model)
+        public async Task<IActionResult> Logout([FromBody] Login model)
         {
             await _signInManager.SignOutAsync();
 
@@ -261,8 +271,11 @@ namespace Interview.API.Controllers
         [Authorize(Policy = "AdminOnly")]
         [HttpPut]
         [Route("updateProfile")]
-        public async Task<IActionResult> UpdateProfile([FromForm] UpdateProfileModel model)
+        public async Task<IActionResult> UpdateProfile([FromForm] UpdateProfileDTO model)
         {
+
+            var entity = _mapper.Map<UpdateProfile>(model);
+
 
             if (!User.Identity.IsAuthenticated)
             {
@@ -288,15 +301,15 @@ namespace Interview.API.Controllers
                 }
 
 
-                currentUser.UserName = model.Username;
-                currentUser.Email = model.Email;
-                currentUser.PhoneNumber = model.PhoneNumber;
+                currentUser.UserName = entity.Username;
+                currentUser.Email = entity.Email;
+                currentUser.PhoneNumber = entity.PhoneNumber;
 
     
 
-                if (!string.IsNullOrEmpty(model.OldPassword))
+                if (!string.IsNullOrEmpty(entity.OldPassword))
                 {
-                    var changePasswordResult = await _userManager.ChangePasswordAsync(currentUser, model.OldPassword, model.NewPassword);
+                    var changePasswordResult = await _userManager.ChangePasswordAsync(currentUser, entity.OldPassword, entity.NewPassword);
                     if (!changePasswordResult.Succeeded)
                     {
 
@@ -308,9 +321,9 @@ namespace Interview.API.Controllers
                     }
                 }
 
-                if (model.ImagePath != null)
+                if (entity.ImagePath != null)
                 {
-                    string blobName = currentUser.UserName + "_" + Guid.NewGuid().ToString() + Path.GetExtension(model.ImagePath.FileName);
+                    string blobName = currentUser.UserName + "_" + Guid.NewGuid().ToString() + Path.GetExtension(entity.ImagePath.FileName);
 
                     string connectionString = ServiceExtension.ConnectionStringAzure;
 
@@ -329,7 +342,7 @@ namespace Interview.API.Controllers
 
                     BlobClient blobClient = containerClient.GetBlobClient(blobName);
 
-                    using (Stream stream = model.ImagePath.OpenReadStream())
+                    using (Stream stream = entity.ImagePath.OpenReadStream())
                     {
                         await blobClient.UploadAsync(stream, true);
                     }
@@ -338,7 +351,7 @@ namespace Interview.API.Controllers
                     currentUser.ImagePath = imageUrl;
                 }
 
-                var existingUserWithUserName = await _userManager.FindByNameAsync(model.Username);
+                var existingUserWithUserName = await _userManager.FindByNameAsync(entity.Username);
                 if (existingUserWithUserName != null && existingUserWithUserName.Id != currentUser.Id)
                 {
                     return StatusCode(StatusCodes.Status400BadRequest, new Response { Status = "Error", Message = "User name is already associated with another user!" });
@@ -366,8 +379,11 @@ namespace Interview.API.Controllers
         [Authorize(Policy = "AdminOnly")]
         [HttpPut]
         [Route("updatePassword")]
-        public async Task<IActionResult> UpdatePassword([FromForm] UpdatePasswordModel model)
+        public async Task<IActionResult> UpdatePassword([FromForm] UpdatePasswordDTO model)
         {
+
+            var entity = _mapper.Map<UpdatePassword>(model);
+
 
             if (!User.Identity.IsAuthenticated)
             {
@@ -393,13 +409,10 @@ namespace Interview.API.Controllers
                 }
 
 
-  
 
-
-
-                if (!string.IsNullOrEmpty(model.OldPassword))
+                if (!string.IsNullOrEmpty(entity.OldPassword))
                 {
-                    var changePasswordResult = await _userManager.ChangePasswordAsync(currentUser, model.OldPassword, model.NewPassword);
+                    var changePasswordResult = await _userManager.ChangePasswordAsync(currentUser, entity.OldPassword, entity.NewPassword);
                     if (!changePasswordResult.Succeeded)
                     {
 

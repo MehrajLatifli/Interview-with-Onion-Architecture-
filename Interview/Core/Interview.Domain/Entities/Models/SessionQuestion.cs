@@ -9,16 +9,19 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Interview.Domain.Entities.Models;
 
-[Table("SessionQuestion")]
+[Table("SessionQuestions")]
 public class SessionQuestion : BaseEntity
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
 
+    [Required]
     public int Value { get; set; }
 
+
     public int SessionId { get; set; }
+
 
     public int QuestionId { get; set; }
 

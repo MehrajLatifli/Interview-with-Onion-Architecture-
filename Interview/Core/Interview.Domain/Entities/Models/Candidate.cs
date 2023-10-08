@@ -9,12 +9,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Interview.Domain.Entities.Models;
 
-[Table("Candidate")]
+[Table("Candidates")]
 public class Candidate : BaseEntity
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
+
 
     public int CandidateDocumentId { get; set; }
 

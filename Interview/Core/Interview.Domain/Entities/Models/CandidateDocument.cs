@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Interview.Domain.Entities.Models;
 
-[Table("CandidateDocument")]
+[Table("CandidateDocuments")]
 public  class CandidateDocument : BaseEntity
 {
     [Key]

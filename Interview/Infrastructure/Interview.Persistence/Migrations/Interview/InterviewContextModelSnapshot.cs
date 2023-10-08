@@ -38,7 +38,7 @@ namespace Interview.Persistence.Migrations.Interview
 
                     b.HasIndex("CandidateDocumentId");
 
-                    b.ToTable("Candidate");
+                    b.ToTable("Candidates");
                 });
 
             modelBuilder.Entity("Interview.Domain.Entities.Models.CandidateDocument", b =>
@@ -77,7 +77,7 @@ namespace Interview.Persistence.Migrations.Interview
                     b.HasKey("Id")
                         .HasName("PK__CandidateDocument");
 
-                    b.ToTable("CandidateDocument");
+                    b.ToTable("CandidateDocuments");
                 });
 
             modelBuilder.Entity("Interview.Domain.Entities.Models.Level", b =>
@@ -99,7 +99,7 @@ namespace Interview.Persistence.Migrations.Interview
                     b.HasKey("Id")
                         .HasName("PK__Level");
 
-                    b.ToTable("Level");
+                    b.ToTable("Levels");
                 });
 
             modelBuilder.Entity("Interview.Domain.Entities.Models.Position", b =>
@@ -117,7 +117,7 @@ namespace Interview.Persistence.Migrations.Interview
                     b.HasKey("Id")
                         .HasName("PK__Position");
 
-                    b.ToTable("Position");
+                    b.ToTable("Positions");
                 });
 
             modelBuilder.Entity("Interview.Domain.Entities.Models.Question", b =>
@@ -150,7 +150,7 @@ namespace Interview.Persistence.Migrations.Interview
 
                     b.HasIndex("StructureId");
 
-                    b.ToTable("Question");
+                    b.ToTable("Questions");
                 });
 
             modelBuilder.Entity("Interview.Domain.Entities.Models.Session", b =>
@@ -183,7 +183,7 @@ namespace Interview.Persistence.Migrations.Interview
 
                     b.HasIndex("VacancyId");
 
-                    b.ToTable("Session");
+                    b.ToTable("Sessions");
                 });
 
             modelBuilder.Entity("Interview.Domain.Entities.Models.SessionQuestion", b =>
@@ -210,7 +210,7 @@ namespace Interview.Persistence.Migrations.Interview
 
                     b.HasIndex("SessionId");
 
-                    b.ToTable("SessionQuestion");
+                    b.ToTable("SessionQuestions");
                 });
 
             modelBuilder.Entity("Interview.Domain.Entities.Models.SessionType", b =>
@@ -228,7 +228,7 @@ namespace Interview.Persistence.Migrations.Interview
                     b.HasKey("Id")
                         .HasName("PK__SessionType");
 
-                    b.ToTable("SessionType");
+                    b.ToTable("SessionTypes");
                 });
 
             modelBuilder.Entity("Interview.Domain.Entities.Models.Structure", b =>
@@ -255,7 +255,7 @@ namespace Interview.Persistence.Migrations.Interview
 
                     b.HasIndex("StructureTypeId");
 
-                    b.ToTable("Structure");
+                    b.ToTable("Structures");
                 });
 
             modelBuilder.Entity("Interview.Domain.Entities.Models.StructureType", b =>
@@ -273,7 +273,7 @@ namespace Interview.Persistence.Migrations.Interview
                     b.HasKey("Id")
                         .HasName("PK__StructureType");
 
-                    b.ToTable("StructureType");
+                    b.ToTable("StructureTypes");
                 });
 
             modelBuilder.Entity("Interview.Domain.Entities.Models.Vacancy", b =>
@@ -311,7 +311,7 @@ namespace Interview.Persistence.Migrations.Interview
 
                     b.HasIndex("StructureId");
 
-                    b.ToTable("Vacancy");
+                    b.ToTable("Vacancies");
                 });
 
             modelBuilder.Entity("Interview.Domain.Entities.Models.Candidate", b =>

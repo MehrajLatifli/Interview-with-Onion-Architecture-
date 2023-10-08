@@ -70,6 +70,35 @@ namespace Interview.Persistence.ServiceExtensions
             services.AddScoped<ICandidateDocumentWriteRepository, CandidateDocumentWriteRepository>();
             services.AddScoped<ICandidateDocumentReadRepository, CandidateDocumentReadRepository>();
 
+            services.AddScoped<ICandidateWriteRepository, CandidateWriteRepository>();
+            services.AddScoped<ICandidateReadRepository, CandidateReadRepository>();
+
+            services.AddScoped<IPositionWriteRepository, PositionWriteRepository>();
+            services.AddScoped<IPositionReadRepository, PositionReadRepository>();
+
+            services.AddScoped<IVacancyWriteRepository, VacancyWriteRepository>();
+            services.AddScoped<IVacancyReadRepository, VacancyReadRepository>();
+
+            services.AddScoped<IStructureTypeWriteRepository, StructureTypeWriteRepository>();
+            services.AddScoped<IStructureTypeReadRepository, StructureTypeReadRepository>();
+
+            services.AddScoped<IStructureWriteRepository, StructureWriteRepository>();
+            services.AddScoped<IStructureReadRepository, StructureReadRepository>();
+
+            services.AddScoped<ISessionWriteRepository, SessionWriteRepository>();
+            services.AddScoped<ISessionReadRepository, SessionReadRepository>();
+
+            services.AddScoped<ISessionQuestionWriteRepository, SessionQuestionWriteRepository>();
+            services.AddScoped<ISessionQuestionReadRepository, SessionQuestionReadRepository>();
+
+            services.AddScoped<IQuestionWriteRepository, QuestionWriteRepository>();
+            services.AddScoped<IQuestionReadRepository, QuestionReadRepository>();
+
+            services.AddScoped<ISessionTypeWriteRepository, SessionTypeWriteRepository>();
+            services.AddScoped<ISessionTypeReadRepository, SessionTypeReadRepository>();
+
+            services.AddScoped<ILevelWriteRepository, LevelWriteRepository>();
+            services.AddScoped<ILevelReadRepository, LevelReadRepository>();
 
 
 

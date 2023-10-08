@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Interview.Domain.Entities.Models;
 
-[Table("SessionType")]
+[Table("SessionTypes")]
 public class SessionType : BaseEntity
 {
     [Key]

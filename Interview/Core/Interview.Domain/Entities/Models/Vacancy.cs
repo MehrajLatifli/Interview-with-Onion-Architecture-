@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Interview.Domain.Entities.Models;
 
-[Table("Vacancy")]
+[Table("Vacancies")]
 public class Vacancy : BaseEntity
 {
     [Key]
@@ -22,8 +22,10 @@ public class Vacancy : BaseEntity
     [Required]
     public string Description { get; set; }
 
+    [Required]
     public DateTime StartDate { get; set; }
 
+    [Required]
     public DateTime EndDate { get; set; }
 
     public int PositionId { get; set; }

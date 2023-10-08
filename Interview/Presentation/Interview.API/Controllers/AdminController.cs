@@ -2,7 +2,7 @@
 using Interview.Application.Exception;
 using Interview.Application.Mapper.DTO;
 using Interview.Application.Services.Abstract;
-using Interview.Domain.AuthModels;
+using Interview.Domain.Entities.AuthModels;
 using Interview.Domain.Entities.Models;
 using Interview.Persistence.Contexts.AuthDbContext.IdentityAuth;
 using Interview.Persistence.ServiceExtensions;

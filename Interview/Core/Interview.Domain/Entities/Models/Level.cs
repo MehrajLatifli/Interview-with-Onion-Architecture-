@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Interview.Domain.Entities.Models;
 
-[Table("Level")]
+[Table("Levels")]
 public class Level : BaseEntity
 {
     [Key]
@@ -20,6 +20,7 @@ public class Level : BaseEntity
     [Column("Name")]
     public string Name { get; set; }
 
+    [Required]
     [Column(TypeName = "decimal(18, 2)")]
     public decimal Coefficient { get; set; }
 

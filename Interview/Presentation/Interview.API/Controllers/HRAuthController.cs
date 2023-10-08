@@ -1,6 +1,8 @@
-﻿using Azure.Storage.Blobs;
+﻿using AutoMapper;
+using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
-using Interview.Domain.AuthModels;
+using Interview.Application.Mapper.AuthDTO;
+using Interview.Domain.Entities.AuthModels;
 using Interview.Persistence.Contexts.AuthDbContext.IdentityAuth;
 using Interview.Persistence.ServiceExtensions;
 using Microsoft.AspNetCore.Authorization;
@@ -24,29 +26,32 @@ namespace Interview.API.Controllers
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _configuration;
         private readonly SignInManager<CustomUser> _signInManager;
+        public readonly IMapper _mapper;
 
-
-
-        List<IdentityError> errorList = new List<IdentityError>();
-
-        public HRAuthController(UserManager<CustomUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration, SignInManager<CustomUser> signInManager)
+        public HRAuthController (UserManager<CustomUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration, SignInManager<CustomUser> signInManager, IMapper mapper)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _configuration = configuration;
             _signInManager = signInManager;
+            _mapper = mapper;
         }
 
         [HttpPost]
         [Route("register")]
-        public async Task<IActionResult> RegisterAdmin([FromForm] RegisterModel model)
+        public async Task<IActionResult> RegisterAdmin([FromForm] RegisterDTO model)
         {
-            var userExists = await _userManager.FindByNameAsync(model.Username);
+
+            var entity = _mapper.Map<Register>(model);
+
+            var userExists = await _userManager.FindByNameAsync(entity.Username);
 
             if (userExists != null)
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User already exists!" });
 
-            string connectionString = "AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;DefaultEndpointsProtocol=http;BlobEndpoint=http://127.0.0.1:10000/devstoreaccount1;QueueEndpoint=http://127.0.0.1:10001/devstoreaccount1;TableEndpoint=http://127.0.0.1:10002/devstoreaccount1;"; // Default connection string for the Azurite Blob storage emulator.
+
+
+            string connectionString = ServiceExtension.ConnectionStringAzure;
 
             string azuriteConnectionString = Environment.GetEnvironmentVariable("CUSTOMCONNSTR_AZURE_STORAGE_CONNECTION_STRING");
             if (!string.IsNullOrEmpty(azuriteConnectionString))
@@ -55,8 +60,8 @@ namespace Interview.API.Controllers
             }
 
             string containerName = "profile-images";
-         
-            string blobName = model.Username + "_" + Guid.NewGuid().ToString() + Path.GetExtension(model.ImagePath.FileName); 
+
+            string blobName = entity.Username + "_" + Guid.NewGuid().ToString() + Path.GetExtension(entity.ImagePath.FileName);
 
             BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
             BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
@@ -65,35 +70,39 @@ namespace Interview.API.Controllers
 
             BlobClient blobClient = containerClient.GetBlobClient(blobName);
 
-            using (Stream stream = model.ImagePath.OpenReadStream())
+            using (Stream stream = entity.ImagePath.OpenReadStream())
             {
                 await blobClient.UploadAsync(stream, true);
             }
 
             string imageUrl = blobClient.Uri.ToString();
 
-            
+
 
             CustomUser user = new()
             {
-                Email = model.Email,
+                Email = entity.Email,
                 SecurityStamp = Guid.NewGuid().ToString(),
-                UserName = model.Username,
-                PhoneNumber = model.PhoneNumber,
+                UserName = entity.Username,
+                PhoneNumber = entity.PhoneNumber,
                 ImagePath = imageUrl,
-                Roles = $"{UserRoles.HR}",
+                Roles = $"{UserRoles.Admin}",
             };
 
-            var result = await _userManager.CreateAsync(user, model.Password);
+            var result = await _userManager.CreateAsync(user, entity.Password);
 
             if (!result.Succeeded)
             {
                 var errors = result.Errors.Select(e => e.Description);
-                var errorMessage = string.Join($" ", errors); 
+                var errorMessage = string.Join($" ", errors);
 
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = $"User creation failed! \n {errorMessage}" });
             }
+            if (!await _roleManager.RoleExistsAsync(UserRoles.Admin))
+                await _roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
 
+            if (await _roleManager.RoleExistsAsync(UserRoles.Admin))
+                await _userManager.AddToRoleAsync(user, UserRoles.Admin);
 
             if (!await _roleManager.RoleExistsAsync(UserRoles.HR))
                 await _roleManager.CreateAsync(new IdentityRole(UserRoles.HR));
@@ -107,7 +116,7 @@ namespace Interview.API.Controllers
             TimeZone localZone = TimeZone.CurrentTimeZone;
             DateTime localTime = localZone.ToLocalTime(DateTime.UtcNow);
 
-          
+
             return Ok(new Response { Status = "Success", Message = "User created successfully!" });
         }
 
@@ -116,10 +125,13 @@ namespace Interview.API.Controllers
 
         [HttpPost]
         [Route("login")]
-        public async Task<IActionResult> Login([FromBody] LoginModel model)
+        public async Task<IActionResult> Login([FromBody] LoginDTO model)
         {
-            var user = await _userManager.FindByNameAsync(model.Username);
-            if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
+
+            var entity = _mapper.Map<Login>(model);
+
+            var user = await _userManager.FindByNameAsync(entity.Username);
+            if (user != null && await _userManager.CheckPasswordAsync(user, entity.Password))
             {
                 var userRoles = await _userManager.GetRolesAsync(user);
 
@@ -171,7 +183,7 @@ namespace Interview.API.Controllers
 
         [HttpPost]
         [Route("logout")]
-        public async Task<IActionResult> Logout([FromBody] LoginModel model)
+        public async Task<IActionResult> Logout([FromBody] Login model)
         {
             await _signInManager.SignOutAsync();
 
@@ -226,7 +238,7 @@ namespace Interview.API.Controllers
             });
         }
 
-        [Authorize(Policy = "HROnly")]
+        [Authorize(Policy = "AdminOnly")]
         [HttpPost]
         [Route("revoke/{username}")]
         public async Task<IActionResult> Revoke(string username)
@@ -240,7 +252,7 @@ namespace Interview.API.Controllers
             return NoContent();
         }
 
-        [Authorize(Policy = "HROnly")]
+        [Authorize(Policy = "AdminOnly")]
         [HttpPost]
         [Route("revoke-all")]
         public async Task<IActionResult> RevokeAll()
@@ -254,6 +266,184 @@ namespace Interview.API.Controllers
 
             return NoContent();
         }
+
+        [Authorize(Policy = "AdminOnly")]
+        [HttpPut]
+        [Route("updateProfile")]
+        public async Task<IActionResult> UpdateProfile([FromForm] UpdateProfileDTO model)
+        {
+
+            var entity = _mapper.Map<UpdateProfile>(model);
+
+
+            if (!User.Identity.IsAuthenticated)
+            {
+
+                return StatusCode(StatusCodes.Status401Unauthorized, new Response { Status = "Error", Message = "User not authenticated." });
+            }
+
+
+
+            var username = User.Identity.Name;
+
+            var currentUser = await _userManager.FindByNameAsync(username);
+
+            var adminUsers = await _userManager.GetUsersInRoleAsync(UserRoles.Admin);
+
+            if (currentUser != null)
+            {
+                adminUsers.Any(i => i.UserName == currentUser.UserName);
+
+                if (currentUser.UserName == null)
+                {
+                    return StatusCode(StatusCodes.Status404NotFound, new Response { Status = "Error", Message = "User not found!" });
+                }
+
+
+                currentUser.UserName = entity.Username;
+                currentUser.Email = entity.Email;
+                currentUser.PhoneNumber = entity.PhoneNumber;
+
+
+
+                if (!string.IsNullOrEmpty(entity.OldPassword))
+                {
+                    var changePasswordResult = await _userManager.ChangePasswordAsync(currentUser, entity.OldPassword, entity.NewPassword);
+                    if (!changePasswordResult.Succeeded)
+                    {
+
+                        var errors = changePasswordResult.Errors.Select(e => e.Description);
+                        var errorMessage = string.Join($" ", errors);
+
+                        return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = $"Failed to update password! \n {errorMessage}" });
+
+                    }
+                }
+
+                if (entity.ImagePath != null)
+                {
+                    string blobName = currentUser.UserName + "_" + Guid.NewGuid().ToString() + Path.GetExtension(entity.ImagePath.FileName);
+
+                    string connectionString = ServiceExtension.ConnectionStringAzure;
+
+                    string azuriteConnectionString = Environment.GetEnvironmentVariable("CUSTOMCONNSTR_AZURE_STORAGE_CONNECTION_STRING");
+                    if (!string.IsNullOrEmpty(azuriteConnectionString))
+                    {
+                        connectionString = azuriteConnectionString;
+                    }
+
+                    string containerName = "profile-images";
+
+                    BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
+                    BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
+
+                    await containerClient.CreateIfNotExistsAsync(PublicAccessType.Blob);
+
+                    BlobClient blobClient = containerClient.GetBlobClient(blobName);
+
+                    using (Stream stream = entity.ImagePath.OpenReadStream())
+                    {
+                        await blobClient.UploadAsync(stream, true);
+                    }
+
+                    string imageUrl = blobClient.Uri.ToString();
+                    currentUser.ImagePath = imageUrl;
+                }
+
+                var existingUserWithUserName = await _userManager.FindByNameAsync(entity.Username);
+                if (existingUserWithUserName != null && existingUserWithUserName.Id != currentUser.Id)
+                {
+                    return StatusCode(StatusCodes.Status400BadRequest, new Response { Status = "Error", Message = "User name is already associated with another user!" });
+                }
+
+                var identityResult = await _userManager.UpdateAsync(currentUser);
+                if (!identityResult.Succeeded)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "Failed to update user!" });
+                }
+
+            }
+
+
+
+
+
+
+
+            return Ok(new Response { Status = "Success", Message = "User updated successfully!" });
+        }
+
+
+
+        [Authorize(Policy = "AdminOnly")]
+        [HttpPut]
+        [Route("updatePassword")]
+        public async Task<IActionResult> UpdatePassword([FromForm] UpdatePasswordDTO model)
+        {
+
+            var entity = _mapper.Map<UpdatePassword>(model);
+
+
+            if (!User.Identity.IsAuthenticated)
+            {
+
+                return StatusCode(StatusCodes.Status401Unauthorized, new Response { Status = "Error", Message = "User not authenticated." });
+            }
+
+
+
+            var username = User.Identity.Name;
+
+            var currentUser = await _userManager.FindByNameAsync(username);
+
+            var adminUsers = await _userManager.GetUsersInRoleAsync(UserRoles.Admin);
+
+            if (currentUser != null)
+            {
+                adminUsers.Any(i => i.UserName == currentUser.UserName);
+
+                if (currentUser.UserName == null)
+                {
+                    return StatusCode(StatusCodes.Status404NotFound, new Response { Status = "Error", Message = "User not found!" });
+                }
+
+
+
+                if (!string.IsNullOrEmpty(entity.OldPassword))
+                {
+                    var changePasswordResult = await _userManager.ChangePasswordAsync(currentUser, entity.OldPassword, entity.NewPassword);
+                    if (!changePasswordResult.Succeeded)
+                    {
+
+                        var errors = changePasswordResult.Errors.Select(e => e.Description);
+                        var errorMessage = string.Join($" ", errors);
+
+                        return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = $"Failed to update password! \n {errorMessage}" });
+
+                    }
+                }
+
+
+
+
+                var identityResult = await _userManager.UpdateAsync(currentUser);
+                if (!identityResult.Succeeded)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "Failed to update user!" });
+                }
+
+            }
+
+
+
+
+
+
+
+            return Ok(new Response { Status = "Success", Message = "User updated successfully!" });
+        }
+
+
 
 
         private JwtSecurityToken CreateToken(List<Claim> authClaims)
