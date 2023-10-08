@@ -76,10 +76,13 @@ namespace Interview.Application.Services.Concrete
 
 
 
+
+
         #region CandidateDocument service manager
 
         public async Task CandidateDocumentCreate(CandidateDocumentDTO_forCreate model, string AzureconnectionString)
         {
+
 
             string connectionString = AzureconnectionString;
 
@@ -168,7 +171,7 @@ namespace Interview.Application.Services.Concrete
 
             if (existing is null)
             {
-                throw new NotFoundException("Candidate not found");
+                throw new NotFoundException("CandidateDocument not found");
 
             }
 
@@ -246,6 +249,1286 @@ namespace Interview.Application.Services.Concrete
         }
 
         #endregion
+
+
+        #region Candidate service manager
+
+        public async Task CandidateCreate(CandidateDTO_forCreate model)
+        {
+
+           
+
+            var entity = _mapper.Map<Candidate>(model);
+
+            var existing = await _candidateDocumentReadRepository.GetByIdAsync(model.CandidateDocumentId.ToString(), false);
+
+            if (existing is null)
+            {
+                throw new NotFoundException("CandidateDocument not found");
+
+            }
+
+            entity = new Candidate
+            {
+               CandidateDocumentId=model.CandidateDocumentId,
+
+            };
+
+
+            await _candidateWriteRepository.AddAsync(entity);
+
+            await _candidateWriteRepository.SaveAsync();
+        }
+
+        public async Task<List<CandidateDTO_forGetandGetAll>> GetCandidate()
+        {
+            List<CandidateDTO_forGetandGetAll> datas = null;
+
+            await Task.Run(() =>
+            {
+                datas = _mapper.Map<List<CandidateDTO_forGetandGetAll>>(_candidateReadRepository.GetAll(false));
+            });
+
+            if (datas.Count <= 0)
+            {
+                throw new NotFoundException("Candidate not found");
+            }
+
+            return datas;
+        }
+
+        public async Task<CandidateDTO_forGetandGetAll> GetCandidateById(int id)
+        {
+            CandidateDTO_forGetandGetAll item = null;
+
+
+            item = _mapper.Map<CandidateDTO_forGetandGetAll>(await _candidateReadRepository.GetByIdAsync(id.ToString(), false));
+
+
+            if (item == null)
+            {
+                throw new NotFoundException("Candidate not found");
+            }
+
+            return item;
+        }
+
+        public async Task CandidateUpdate(CandidateDTO_forUpdate model)
+        {
+
+            var existing = await _candidateReadRepository.GetByIdAsync(model.Id.ToString(), false);
+
+            var existing2 = await _candidateDocumentReadRepository.GetByIdAsync(model.CandidateDocumentId.ToString(), false);
+
+            if (existing is null)
+            {
+                throw new NotFoundException("Candidate not found");
+
+            }
+
+          
+
+            if (existing2 is null)
+            {
+                throw new NotFoundException("CandidateDocument not found");
+
+            }
+
+            var entity = _mapper.Map<Candidate>(model);
+
+            entity = new Candidate
+            {
+                Id = model.Id,
+                CandidateDocumentId=model.CandidateDocumentId,
+
+            };
+
+            _candidateWriteRepository.Update(entity);
+            await _candidateWriteRepository.SaveAsync();
+
+        }
+
+        public async Task<CandidateDTO_forGetandGetAll> DeleteCandidateById(int id)
+        {
+
+            if (_candidateReadRepository.GetAll().Any(i => i.Id == Convert.ToInt32(id)))
+            {
+
+                await _candidateWriteRepository.RemoveByIdAsync(id.ToString());
+                await _candidateWriteRepository.SaveAsync();
+
+                return null;
+
+            }
+
+            else
+            {
+                throw new NotFoundException("Candidate not found");
+            }
+        }
+
+        #endregion
+
+
+        #region Level service manager
+
+        public async Task LevelCreate(LevelDTO_forCreate model)
+        {
+
+
+
+            var entity = _mapper.Map<Level>(model);
+
+            entity = new Level
+            {
+                Name = model.Name,
+                Coefficient = model.Coefficient,
+
+            };
+
+
+            await _levelWriteRepository.AddAsync(entity);
+
+            await _levelWriteRepository.SaveAsync();
+        }
+
+        public async Task<List<LevelDTO_forGetandGetAll>> GetLevel()
+        {
+            List<LevelDTO_forGetandGetAll> datas = null;
+
+            await Task.Run(() =>
+            {
+                datas = _mapper.Map<List<LevelDTO_forGetandGetAll>>(_levelReadRepository.GetAll(false));
+            });
+
+            if (datas.Count <= 0)
+            {
+                throw new NotFoundException("Level not found");
+            }
+
+            return datas;
+        }
+
+        public async Task<LevelDTO_forGetandGetAll> GetLevelById(int id)
+        {
+            LevelDTO_forGetandGetAll item = null;
+
+
+            item = _mapper.Map<LevelDTO_forGetandGetAll>(await _levelReadRepository.GetByIdAsync(id.ToString(), false));
+
+
+            if (item == null)
+            {
+                throw new NotFoundException("Level not found");
+            }
+
+            return item;
+        }
+
+        public async Task LevelUpdate(LevelDTO_forUpdate model)
+        {
+
+            var existing = await _levelReadRepository.GetByIdAsync(model.Id.ToString(), false);
+
+
+            if (existing is null)
+            {
+                throw new NotFoundException("Level not found");
+
+            }
+
+
+
+            if (existing is null)
+            {
+                throw new NotFoundException("Level not found");
+
+            }
+
+            var entity = _mapper.Map<Level>(model);
+
+            entity = new Level
+            {
+                Id=model.Id,
+                Name = model.Name,
+                Coefficient = model.Coefficient,
+
+            };
+
+            _levelWriteRepository.Update(entity);
+            await _levelWriteRepository.SaveAsync();
+
+        }
+
+        public async Task<LevelDTO_forGetandGetAll> DeleteLevelById(int id)
+        {
+
+            if (_levelReadRepository.GetAll().Any(i => i.Id == Convert.ToInt32(id)))
+            {
+
+                await _levelWriteRepository.RemoveByIdAsync(id.ToString());
+                await _levelWriteRepository.SaveAsync();
+
+                return null;
+
+            }
+
+            else
+            {
+                throw new NotFoundException("Level not found");
+            }
+        }
+
+        #endregion
+
+
+        #region StructureType service manager
+
+        public async Task StructureTypeCreate(StructureTypeDTO_forCreate model)
+        {
+
+
+
+            var entity = _mapper.Map<StructureType>(model);
+
+            entity = new StructureType
+            {
+                Name = model.Name,
+               
+
+            };
+
+
+            await _structureTypeWriteRepository.AddAsync(entity);
+                   
+            await _structureTypeWriteRepository.SaveAsync();
+        }
+
+        public async Task<List<StructureTypeDTO_forGetandGetAll>> GetStructureType()
+        {
+            List<StructureTypeDTO_forGetandGetAll> datas = null;
+
+            await Task.Run(() =>
+            {
+                datas = _mapper.Map<List<StructureTypeDTO_forGetandGetAll>>(_structureTypeReadRepository.GetAll(false));
+            });
+
+            if (datas.Count <= 0)
+            {
+                throw new NotFoundException("StructureType not found");
+            }
+
+            return datas;
+        }
+
+        public async Task<StructureTypeDTO_forGetandGetAll> GetStructureTypeById(int id)
+        {
+            StructureTypeDTO_forGetandGetAll item = null;
+
+
+            item = _mapper.Map<StructureTypeDTO_forGetandGetAll>(await _structureTypeReadRepository.GetByIdAsync(id.ToString(), false));
+
+
+            if (item == null)
+            {
+                throw new NotFoundException("StructureType not found");
+            }
+
+            return item;
+        }
+
+        public async Task StructureTypeUpdate(StructureTypeDTO_forUpdate model)
+        {
+
+            var existing = await _structureTypeReadRepository.GetByIdAsync(model.Id.ToString(), false);
+
+
+            if (existing is null)
+            {
+                throw new NotFoundException("StructureType not found");
+
+            }
+
+
+
+            if (existing is null)
+            {
+                throw new NotFoundException("StructureType not found");
+
+            }
+
+            var entity = _mapper.Map<StructureType>(model);
+
+            entity = new StructureType
+            {
+                Id = model.Id,
+                Name = model.Name,
+
+            };
+
+            _structureTypeWriteRepository.Update(entity);
+            await _structureTypeWriteRepository.SaveAsync();
+
+        }
+
+        public async Task<StructureTypeDTO_forGetandGetAll> DeleteStructureTypeById(int id)
+        {
+
+            if (_structureTypeReadRepository.GetAll().Any(i => i.Id == Convert.ToInt32(id)))
+            {
+
+                await _structureTypeWriteRepository.RemoveByIdAsync(id.ToString());
+                await _structureTypeWriteRepository.SaveAsync();
+
+                return null;
+
+            }
+
+            else
+            {
+                throw new NotFoundException("StructureType not found");
+            }
+        }
+
+        #endregion
+
+
+        #region Position service manager
+
+        public async Task PositionCreate(PositionDTO_forCreate model)
+        {
+
+
+
+            var entity = _mapper.Map<Position>(model);
+
+            entity = new Position
+            {
+                Name = model.Name,
+
+
+            };
+
+
+            await _positionWriteRepository.AddAsync(entity);
+
+            await _positionWriteRepository.SaveAsync();
+        }
+
+        public async Task<List<PositionDTO_forGetandGetAll>> GetPosition()
+        {
+            List<PositionDTO_forGetandGetAll> datas = null;
+
+            await Task.Run(() =>
+            {
+                datas = _mapper.Map<List<PositionDTO_forGetandGetAll>>(_positionReadRepository.GetAll(false));
+            });
+
+            if (datas.Count <= 0)
+            {
+                throw new NotFoundException("Position not found");
+            }
+
+            return datas;
+        }
+
+        public async Task<PositionDTO_forGetandGetAll> GetPositionById(int id)
+        {
+            PositionDTO_forGetandGetAll item = null;
+
+
+            item = _mapper.Map<PositionDTO_forGetandGetAll>(await _positionReadRepository.GetByIdAsync(id.ToString(), false));
+
+
+            if (item == null)
+            {
+                throw new NotFoundException("Position not found");
+            }
+
+            return item;
+        }
+
+        public async Task PositionUpdate(PositionDTO_forUpdate model)
+        {
+
+            var existing = await _positionReadRepository.GetByIdAsync(model.Id.ToString(), false);
+
+
+            if (existing is null)
+            {
+                throw new NotFoundException("Position not found");
+
+            }
+
+
+
+            if (existing is null)
+            {
+                throw new NotFoundException("Position not found");
+
+            }
+
+            var entity = _mapper.Map<Position>(model);
+
+            entity = new Position
+            {
+                Id = model.Id,
+                Name = model.Name,
+
+            };
+
+            _positionWriteRepository.Update(entity);
+            await _positionWriteRepository.SaveAsync();
+
+        }
+
+        public async Task<PositionDTO_forGetandGetAll> DeletePositionById(int id)
+        {
+
+            if (_positionReadRepository.GetAll().Any(i => i.Id == Convert.ToInt32(id)))
+            {
+
+                await _positionWriteRepository.RemoveByIdAsync(id.ToString());
+                await _positionWriteRepository.SaveAsync();
+
+                return null;
+
+            }
+
+            else
+            {
+                throw new NotFoundException("Position not found");
+            }
+        }
+
+        #endregion
+
+
+        #region Structure service manager
+
+        public async Task StructureCreate(StructureDTO_forCreate model)
+        {
+
+
+
+            var entity = _mapper.Map<Structure>(model);
+
+
+            var existing = await _structureTypeReadRepository.GetByIdAsync(model.StructureTypeId.ToString(), false);
+
+            if (existing is null)
+            {
+                throw new NotFoundException("StructureType not found");
+
+            }
+
+            entity = new Structure
+            {
+                Name = model.Name,
+                ParentId = model.ParentId,
+                StructureTypeId = model.StructureTypeId,
+
+
+            };
+
+
+            await _structureWriteRepository.AddAsync(entity);
+
+            await _structureWriteRepository.SaveAsync();
+        }
+
+        public async Task<List<StructureDTO_forGetandGetAll>> GetStructure()
+        {
+            List<StructureDTO_forGetandGetAll> datas = null;
+
+            await Task.Run(() =>
+            {
+                datas = _mapper.Map<List<StructureDTO_forGetandGetAll>>(_structureReadRepository.GetAll(false));
+            });
+
+            if (datas.Count <= 0)
+            {
+                throw new NotFoundException("Structure not found");
+            }
+
+            return datas;
+        }
+
+        public async Task<StructureDTO_forGetandGetAll> GetStructureById(int id)
+        {
+            StructureDTO_forGetandGetAll item = null;
+
+
+            item = _mapper.Map<StructureDTO_forGetandGetAll>(await _structureReadRepository.GetByIdAsync(id.ToString(), false));
+
+
+            if (item == null)
+            {
+                throw new NotFoundException("Structure not found");
+            }
+
+            return item;
+        }
+
+        public async Task StructureUpdate(StructureDTO_forUpdate model)
+        {
+
+
+            var existing = await _structureTypeReadRepository.GetByIdAsync(model.StructureTypeId.ToString(), false);
+
+            if (existing is null)
+            {
+                throw new NotFoundException("StructureType not found");
+
+            }
+
+            var existing2 = await _structureReadRepository.GetByIdAsync(model.Id.ToString(), false);
+
+
+            if (existing2 is null)
+            {
+                throw new NotFoundException("Structure not found");
+
+            }
+
+            var entity = _mapper.Map<Structure>(model);
+
+            entity = new Structure
+            {
+                Id = model.Id,
+                Name = model.Name,
+
+            };
+
+            _structureWriteRepository.Update(entity);
+            await _structureWriteRepository.SaveAsync();
+
+        }
+
+        public async Task<StructureDTO_forGetandGetAll> DeleteStructureById(int id)
+        {
+
+            if (_structureReadRepository.GetAll().Any(i => i.Id == Convert.ToInt32(id)))
+            {
+
+                await _structureWriteRepository.RemoveByIdAsync(id.ToString());
+                await _structureWriteRepository.SaveAsync();
+
+                return null;
+
+            }
+
+            else
+            {
+                throw new NotFoundException("Structure not found");
+            }
+        }
+
+        #endregion
+
+
+        #region Vacancy service manager
+
+        public async Task VacancyCreate(VacancyDTO_forCreate model)
+        {
+
+
+
+            var entity = _mapper.Map<Vacancy>(model);
+
+            var existing = await _structureReadRepository.GetByIdAsync(model.StructureId.ToString(), false);
+            var existing2 = await _positionReadRepository.GetByIdAsync(model.PositionId.ToString(), false);
+
+            if (existing is null)
+            {
+                throw new NotFoundException("Structure not found");
+
+            }
+
+            if (existing2 is null)
+            {
+                throw new NotFoundException("Position not found");
+
+            }
+
+            entity = new Vacancy
+            {
+                Title = model.Title,
+                Description = model.Description,
+                StartDate = model.StartDate,
+                EndDate = model.EndDate,
+                PositionId = model.PositionId,
+                StructureId = model.StructureId,
+
+
+            };
+
+
+            await _vacancyWriteRepository.AddAsync(entity);
+
+            await _vacancyWriteRepository.SaveAsync();
+        }
+
+        public async Task<List<VacancyDTO_forGetandGetAll>> GetVacancy()
+        {
+            List<VacancyDTO_forGetandGetAll> datas = null;
+
+            await Task.Run(() =>
+            {
+                datas = _mapper.Map<List<VacancyDTO_forGetandGetAll>>(_vacancyReadRepository.GetAll(false));
+            });
+
+            if (datas.Count <= 0)
+            {
+                throw new NotFoundException("Vacancy not found");
+            }
+
+            return datas;
+        }
+
+        public async Task<VacancyDTO_forGetandGetAll> GetVacancyById(int id)
+        {
+            VacancyDTO_forGetandGetAll item = null;
+
+
+            item = _mapper.Map<VacancyDTO_forGetandGetAll>(await _vacancyReadRepository.GetByIdAsync(id.ToString(), false));
+
+
+            if (item == null)
+            {
+                throw new NotFoundException("Vacancy not found");
+            }
+
+            return item;
+        }
+
+        public async Task VacancyUpdate(VacancyDTO_forUpdate model)
+        {
+
+
+            var existing = await _vacancyReadRepository.GetByIdAsync(model.Id.ToString(), false);
+            var existing2 = await _positionReadRepository.GetByIdAsync(model.PositionId.ToString(), false);
+            var existing3 = await _structureReadRepository.GetByIdAsync(model.StructureId.ToString(), false);
+
+
+
+
+            if (existing is null)
+            {
+                throw new NotFoundException("Vacancy not found");
+
+            }
+
+            if (existing2 is null)
+            {
+                throw new NotFoundException("Position not found");
+
+            }
+
+            if (existing3 is null)
+            {
+                throw new NotFoundException("Structure not found");
+
+            }
+
+
+
+
+            var entity = _mapper.Map<Vacancy>(model);
+
+   
+
+            entity = new Vacancy
+            {
+                Id = model.Id,
+                Title = model.Title,
+                Description = model.Description,
+                StartDate = model.StartDate,
+                EndDate = model.EndDate,
+                PositionId = model.PositionId,
+                StructureId = model.StructureId,
+
+
+            };
+
+            _vacancyWriteRepository.Update(entity);
+            await _vacancyWriteRepository.SaveAsync();
+
+        }
+
+        public async Task<VacancyDTO_forGetandGetAll> DeleteVacancyById(int id)
+        {
+
+            if (_vacancyReadRepository.GetAll().Any(i => i.Id == Convert.ToInt32(id)))
+            {
+
+                await _vacancyWriteRepository.RemoveByIdAsync(id.ToString());
+                await _vacancyWriteRepository.SaveAsync();
+
+                return null;
+
+            }
+
+            else
+            {
+                throw new NotFoundException("Vacancy not found");
+            }
+        }
+
+        #endregion
+
+
+        #region Session service manager
+
+        public async Task SessionCreate(SessionDTO_forCreate model)
+        {
+
+
+
+            var entity = _mapper.Map<Session>(model);
+
+  
+            var existing1 = await _vacancyReadRepository.GetByIdAsync(model.VacancyId.ToString(), false);
+            var existing2 = await _candidateReadRepository.GetByIdAsync(model.CandidateId.ToString(), false);
+
+            if (existing1 is null)
+            {
+                throw new NotFoundException("Vacancy not found");
+
+            }
+
+            if (existing2 is null)
+            {
+                throw new NotFoundException("Candidate not found");
+
+            }
+
+            entity = new Session
+            {
+                EndValue = entity.EndValue,
+                StartDate = entity.StartDate,
+                EndDate = entity.EndDate,
+                VacancyId=model.VacancyId,
+                CandidateId=model.CandidateId,
+
+
+            };
+
+
+            await _sessionWriteRepository.AddAsync(entity);
+
+            await _sessionWriteRepository.SaveAsync();
+        }
+
+        public async Task<List<SessionDTO_forGetandGetAll>> GetSession()
+        {
+            List<SessionDTO_forGetandGetAll> datas = null;
+
+            await Task.Run(() =>
+            {
+                datas = _mapper.Map<List<SessionDTO_forGetandGetAll>>(_sessionReadRepository.GetAll(false));
+            });
+
+            if (datas.Count <= 0)
+            {
+                throw new NotFoundException("Session not found");
+            }
+
+            return datas;
+        }
+
+        public async Task<SessionDTO_forGetandGetAll> GetSessionById(int id)
+        {
+            SessionDTO_forGetandGetAll item = null;
+
+
+            item = _mapper.Map<SessionDTO_forGetandGetAll>(await _sessionReadRepository.GetByIdAsync(id.ToString(), false));
+
+
+            if (item == null)
+            {
+                throw new NotFoundException("Session not found");
+            }
+
+            return item;
+        }
+
+        public async Task SessionUpdate(SessionDTO_forUpdate model)
+        {
+
+
+            var existing = await _sessionReadRepository.GetByIdAsync(model.Id.ToString(), false);
+            var existing2 = await _vacancyReadRepository.GetByIdAsync(model.VacancyId.ToString(), false);
+            var existing3 = await _candidateReadRepository.GetByIdAsync(model.CandidateId.ToString(), false);
+
+
+
+
+            if (existing is null)
+            {
+                throw new NotFoundException("Session not found");
+
+            }
+
+            if (existing2 is null)
+            {
+                throw new NotFoundException("Vacancy not found");
+
+            }
+
+            if (existing3 is null)
+            {
+                throw new NotFoundException("Candidate not found");
+
+            }
+
+
+
+
+            var entity = _mapper.Map<Session>(model);
+
+
+
+            entity = new Session
+            {
+                Id = model.Id,
+                EndValue = entity.EndValue,
+                StartDate = entity.StartDate,
+                EndDate = entity.EndDate,
+                VacancyId = model.VacancyId,
+                CandidateId = model.CandidateId,
+
+
+            };
+
+            _sessionWriteRepository.Update(entity);
+            await _sessionWriteRepository.SaveAsync();
+
+        }
+
+        public async Task<SessionDTO_forGetandGetAll> DeleteSessionById(int id)
+        {
+
+            if (_sessionReadRepository.GetAll().Any(i => i.Id == Convert.ToInt32(id)))
+            {
+
+                await _sessionWriteRepository.RemoveByIdAsync(id.ToString());
+                await _sessionWriteRepository.SaveAsync();
+
+                return null;
+
+            }
+
+            else
+            {
+                throw new NotFoundException("Session not found");
+            }
+        }
+
+        #endregion
+
+
+        #region SessionType service manager
+
+        public async Task SessionTypeCreate(SessionTypeDTO_forCreate model)
+        {
+
+
+
+            var entity = _mapper.Map<SessionType>(model);
+
+   
+
+            entity = new SessionType
+            {
+                Name = entity.Name,
+
+            };
+
+
+            await _sessionTypeWriteRepository.AddAsync(entity);
+
+            await _sessionTypeWriteRepository.SaveAsync();
+        }
+
+        public async Task<List<SessionTypeDTO_forGetandGetAll>> GetSessionType()
+        {
+            List<SessionTypeDTO_forGetandGetAll> datas = null;
+
+            await Task.Run(() =>
+            {
+                datas = _mapper.Map<List<SessionTypeDTO_forGetandGetAll>>(_sessionTypeReadRepository.GetAll(false));
+            });
+
+            if (datas.Count <= 0)
+            {
+                throw new NotFoundException("SessionType not found");
+            }
+
+            return datas;
+        }
+
+        public async Task<SessionTypeDTO_forGetandGetAll> GetSessionTypeById(int id)
+        {
+            SessionTypeDTO_forGetandGetAll item = null;
+
+
+            item = _mapper.Map<SessionTypeDTO_forGetandGetAll>(await _sessionTypeReadRepository.GetByIdAsync(id.ToString(), false));
+
+
+            if (item == null)
+            {
+                throw new NotFoundException("SessionType not found");
+            }
+
+            return item;
+        }
+
+        public async Task SessionTypeUpdate(SessionTypeDTO_forUpdate model)
+        {
+
+
+            var existing = await _sessionTypeReadRepository.GetByIdAsync(model.Id.ToString(), false);
+
+            if (existing is null)
+            {
+                throw new NotFoundException("SessionType not found");
+
+            }
+
+
+            var entity = _mapper.Map<SessionType>(model);
+
+
+            entity = new SessionType
+            {
+                Id  = existing.Id,
+                Name = entity.Name,
+
+            };
+
+
+            _sessionTypeWriteRepository.Update(entity);
+            await _sessionTypeWriteRepository.SaveAsync();
+
+        }
+
+        public async Task<SessionTypeDTO_forGetandGetAll> DeleteSessionTypeById(int id)
+        {
+
+            if (_sessionTypeReadRepository.GetAll().Any(i => i.Id == Convert.ToInt32(id)))
+            {
+
+                await _sessionTypeWriteRepository.RemoveByIdAsync(id.ToString());
+                await _sessionTypeWriteRepository.SaveAsync();
+
+                return null;
+
+            }
+
+            else
+            {
+                throw new NotFoundException("SessionType not found");
+            }
+        }
+
+        #endregion
+
+
+        #region Question service manager
+
+        public async Task QuestionCreate(QuestionDTO_forCreate model)
+        {
+
+
+
+            var entity = _mapper.Map<Question>(model);
+
+
+            var existing1 = await _sessionTypeReadRepository.GetByIdAsync(model.SessionTypeId.ToString(), false);
+            var existing2 = await _structureReadRepository.GetByIdAsync(model.StructureId.ToString(), false);
+
+            if (existing1 is null)
+            {
+                throw new NotFoundException("SessionType not found");
+
+            }
+
+            if (existing2 is null)
+            {
+                throw new NotFoundException("Structure not found");
+
+            }
+
+            entity = new Question
+            {
+                Text = entity.Text,
+                LevelId = entity.LevelId,
+                SessionTypeId = entity.SessionTypeId,
+                StructureId = model.StructureId,
+
+
+            };
+
+
+            await _questionWriteRepository.AddAsync(entity);
+
+            await _questionWriteRepository.SaveAsync();
+        }
+
+        public async Task<List<QuestionDTO_forGetandGetAll>> GetQuestion()
+        {
+            List<QuestionDTO_forGetandGetAll> datas = null;
+
+            await Task.Run(() =>
+            {
+                datas = _mapper.Map<List<QuestionDTO_forGetandGetAll>>(_questionReadRepository.GetAll(false));
+            });
+
+            if (datas.Count <= 0)
+            {
+                throw new NotFoundException("Question not found");
+            }
+
+            return datas;
+        }
+
+        public async Task<QuestionDTO_forGetandGetAll> GetQuestionById(int id)
+        {
+            QuestionDTO_forGetandGetAll item = null;
+
+
+            item = _mapper.Map<QuestionDTO_forGetandGetAll>(await _questionReadRepository.GetByIdAsync(id.ToString(), false));
+
+
+            if (item == null)
+            {
+                throw new NotFoundException("Question not found");
+            }
+
+            return item;
+        }
+
+        public async Task QuestionUpdate(QuestionDTO_forUpdate model)
+        {
+
+
+            var existing = await _questionReadRepository.GetByIdAsync(model.Id.ToString(), false);
+            var existing2 = await _sessionTypeReadRepository.GetByIdAsync(model.SessionTypeId.ToString(), false);
+            var existing3 = await _structureReadRepository.GetByIdAsync(model.StructureId.ToString(), false);
+
+
+
+
+            if (existing is null)
+            {
+                throw new NotFoundException("Question not found");
+
+            }
+
+            if (existing2 is null)
+            {
+                throw new NotFoundException("SessionType not found");
+
+            }
+
+            if (existing3 is null)
+            {
+                throw new NotFoundException("Structure not found");
+
+            }
+
+
+
+
+            var entity = _mapper.Map<Question>(model);
+
+
+
+            entity = new Question
+            {
+                Id= model.Id,
+                Text = entity.Text,
+                LevelId = entity.LevelId,
+                SessionTypeId = entity.SessionTypeId,
+                StructureId = model.StructureId,
+
+
+            };
+
+            _questionWriteRepository.Update(entity);
+            await _questionWriteRepository.SaveAsync();
+
+        }
+
+        public async Task<QuestionDTO_forGetandGetAll> DeleteQuestionById(int id)
+        {
+
+            if (_questionReadRepository.GetAll().Any(i => i.Id == Convert.ToInt32(id)))
+            {
+
+                await _questionWriteRepository.RemoveByIdAsync(id.ToString());
+                await _questionWriteRepository.SaveAsync();
+
+                return null;
+
+            }
+
+            else
+            {
+                throw new NotFoundException("Question not found");
+            }
+        }
+
+        #endregion
+
+
+        #region SessionQuestion service manager
+
+        public async Task SessionQuestionCreate(SessionQuestionDTO_forCreate model)
+        {
+
+
+
+            var entity = _mapper.Map<SessionQuestion>(model);
+
+
+            var existing1 = await _sessionReadRepository.GetByIdAsync(model.SessionId.ToString(), false);
+            var existing2 = await _questionReadRepository.GetByIdAsync(model.QuestionId.ToString(), false);
+
+            if (existing1 is null)
+            {
+                throw new NotFoundException("Session not found");
+
+            }
+
+            if (existing2 is null)
+            {
+                throw new NotFoundException("Question not found");
+
+            }
+
+            entity = new SessionQuestion
+            {
+                Value = entity.Value,
+
+                SessionId = entity.SessionId,
+                QuestionId = model.QuestionId,
+
+
+            };
+
+
+            await _sessionQuestionWriteRepository.AddAsync(entity);
+
+            await _sessionQuestionWriteRepository.SaveAsync();
+        }
+
+        public async Task<List<SessionQuestionDTO_forGetandGetAll>> GetSessionQuestion()
+        {
+            List<SessionQuestionDTO_forGetandGetAll> datas = null;
+
+            await Task.Run(() =>
+            {
+                datas = _mapper.Map<List<SessionQuestionDTO_forGetandGetAll>>(_sessionQuestionReadRepository.GetAll(false));
+            });
+
+            if (datas.Count <= 0)
+            {
+                throw new NotFoundException("SessionQuestion not found");
+            }
+
+            return datas;
+        }
+
+        public async Task<SessionQuestionDTO_forGetandGetAll> GetSessionQuestionById(int id)
+        {
+            SessionQuestionDTO_forGetandGetAll item = null;
+
+
+            item = _mapper.Map<SessionQuestionDTO_forGetandGetAll>(await _sessionQuestionReadRepository.GetByIdAsync(id.ToString(), false));
+
+
+            if (item == null)
+            {
+                throw new NotFoundException("SessionQuestion not found");
+            }
+
+            return item;
+        }
+
+        public async Task SessionQuestionUpdate(SessionQuestionDTO_forUpdate model)
+        {
+
+
+            var existing = await _sessionQuestionReadRepository.GetByIdAsync(model.Id.ToString(), false);
+            var existing2 = await _sessionReadRepository.GetByIdAsync(model.SessionId.ToString(), false);
+            var existing3 = await _questionReadRepository.GetByIdAsync(model.QuestionId.ToString(), false);
+
+
+
+
+            if (existing is null)
+            {
+                throw new NotFoundException("SessionQuestion not found");
+
+            }
+
+            if (existing2 is null)
+            {
+                throw new NotFoundException("Session not found");
+
+            }
+
+            if (existing3 is null)
+            {
+                throw new NotFoundException("Question not found");
+
+            }
+
+
+
+
+            var entity = _mapper.Map<SessionQuestion>(model);
+
+
+
+            entity = new SessionQuestion
+            {
+                Value = entity.Value,
+
+                SessionId = entity.SessionId,
+                QuestionId = model.QuestionId,
+
+
+            };
+
+            _sessionQuestionWriteRepository.Update(entity);
+            await _sessionQuestionWriteRepository.SaveAsync();
+
+        }
+
+        public async Task<SessionQuestionDTO_forGetandGetAll> DeleteSessionQuestionById(int id)
+        {
+
+            if (_sessionQuestionReadRepository.GetAll().Any(i => i.Id == Convert.ToInt32(id)))
+            {
+
+                await _sessionQuestionWriteRepository.RemoveByIdAsync(id.ToString());
+                await _sessionQuestionWriteRepository.SaveAsync();
+
+                return null;
+
+            }
+
+            else
+            {
+                throw new NotFoundException("SessionQuestion not found");
+            }
+        }
+
+        #endregion
+
 
 
 
