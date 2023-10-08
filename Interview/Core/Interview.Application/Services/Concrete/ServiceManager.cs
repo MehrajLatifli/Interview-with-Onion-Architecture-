@@ -17,12 +17,63 @@ namespace Interview.Application.Services.Concrete
         private readonly ICandidateDocumentWriteRepository _candidateDocumentWriteRepository;
         private readonly ICandidateDocumentReadRepository _candidateDocumentReadRepository;
 
-        public ServiceManager(IMapper mapper, ICandidateDocumentWriteRepository candidateDocumentWriteRepository, ICandidateDocumentReadRepository candidateDocumentReadRepository)
+        private readonly ICandidateWriteRepository _candidateWriteRepository;
+        private readonly ICandidateReadRepository _candidateReadRepository;
+
+        private readonly ILevelWriteRepository _levelWriteRepository;
+        private readonly ILevelReadRepository _levelReadRepository;
+
+        private readonly ISessionTypeWriteRepository _sessionTypeWriteRepository;
+        private readonly ISessionTypeReadRepository _sessionTypeReadRepository;
+
+        private readonly IQuestionWriteRepository _questionWriteRepository;
+        private readonly IQuestionReadRepository _questionReadRepository;
+
+        private readonly ISessionQuestionWriteRepository _sessionQuestionWriteRepository;
+        private readonly ISessionQuestionReadRepository _sessionQuestionReadRepository;
+
+        private readonly ISessionWriteRepository _sessionWriteRepository;
+        private readonly ISessionReadRepository _sessionReadRepository;
+
+        private readonly IStructureWriteRepository _structureWriteRepository;
+        private readonly IStructureReadRepository _structureReadRepository;
+
+        private readonly IStructureTypeWriteRepository _structureTypeWriteRepository;
+        private readonly IStructureTypeReadRepository _structureTypeReadRepository;
+
+        private readonly IVacancyWriteRepository _vacancyWriteRepository;
+        private readonly IVacancyReadRepository _vacancyReadRepository;
+
+        private readonly IPositionWriteRepository _positionWriteRepository;
+        private readonly IPositionReadRepository _positionReadRepository;
+
+        public ServiceManager(IMapper mapper, ICandidateDocumentWriteRepository candidateDocumentWriteRepository, ICandidateDocumentReadRepository candidateDocumentReadRepository, ICandidateWriteRepository candidateWriteRepository, ICandidateReadRepository candidateReadRepository, ILevelWriteRepository levelWriteRepository, ILevelReadRepository levelReadRepository, ISessionTypeWriteRepository sessionTypeWriteRepository, ISessionTypeReadRepository sessionTypeReadRepository, IQuestionWriteRepository questionWriteRepository, IQuestionReadRepository questionReadRepository, ISessionQuestionWriteRepository sessionQuestionWriteRepository, ISessionQuestionReadRepository sessionQuestionReadRepository, ISessionWriteRepository sessionWriteRepository, ISessionReadRepository sessionReadRepository, IStructureWriteRepository structureWriteRepository, IStructureReadRepository structureReadRepository, IStructureTypeWriteRepository structureTypeWriteRepository, IStructureTypeReadRepository structureTypeReadRepository, IVacancyWriteRepository vacancyWriteRepository, IVacancyReadRepository vacancyReadRepository, IPositionWriteRepository positionWriteRepository, IPositionReadRepository positionReadRepository)
         {
             _mapper = mapper;
             _candidateDocumentWriteRepository = candidateDocumentWriteRepository;
             _candidateDocumentReadRepository = candidateDocumentReadRepository;
+            _candidateWriteRepository = candidateWriteRepository;
+            _candidateReadRepository = candidateReadRepository;
+            _levelWriteRepository = levelWriteRepository;
+            _levelReadRepository = levelReadRepository;
+            _sessionTypeWriteRepository = sessionTypeWriteRepository;
+            _sessionTypeReadRepository = sessionTypeReadRepository;
+            _questionWriteRepository = questionWriteRepository;
+            _questionReadRepository = questionReadRepository;
+            _sessionQuestionWriteRepository = sessionQuestionWriteRepository;
+            _sessionQuestionReadRepository = sessionQuestionReadRepository;
+            _sessionWriteRepository = sessionWriteRepository;
+            _sessionReadRepository = sessionReadRepository;
+            _structureWriteRepository = structureWriteRepository;
+            _structureReadRepository = structureReadRepository;
+            _structureTypeWriteRepository = structureTypeWriteRepository;
+            _structureTypeReadRepository = structureTypeReadRepository;
+            _vacancyWriteRepository = vacancyWriteRepository;
+            _vacancyReadRepository = vacancyReadRepository;
+            _positionWriteRepository = positionWriteRepository;
+            _positionReadRepository = positionReadRepository;
         }
+
 
 
         #region CandidateDocument service manager
@@ -155,9 +206,9 @@ namespace Interview.Application.Services.Concrete
 
             }
 
-            var update = _mapper.Map<CandidateDocument>(model);
+            var entity = _mapper.Map<CandidateDocument>(model);
 
-            update = new CandidateDocument
+            entity = new CandidateDocument
             {
                 Id = model.Id,
                 Surname = model.Surname,
@@ -170,7 +221,7 @@ namespace Interview.Application.Services.Concrete
 
             };
 
-            _candidateDocumentWriteRepository.Update(update);
+            _candidateDocumentWriteRepository.Update(entity);
             await _candidateDocumentWriteRepository.SaveAsync();
 
         }
