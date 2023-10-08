@@ -130,7 +130,7 @@ namespace Interview.API.Controllers
         #region CandidateDocument
 
 
-        [HttpGet("CandidateDocument/{id}")]
+        [HttpGet("candidatedocument/{id}")]
         public async Task<IActionResult> GetCandidateDocumentById(int id)
         {
 
@@ -141,7 +141,7 @@ namespace Interview.API.Controllers
         }
 
 
-        [HttpGet("CandidateDocument")]
+        [HttpGet("candidatedocument")]
         public async Task<IActionResult> GetCandidateDocument()
         {
 
@@ -154,7 +154,7 @@ namespace Interview.API.Controllers
 
 
         [HttpPost]
-        [Route("CandidateDocument")]
+        [Route("candidatedocument")]
         public async Task<IActionResult> CandidateDocumentCreate([FromForm] CandidateDocumentDTO_forCreate model)
         {
 
@@ -166,7 +166,7 @@ namespace Interview.API.Controllers
 
 
         [HttpPut]
-        [Route("CandidateDocument")]
+        [Route("candidatedocument")]
         public async Task<IActionResult> CandidateDocumentUpdate([FromForm] CandidateDocumentDTO_forUpdate model)
         {
 
@@ -182,7 +182,7 @@ namespace Interview.API.Controllers
         }
 
 
-        [HttpDelete("CandidateDocument/{id}")]
+        [HttpDelete("candidatedocument/{id}")]
         public async Task<IActionResult> CandidateDocumentDelete(int id)
         {
 
