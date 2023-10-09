@@ -23,7 +23,7 @@ namespace Interview.Application.Services.Abstract
 
         #region Candidate service
 
-        public Task CandidateCreate(CandidateDTO_forCreate model);
+        public Task  CandidateCreate(CandidateDTO_forCreate model);
 
         public Task<List<CandidateDTO_forGetandGetAll>> GetCandidate();
 
@@ -71,6 +71,8 @@ namespace Interview.Application.Services.Abstract
         public Task QuestionCreate(QuestionDTO_forCreate model);
 
         public Task<List<QuestionDTO_forGetandGetAll>> GetQuestion();
+
+        public Task<List<QuestionDTO_forGetandGetAll>> GetRandomQuestion();
 
         public Task<QuestionDTO_forGetandGetAll> GetQuestionById(int id);
 

@@ -1,10 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Interview.Application.Mapper.DTO
 {
     public class SessionDTO_forCreate
     {
-
+        [Column(TypeName = "decimal(18, 4)")]
         public decimal EndValue { get; set; }
 
         public DateTime? StartDate { get; set; }

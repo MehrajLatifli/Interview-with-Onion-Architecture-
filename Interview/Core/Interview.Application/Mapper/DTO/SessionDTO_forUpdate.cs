@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Interview.Application.Mapper.DTO
 {
@@ -7,6 +8,7 @@ namespace Interview.Application.Mapper.DTO
         [Required(ErrorMessage = "Id is required")]
         public int Id { get; set; }
 
+        [Column(TypeName = "decimal(18, 4)")]
         public decimal EndValue { get; set; }
 
         public DateTime? StartDate { get; set; }

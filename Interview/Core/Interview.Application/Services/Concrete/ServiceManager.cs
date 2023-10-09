@@ -6,6 +6,7 @@ using Interview.Application.Mapper.DTO;
 using Interview.Application.Repositories.Custom;
 using Interview.Application.Services.Abstract;
 using Interview.Domain.Entities.Models;
+using System.Linq;
 
 namespace Interview.Application.Services.Concrete
 {
@@ -839,17 +840,18 @@ namespace Interview.Application.Services.Concrete
             var existing = await _structureReadRepository.GetByIdAsync(model.StructureId.ToString(), false);
             var existing2 = await _positionReadRepository.GetByIdAsync(model.PositionId.ToString(), false);
 
+            if (existing2 is null)
+            {
+                throw new NotFoundException("Position not found");
+
+            }
+
             if (existing is null)
             {
                 throw new NotFoundException("Structure not found");
 
             }
 
-            if (existing2 is null)
-            {
-                throw new NotFoundException("Position not found");
-
-            }
 
             entity = new Vacancy
             {
@@ -1247,7 +1249,13 @@ namespace Interview.Application.Services.Concrete
 
             var existing1 = await _sessionTypeReadRepository.GetByIdAsync(model.SessionTypeId.ToString(), false);
             var existing2 = await _structureReadRepository.GetByIdAsync(model.StructureId.ToString(), false);
+            var existing3 = await _levelReadRepository.GetByIdAsync(model.LevelId.ToString(), false);
 
+            if (existing3 is null)
+            {
+                throw new NotFoundException("Level not found");
+
+            }
             if (existing1 is null)
             {
                 throw new NotFoundException("SessionType not found");
@@ -1259,6 +1267,7 @@ namespace Interview.Application.Services.Concrete
                 throw new NotFoundException("Structure not found");
 
             }
+
 
             entity = new Question
             {
@@ -1293,6 +1302,99 @@ namespace Interview.Application.Services.Concrete
             return datas;
         }
 
+        public async Task<List<QuestionDTO_forGetandGetAll>> GetRandomQuestion()
+        {
+            List<QuestionDTO_forGetandGetAll> easyList = new List<QuestionDTO_forGetandGetAll>();
+            List<QuestionDTO_forGetandGetAll> mediumList = new List<QuestionDTO_forGetandGetAll>();
+            List<QuestionDTO_forGetandGetAll> hardList = new List<QuestionDTO_forGetandGetAll>();
+            List<QuestionDTO_forGetandGetAll> randomList = new List<QuestionDTO_forGetandGetAll>();
+
+            var rnd = new Random();
+
+
+            await Task.Run(() =>
+            {
+                 easyList = _mapper.Map<List<QuestionDTO_forGetandGetAll>>(_questionReadRepository.GetAll(false).Where(i=>i.LevelId==1));
+
+                 var easyrandomNumbers = Enumerable.Range(_questionReadRepository.GetAll(false).Where(i => i.LevelId == 1).FirstOrDefault().Id, _questionReadRepository.GetAll(false).Where(i => i.LevelId == 1).Count() - 1)
+                 .OrderBy(x => rnd.Next())
+                 .Take(10)
+                 .ToList();
+
+                foreach (var id in easyrandomNumbers)
+                {
+                    foreach (var item in easyList)
+                    {
+                        if (item.Id == id)
+                        {
+                            randomList.Add(item);
+                            break;
+                        }
+                    }
+                }
+            });
+
+
+            await Task.Run(() =>
+            {
+                mediumList = _mapper.Map<List<QuestionDTO_forGetandGetAll>>(_questionReadRepository.GetAll(false).Where(i => i.LevelId == 2));
+
+
+
+                var mediumrandomNumbers = Enumerable.Range(_questionReadRepository.GetAll(false).Where(i => i.LevelId == 2).FirstOrDefault().Id, _questionReadRepository.GetAll(false).Where(i => i.LevelId == 2).Count() - 1)
+               .OrderBy(x => rnd.Next())
+               .Take(8)
+               .ToList();
+
+                foreach (var id in mediumrandomNumbers)
+                {
+                    foreach (var item in mediumList)
+                    {
+                        if (item.Id == id)
+                        {
+                            randomList.Add(item);
+                            break;
+                        }
+                    }
+                }
+
+            });
+
+
+            await Task.Run(() =>
+            {
+                hardList = _mapper.Map<List<QuestionDTO_forGetandGetAll>>(_questionReadRepository.GetAll(false).Where(i => i.LevelId == 3));
+
+
+                var hardrandomNumbers = Enumerable.Range(_questionReadRepository.GetAll(false).Where(i => i.LevelId == 3).FirstOrDefault().Id, _questionReadRepository.GetAll(false).Where(i => i.LevelId == 3).Count() - 1)
+               .OrderBy(x => rnd.Next())
+               .Take(2)
+               .ToList();
+
+
+                foreach (var id in hardrandomNumbers)
+                {
+                    foreach (var item in hardList)
+                    {
+                        if (item.Id == id)
+                        {
+                            randomList.Add(item);
+                            break;
+                        }
+                    }
+                }
+
+            });
+
+
+            if (randomList.Count <= 0)
+            {
+                throw new NotFoundException("Question not found");
+            }
+
+            return randomList;
+        }
+
         public async Task<QuestionDTO_forGetandGetAll> GetQuestionById(int id)
         {
             QuestionDTO_forGetandGetAll item = null;
@@ -1316,10 +1418,14 @@ namespace Interview.Application.Services.Concrete
             var existing = await _questionReadRepository.GetByIdAsync(model.Id.ToString(), false);
             var existing2 = await _sessionTypeReadRepository.GetByIdAsync(model.SessionTypeId.ToString(), false);
             var existing3 = await _structureReadRepository.GetByIdAsync(model.StructureId.ToString(), false);
+            var existing4 = await _levelReadRepository.GetByIdAsync(model.LevelId.ToString(), false);
 
 
+            if (existing4 is null)
+            {
+                throw new NotFoundException("Level not found");
 
-
+            }
             if (existing is null)
             {
                 throw new NotFoundException("Question not found");
@@ -1338,7 +1444,7 @@ namespace Interview.Application.Services.Concrete
 
             }
 
-
+       
 
 
             var entity = _mapper.Map<Question>(model);
