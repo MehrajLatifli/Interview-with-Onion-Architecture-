@@ -1564,21 +1564,30 @@ namespace Interview.Application.Services.Concrete
                 }
             });
 
-            if (!_mapper.Map<List<PositionDTO_forGetandGetAll>>(_positionReadRepository.GetAll(false)).Any(i => i.Id == positionId))
+            await Task.Run(() =>
             {
-                throw new NotFoundException("Position not found");
-            }
 
-            if (!_mapper.Map<List<VacancyDTO_forGetandGetAll>>(_vacancyReadRepository.GetAll(false)).Any(i => i.Id == vacantionId && i.PositionId == positionId))
+                if (!_mapper.Map<List<PositionDTO_forGetandGetAll>>(_positionReadRepository.GetAll(false)).Any(i => i.Id == positionId))
+                {
+                    throw new NotFoundException("Position not found");
+                }
+            });
+
+            await Task.Run(() =>
             {
-                throw new NotFoundException("Vacancy not found");
-            }
+                if (!_mapper.Map<List<VacancyDTO_forGetandGetAll>>(_vacancyReadRepository.GetAll(false)).Any(i => i.Id == vacantionId && i.PositionId == positionId))
+                {
+                    throw new NotFoundException("Vacancy not found");
+                }
+            });
 
-            if (!_mapper.Map<List<SessionDTO_forGetandGetAll>>(_sessionReadRepository.GetAll(false)).Any(i => i.Id == sessionId && i.VacancyId == vacantionId))
+            await Task.Run(() =>
             {
-                throw new NotFoundException("Session not found");
-            }
-
+                if (!_mapper.Map<List<SessionDTO_forGetandGetAll>>(_sessionReadRepository.GetAll(false)).Any(i => i.Id == sessionId && i.VacancyId == vacantionId))
+                {
+                    throw new NotFoundException("Session not found");
+                }
+            });
 
             if (_mapper.Map<List<PositionDTO_forGetandGetAll>>(_positionReadRepository.GetAll(false)).Any(i => i.Id == positionId))
             {
