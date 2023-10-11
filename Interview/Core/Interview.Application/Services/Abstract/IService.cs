@@ -72,7 +72,7 @@ namespace Interview.Application.Services.Abstract
 
         public Task<List<QuestionDTO_forGetandGetAll>> GetQuestion();
 
-        public Task<List<QuestionDTO_forGetandGetAll>> GetRandomQuestion();
+
 
         public Task<QuestionDTO_forGetandGetAll> GetQuestionById(int id);
 
@@ -95,6 +95,8 @@ namespace Interview.Application.Services.Abstract
 
         public Task<SessionQuestionDTO_forGetandGetAll> DeleteSessionQuestionById(int id);
 
+        public Task<List<QuestionDTO_forGetandGetAll>> GetRandomQuestion(int questionCount, int positionId, int vacantionId, int sessionId);
+
         #endregion
 
 
@@ -109,6 +111,8 @@ namespace Interview.Application.Services.Abstract
         public Task SessionUpdate(SessionDTO_forUpdate model);
 
         public Task<SessionDTO_forGetandGetAll> DeleteSessionById(int id);
+
+  
 
         #endregion
 

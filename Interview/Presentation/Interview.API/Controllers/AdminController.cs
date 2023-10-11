@@ -15,7 +15,7 @@ namespace Interview.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Policy = "AdminOnly")]
+    //[Authorize(Policy = "AdminOnly")]
     public class AdminController : ControllerBase
     {
         private readonly UserManager<CustomUser> _userManager;
@@ -764,17 +764,6 @@ namespace Interview.API.Controllers
         }
 
 
-        [HttpGet("RandomQuestion")]
-        public async Task<IActionResult> GetRandomQuestion()
-        {
-
-            var data = await _service.GetRandomQuestion();
-
-
-            return Ok(data);
-
-        }
-
 
         [HttpPost]
         [Route("Question")]
@@ -883,19 +872,30 @@ namespace Interview.API.Controllers
         }
 
 
-#endregion        
-        
-        
-    
-        
+        [HttpGet("RandomQuestion/{questionCount}/{sessionId}/{vacantionId}/{positionId}")]
+        public async Task<IActionResult> GetRandomQuestion(int questionCount, int positionId, int vacantionId, int sessionId)
+        {
+
+            var data = await _service.GetRandomQuestion( questionCount,  sessionId,  vacantionId,  positionId);
+
+
+            return Ok(data);
+
+        }
+
+        #endregion
 
 
 
-        
 
-        
-        
-        
+
+
+
+
+
+
+
+
 
 
     }

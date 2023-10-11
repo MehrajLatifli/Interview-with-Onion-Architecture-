@@ -6,6 +6,7 @@ using Interview.Application.Mapper.DTO;
 using Interview.Application.Repositories.Custom;
 using Interview.Application.Services.Abstract;
 using Interview.Domain.Entities.Models;
+using System.Diagnostics.Metrics;
 using System.Linq;
 
 namespace Interview.Application.Services.Concrete
@@ -121,7 +122,7 @@ namespace Interview.Application.Services.Concrete
                 Email = model.Email,
                 Cv = Url,
                 Address = model.Address,
-                Patronymic=model.Patronymic,
+                Patronymic = model.Patronymic,
 
             };
 
@@ -257,7 +258,7 @@ namespace Interview.Application.Services.Concrete
         public async Task CandidateCreate(CandidateDTO_forCreate model)
         {
 
-           
+
 
             var entity = _mapper.Map<Candidate>(model);
 
@@ -271,7 +272,7 @@ namespace Interview.Application.Services.Concrete
 
             entity = new Candidate
             {
-               CandidateDocumentId=model.CandidateDocumentId,
+                CandidateDocumentId = model.CandidateDocumentId,
 
             };
 
@@ -327,7 +328,7 @@ namespace Interview.Application.Services.Concrete
 
             }
 
-          
+
 
             if (existing2 is null)
             {
@@ -340,7 +341,7 @@ namespace Interview.Application.Services.Concrete
             entity = new Candidate
             {
                 Id = model.Id,
-                CandidateDocumentId=model.CandidateDocumentId,
+                CandidateDocumentId = model.CandidateDocumentId,
 
             };
 
@@ -450,7 +451,7 @@ namespace Interview.Application.Services.Concrete
 
             entity = new Level
             {
-                Id=model.Id,
+                Id = model.Id,
                 Name = model.Name,
                 Coefficient = model.Coefficient,
 
@@ -495,13 +496,13 @@ namespace Interview.Application.Services.Concrete
             entity = new StructureType
             {
                 Name = model.Name,
-               
+
 
             };
 
 
             await _structureTypeWriteRepository.AddAsync(entity);
-                   
+
             await _structureTypeWriteRepository.SaveAsync();
         }
 
@@ -938,7 +939,7 @@ namespace Interview.Application.Services.Concrete
 
             var entity = _mapper.Map<Vacancy>(model);
 
-   
+
 
             entity = new Vacancy
             {
@@ -989,7 +990,7 @@ namespace Interview.Application.Services.Concrete
 
             var entity = _mapper.Map<Session>(model);
 
-  
+
             var existing1 = await _vacancyReadRepository.GetByIdAsync(model.VacancyId.ToString(), false);
             var existing2 = await _candidateReadRepository.GetByIdAsync(model.CandidateId.ToString(), false);
 
@@ -1010,8 +1011,8 @@ namespace Interview.Application.Services.Concrete
                 EndValue = entity.EndValue,
                 StartDate = entity.StartDate,
                 EndDate = entity.EndDate,
-                VacancyId=model.VacancyId,
-                CandidateId=model.CandidateId,
+                VacancyId = model.VacancyId,
+                CandidateId = model.CandidateId,
 
 
             };
@@ -1127,6 +1128,8 @@ namespace Interview.Application.Services.Concrete
             }
         }
 
+
+
         #endregion
 
 
@@ -1139,7 +1142,7 @@ namespace Interview.Application.Services.Concrete
 
             var entity = _mapper.Map<SessionType>(model);
 
-   
+
 
             entity = new SessionType
             {
@@ -1204,7 +1207,7 @@ namespace Interview.Application.Services.Concrete
 
             entity = new SessionType
             {
-                Id  = existing.Id,
+                Id = existing.Id,
                 Name = entity.Name,
 
             };
@@ -1302,98 +1305,7 @@ namespace Interview.Application.Services.Concrete
             return datas;
         }
 
-        public async Task<List<QuestionDTO_forGetandGetAll>> GetRandomQuestion()
-        {
-            List<QuestionDTO_forGetandGetAll> easyList = new List<QuestionDTO_forGetandGetAll>();
-            List<QuestionDTO_forGetandGetAll> mediumList = new List<QuestionDTO_forGetandGetAll>();
-            List<QuestionDTO_forGetandGetAll> hardList = new List<QuestionDTO_forGetandGetAll>();
-            List<QuestionDTO_forGetandGetAll> randomList = new List<QuestionDTO_forGetandGetAll>();
 
-            var rnd = new Random();
-
-
-            await Task.Run(() =>
-            {
-                 easyList = _mapper.Map<List<QuestionDTO_forGetandGetAll>>(_questionReadRepository.GetAll(false).Where(i=>i.LevelId==1));
-
-                 var easyrandomNumbers = Enumerable.Range(_questionReadRepository.GetAll(false).Where(i => i.LevelId == 1).FirstOrDefault().Id, _questionReadRepository.GetAll(false).Where(i => i.LevelId == 1).Count() - 1)
-                 .OrderBy(x => rnd.Next())
-                 .Take(10)
-                 .ToList();
-
-                foreach (var id in easyrandomNumbers)
-                {
-                    foreach (var item in easyList)
-                    {
-                        if (item.Id == id)
-                        {
-                            randomList.Add(item);
-                            break;
-                        }
-                    }
-                }
-            });
-
-
-            await Task.Run(() =>
-            {
-                mediumList = _mapper.Map<List<QuestionDTO_forGetandGetAll>>(_questionReadRepository.GetAll(false).Where(i => i.LevelId == 2));
-
-
-
-                var mediumrandomNumbers = Enumerable.Range(_questionReadRepository.GetAll(false).Where(i => i.LevelId == 2).FirstOrDefault().Id, _questionReadRepository.GetAll(false).Where(i => i.LevelId == 2).Count() - 1)
-               .OrderBy(x => rnd.Next())
-               .Take(8)
-               .ToList();
-
-                foreach (var id in mediumrandomNumbers)
-                {
-                    foreach (var item in mediumList)
-                    {
-                        if (item.Id == id)
-                        {
-                            randomList.Add(item);
-                            break;
-                        }
-                    }
-                }
-
-            });
-
-
-            await Task.Run(() =>
-            {
-                hardList = _mapper.Map<List<QuestionDTO_forGetandGetAll>>(_questionReadRepository.GetAll(false).Where(i => i.LevelId == 3));
-
-
-                var hardrandomNumbers = Enumerable.Range(_questionReadRepository.GetAll(false).Where(i => i.LevelId == 3).FirstOrDefault().Id, _questionReadRepository.GetAll(false).Where(i => i.LevelId == 3).Count() - 1)
-               .OrderBy(x => rnd.Next())
-               .Take(2)
-               .ToList();
-
-
-                foreach (var id in hardrandomNumbers)
-                {
-                    foreach (var item in hardList)
-                    {
-                        if (item.Id == id)
-                        {
-                            randomList.Add(item);
-                            break;
-                        }
-                    }
-                }
-
-            });
-
-
-            if (randomList.Count <= 0)
-            {
-                throw new NotFoundException("Question not found");
-            }
-
-            return randomList;
-        }
 
         public async Task<QuestionDTO_forGetandGetAll> GetQuestionById(int id)
         {
@@ -1444,7 +1356,7 @@ namespace Interview.Application.Services.Concrete
 
             }
 
-       
+
 
 
             var entity = _mapper.Map<Question>(model);
@@ -1453,7 +1365,7 @@ namespace Interview.Application.Services.Concrete
 
             entity = new Question
             {
-                Id= model.Id,
+                Id = model.Id,
                 Text = entity.Text,
                 LevelId = entity.LevelId,
                 SessionTypeId = entity.SessionTypeId,
@@ -1632,6 +1544,307 @@ namespace Interview.Application.Services.Concrete
                 throw new NotFoundException("SessionQuestion not found");
             }
         }
+
+
+        public async Task<List<QuestionDTO_forGetandGetAll>> GetRandomQuestion(int questionCount, int positionId, int vacantionId, int sessionId)
+        {
+ 
+
+            List<QuestionDTO_forGetandGetAll> easyList = new List<QuestionDTO_forGetandGetAll>();
+            List<QuestionDTO_forGetandGetAll> mediumList = new List<QuestionDTO_forGetandGetAll>();
+            List<QuestionDTO_forGetandGetAll> hardList = new List<QuestionDTO_forGetandGetAll>();
+            List<QuestionDTO_forGetandGetAll> randomList = new List<QuestionDTO_forGetandGetAll>();
+            Random rnd =null;
+
+            await Task.Run(() =>
+            {
+                if (_mapper.Map<List<QuestionDTO_forGetandGetAll>>(_questionReadRepository.GetAll(false)).Count < questionCount)
+                {
+                    throw new NotFoundException("Not enough questions");
+                }
+            });
+
+            if (!_mapper.Map<List<PositionDTO_forGetandGetAll>>(_positionReadRepository.GetAll(false)).Any(i => i.Id == positionId))
+            {
+                throw new NotFoundException("Position not found");
+            }
+
+            if (!_mapper.Map<List<VacancyDTO_forGetandGetAll>>(_vacancyReadRepository.GetAll(false)).Any(i => i.Id == vacantionId && i.PositionId == positionId))
+            {
+                throw new NotFoundException("Vacancy not found");
+            }
+
+            if (!_mapper.Map<List<SessionDTO_forGetandGetAll>>(_sessionReadRepository.GetAll(false)).Any(i => i.Id == sessionId && i.VacancyId == vacantionId))
+            {
+                throw new NotFoundException("Session not found");
+            }
+
+
+            if (_mapper.Map<List<PositionDTO_forGetandGetAll>>(_positionReadRepository.GetAll(false)).Any(i => i.Id == positionId))
+            {
+                if (_mapper.Map<List<VacancyDTO_forGetandGetAll>>(_vacancyReadRepository.GetAll(false)).Any(i => i.Id == vacantionId && i.PositionId == positionId))
+                {
+                    if (_mapper.Map<List<SessionDTO_forGetandGetAll>>(_sessionReadRepository.GetAll(false)).Any(i => i.Id == sessionId && i.VacancyId == vacantionId))
+                    {
+
+                        if (_mapper.Map<PositionDTO_forGetandGetAll>(await _positionReadRepository.GetByIdAsync(positionId.ToString(), false)).Name == "Junior")
+                        {
+                            rnd = new Random();
+
+                            await Task.Run(() =>
+                            {
+                                easyList = _mapper.Map<List<QuestionDTO_forGetandGetAll>>(_questionReadRepository.GetAll(false).Where(i => i.LevelId == 1));
+
+                                var easyrandomNumbers = Enumerable.Range(_questionReadRepository.GetAll(false).Where(i => i.LevelId == 1).FirstOrDefault().Id, _questionReadRepository.GetAll(false).Where(i => i.LevelId == 1).Count() - 1)
+                                .OrderBy(x => rnd.Next())
+                                .Take(Convert.ToInt32(Math.Round(Convert.ToDouble(questionCount) * 50 / 100, MidpointRounding.AwayFromZero)))
+                                .ToList();
+
+                                foreach (var id in easyrandomNumbers)
+                                {
+                                    foreach (var item in easyList)
+                                    {
+                                        if (item.Id == id)
+                                        {
+                                            randomList.Add(item);
+                                            break;
+                                        }
+                                    }
+                                }
+                            });
+
+
+                            await Task.Run(() =>
+                            {
+                                mediumList = _mapper.Map<List<QuestionDTO_forGetandGetAll>>(_questionReadRepository.GetAll(false).Where(i => i.LevelId == 2));
+
+                                var mediumrandomNumbers = Enumerable.Range(_questionReadRepository.GetAll(false).Where(i => i.LevelId == 2).FirstOrDefault().Id, _questionReadRepository.GetAll(false).Where(i => i.LevelId == 2).Count() - 1)
+                               .OrderBy(x => rnd.Next())
+                               .Take(Convert.ToInt32(Math.Round(Convert.ToDouble(questionCount) * 30 / 100, MidpointRounding.AwayFromZero)))
+                               .ToList();
+
+                                foreach (var id in mediumrandomNumbers)
+                                {
+                                    foreach (var item in mediumList)
+                                    {
+                                        if (item.Id == id)
+                                        {
+                                            randomList.Add(item);
+                                            break;
+                                        }
+                                    }
+                                }
+
+                            });
+
+
+                            await Task.Run(() =>
+                            {
+                                hardList = _mapper.Map<List<QuestionDTO_forGetandGetAll>>(_questionReadRepository.GetAll(false).Where(i => i.LevelId == 3));
+
+                                var hardrandomNumbers = Enumerable.Range(_questionReadRepository.GetAll(false).Where(i => i.LevelId == 3).FirstOrDefault().Id, _questionReadRepository.GetAll(false).Where(i => i.LevelId == 3).Count() - 1)
+                               .OrderBy(x => rnd.Next())
+                               .Take(Convert.ToInt32(Math.Round(Convert.ToDouble(questionCount) * 20 / 100, MidpointRounding.AwayFromZero)))
+                               .ToList();
+
+
+                                foreach (var id in hardrandomNumbers)
+                                {
+                                    foreach (var item in hardList)
+                                    {
+                                        if (item.Id == id)
+                                        {
+                                            randomList.Add(item);
+                                            break;
+                                        }
+                                    }
+                                }
+
+                            });
+
+                        }
+
+                        if (_mapper.Map<PositionDTO_forGetandGetAll>(await _positionReadRepository.GetByIdAsync(positionId.ToString(), false)).Name == "Middle")
+                        {
+                            rnd = new Random();
+
+                            await Task.Run(() =>
+                            {
+                                easyList = _mapper.Map<List<QuestionDTO_forGetandGetAll>>(_questionReadRepository.GetAll(false).Where(i => i.LevelId == 1));
+
+                                var easyrandomNumbers = Enumerable.Range(_questionReadRepository.GetAll(false).Where(i => i.LevelId == 1).FirstOrDefault().Id, _questionReadRepository.GetAll(false).Where(i => i.LevelId == 1).Count() - 1)
+                                .OrderBy(x => rnd.Next())
+                                .Take(Convert.ToInt32(Math.Round(Convert.ToDouble(questionCount) * 20 / 100, MidpointRounding.AwayFromZero)))
+                                .ToList();
+
+                                foreach (var id in easyrandomNumbers)
+                                {
+                                    foreach (var item in easyList)
+                                    {
+                                        if (item.Id == id)
+                                        {
+                                            randomList.Add(item);
+                                            break;
+                                        }
+                                    }
+                                }
+                            });
+
+
+                            await Task.Run(() =>
+                            {
+                                mediumList = _mapper.Map<List<QuestionDTO_forGetandGetAll>>(_questionReadRepository.GetAll(false).Where(i => i.LevelId == 2));
+
+                                var mediumrandomNumbers = Enumerable.Range(_questionReadRepository.GetAll(false).Where(i => i.LevelId == 2).FirstOrDefault().Id, _questionReadRepository.GetAll(false).Where(i => i.LevelId == 2).Count() - 1)
+                               .OrderBy(x => rnd.Next())
+                               .Take(Convert.ToInt32(Math.Round(Convert.ToDouble(questionCount) * 50 / 100, MidpointRounding.AwayFromZero)))
+                               .ToList();
+
+                                foreach (var id in mediumrandomNumbers)
+                                {
+                                    foreach (var item in mediumList)
+                                    {
+                                        if (item.Id == id)
+                                        {
+                                            randomList.Add(item);
+                                            break;
+                                        }
+                                    }
+                                }
+
+                            });
+
+
+                            await Task.Run(() =>
+                            {
+                                hardList = _mapper.Map<List<QuestionDTO_forGetandGetAll>>(_questionReadRepository.GetAll(false).Where(i => i.LevelId == 3));
+
+                                var hardrandomNumbers = Enumerable.Range(_questionReadRepository.GetAll(false).Where(i => i.LevelId == 3).FirstOrDefault().Id, _questionReadRepository.GetAll(false).Where(i => i.LevelId == 3).Count() - 1)
+                               .OrderBy(x => rnd.Next())
+                               .Take(Convert.ToInt32(Math.Round(Convert.ToDouble(questionCount) * 30 / 100, MidpointRounding.AwayFromZero)))
+                               .ToList();
+
+
+                                foreach (var id in hardrandomNumbers)
+                                {
+                                    foreach (var item in hardList)
+                                    {
+                                        if (item.Id == id)
+                                        {
+                                            randomList.Add(item);
+                                            break;
+                                        }
+                                    }
+                                }
+
+                            });
+
+                        }
+
+                        if (_mapper.Map<PositionDTO_forGetandGetAll>(await _positionReadRepository.GetByIdAsync(positionId.ToString(), false)).Name == "Senior")
+                        {
+                            rnd = new Random();
+
+                            await Task.Run(() =>
+                            {
+                                easyList = _mapper.Map<List<QuestionDTO_forGetandGetAll>>(_questionReadRepository.GetAll(false).Where(i => i.LevelId == 1));
+
+                                var easyrandomNumbers = Enumerable.Range(_questionReadRepository.GetAll(false).Where(i => i.LevelId == 1).FirstOrDefault().Id, _questionReadRepository.GetAll(false).Where(i => i.LevelId == 1).Count() - 1)
+                                .OrderBy(x => rnd.Next())
+                                .Take(Convert.ToInt32(Math.Round(Convert.ToDouble(questionCount) * 20 / 100, MidpointRounding.AwayFromZero)))
+                                .ToList();
+
+                                foreach (var id in easyrandomNumbers)
+                                {
+                                    foreach (var item in easyList)
+                                    {
+                                        if (item.Id == id)
+                                        {
+                                            randomList.Add(item);
+                                            break;
+                                        }
+                                    }
+                                }
+                            });
+
+
+                            await Task.Run(() =>
+                            {
+                                mediumList = _mapper.Map<List<QuestionDTO_forGetandGetAll>>(_questionReadRepository.GetAll(false).Where(i => i.LevelId == 2));
+
+                                var mediumrandomNumbers = Enumerable.Range(_questionReadRepository.GetAll(false).Where(i => i.LevelId == 2).FirstOrDefault().Id, _questionReadRepository.GetAll(false).Where(i => i.LevelId == 2).Count() - 1)
+                               .OrderBy(x => rnd.Next())
+                               .Take(Convert.ToInt32(Math.Round(Convert.ToDouble(questionCount) * 30 / 100, MidpointRounding.AwayFromZero)))
+                               .ToList();
+
+                                foreach (var id in mediumrandomNumbers)
+                                {
+                                    foreach (var item in mediumList)
+                                    {
+                                        if (item.Id == id)
+                                        {
+                                            randomList.Add(item);
+                                            break;
+                                        }
+                                    }
+                                }
+
+                            });
+
+
+                            await Task.Run(() =>
+                            {
+                                hardList = _mapper.Map<List<QuestionDTO_forGetandGetAll>>(_questionReadRepository.GetAll(false).Where(i => i.LevelId == 3));
+
+                                var hardrandomNumbers = Enumerable.Range(_questionReadRepository.GetAll(false).Where(i => i.LevelId == 3).FirstOrDefault().Id, _questionReadRepository.GetAll(false).Where(i => i.LevelId == 3).Count() - 1)
+                               .OrderBy(x => rnd.Next())
+                               .Take(Convert.ToInt32(Math.Round(Convert.ToDouble(questionCount) * 50 / 100, MidpointRounding.AwayFromZero)))
+                               .ToList();
+
+
+                                foreach (var id in hardrandomNumbers)
+                                {
+                                    foreach (var item in hardList)
+                                    {
+                                        if (item.Id == id)
+                                        {
+                                            randomList.Add(item);
+                                            break;
+                                        }
+                                    }
+                                }
+
+                            });
+
+                        }
+
+
+
+
+
+                    }
+                }
+
+            }
+
+
+            if (randomList.Count <= 0)
+            {
+                throw new NotFoundException("Question not found");
+            }
+            if (randomList.Count < questionCount)
+            {
+
+                throw new NotFoundException("Not enough questions");
+
+            }
+
+
+
+            return randomList;
+        }
+
+
 
         #endregion
 
