@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Interview.Domain.Entities.Models;
 
 [Table("Questions")]
-public  class Question : BaseEntity
+public class Question : BaseEntity
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -21,22 +21,22 @@ public  class Question : BaseEntity
 
     public int LevelId { get; set; }
 
-    public int SessionTypeId { get; set; }
+    public int CategoryId { get; set; }
 
     public int StructureId { get; set; }
 
+    [ForeignKey("CategoryId")]
+    [InverseProperty("Question")]
+    public virtual Category Category { get; set; }
+
     [ForeignKey("LevelId")]
-    [InverseProperty("Questions")]
+    [InverseProperty("Question")]
     public virtual Level Level { get; set; }
 
     [InverseProperty("Question")]
-    public virtual ICollection<SessionQuestion> SessionQuestions { get; set; } = new List<SessionQuestion>();
-
-    [ForeignKey("SessionTypeId")]
-    [InverseProperty("Questions")]
-    public virtual SessionType SessionType { get; set; }
+    public virtual ICollection<SessionQuestion> SessionQuestion { get; set; } = new List<SessionQuestion>();
 
     [ForeignKey("StructureId")]
-    [InverseProperty("Questions")]
+    [InverseProperty("Question")]
     public virtual Structure Structure { get; set; }
 }

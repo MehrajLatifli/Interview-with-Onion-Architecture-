@@ -38,12 +38,12 @@ namespace Interview.Application.Mapper
             CreateMap<Level, LevelDTO_forGetandGetAll>();
             CreateMap<LevelDTO_forGetandGetAll, Level>();
 
-            CreateMap<SessionType, SessionTypeDTO_forCreate>();
-            CreateMap<SessionTypeDTO_forCreate, SessionType>();
-            CreateMap<SessionType, SessionTypeDTO_forUpdate>();
-            CreateMap<SessionTypeDTO_forUpdate, SessionType>();
-            CreateMap<SessionType, SessionTypeDTO_forGetandGetAll>();
-            CreateMap<SessionTypeDTO_forGetandGetAll, SessionType>();
+            CreateMap<Category, CategoryDTO_forCreate>();
+            CreateMap<CategoryDTO_forCreate, Category>();
+            CreateMap<Category, CategoryDTO_forUpdate>();
+            CreateMap<CategoryDTO_forUpdate, Category>();
+            CreateMap<Category, CategoryDTO_forGetandGetAll>();
+            CreateMap<CategoryDTO_forGetandGetAll, Category>();
 
             CreateMap<Question, QuestionDTO_forCreate>();
             CreateMap<QuestionDTO_forCreate, Question>();

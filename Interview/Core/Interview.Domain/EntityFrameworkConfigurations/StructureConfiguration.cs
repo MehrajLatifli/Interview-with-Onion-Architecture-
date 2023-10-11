@@ -8,10 +8,9 @@ namespace Interview.Domain.EntityFrameworkConfigurations
     {
         public void Configure(EntityTypeBuilder<Structure> builder)
         {
-
             builder.HasKey(e => e.Id).HasName("PK__Structure");
 
-            builder.HasOne(d => d.StructureType).WithMany(p => p.Structures)
+            builder.HasOne(d => d.StructureType).WithMany(p => p.Structure)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_StructureType_forStructure");
 

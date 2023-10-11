@@ -24,7 +24,7 @@ CREATE TABLE [Candidate]
 
   [CandidateDocumentId] INT NOT NULL,
       
-  CONSTRAINT [FK_CandidateDocument_forCandidates] FOREIGN KEY ([StructureTypeId]) REFERENCES [CandidateDocument] ([Id]) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT [FK_CandidateDocument_forCandidates] FOREIGN KEY ([CandidateDocumentId]) REFERENCES [CandidateDocument] ([Id]) ON DELETE NO ACTION ON UPDATE NO ACTION,
 );
 
 
@@ -42,8 +42,8 @@ CREATE TABLE [Structure]
 (
    [Id] INT PRIMARY KEY IDENTITY (1,1) NOT NULL,
    [Name] NVARCHAR(max) NOT NULL,
-   [ParentId] NVARCHAR(max) NOT NULL,
    
+   [ParentId] NVARCHAR(max) NOT NULL,
    [StructureTypeId] INT NOT NULL,
    
    CONSTRAINT [FK_StructureType_forStructure] FOREIGN KEY ([StructureTypeId]) REFERENCES [StructureType] ([Id]) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -81,7 +81,7 @@ CREATE TABLE [Vacancy]
 CREATE TABLE [Session]
 (
    [Id] INT PRIMARY KEY IDENTITY (1,1) NOT NULL,
-   [EndValue] decimal NOT NULL  DEFAULT 0.0,
+   [EndValue] decimal DEFAULT 0.0,
    [StartDate] datetime2 DEFAULT NULL,
    [EndDate] datetime2 DEFAULT NULL,
    
@@ -96,7 +96,7 @@ CREATE TABLE [Session]
 
 
 -- Kateqoriya
-CREATE TABLE [SessionType]
+CREATE TABLE [Category]
 (
    [Id] INT PRIMARY KEY IDENTITY (1,1) NOT NULL,
    [Name]  NVARCHAR(max) NOT NULL,
@@ -122,11 +122,11 @@ CREATE TABLE [Question]
    [Text] NVARCHAR(max) NOT NULL,
 
    [LevelId] INT NOT NULL,
-   [SessionTypeId] INT NOT NULL,
+   [CategoryId] INT NOT NULL,
    [StructureId] INT NOT NULL,
 
    CONSTRAINT [FK_LevelId_forQuestion] FOREIGN KEY ([LevelId]) REFERENCES [Level] ([Id]) ON DELETE NO ACTION ON UPDATE NO ACTION,
-   CONSTRAINT [FK_SessionTypeId_forQuestion] FOREIGN KEY ([SessionTypeId]) REFERENCES [SessionType] ([Id]) ON DELETE NO ACTION ON UPDATE NO ACTION,
+   CONSTRAINT [FK_CategoryId_forQuestion] FOREIGN KEY ([CategoryId]) REFERENCES [Category] ([Id]) ON DELETE NO ACTION ON UPDATE NO ACTION,
    CONSTRAINT [FK_StructureId_forQuestion] FOREIGN KEY ([StructureId]) REFERENCES [Structure] ([Id]) ON DELETE NO ACTION ON UPDATE NO ACTION,
 );
 
@@ -135,12 +135,12 @@ CREATE TABLE [Question]
 CREATE TABLE [SessionQuestion]
 (
    [Id] INT PRIMARY KEY IDENTITY (1,1) NOT NULL,
-   [Value] integer NOT NULL,
+   [Value] INT DEFAULT 0,
 
    [SessionId] INT NOT NULL,
-   [Question] INT NOT NULL,
+   [QuestionId] INT NOT NULL,
 
-   CONSTRAINT [FK_SessionId_forSessionQuestion] FOREIGN KEY ([SessionId]) REFERENCES [Level] ([Id]) ON DELETE NO ACTION ON UPDATE NO ACTION,
+   CONSTRAINT [FK_SessionId_forSessionQuestion] FOREIGN KEY ([SessionId]) REFERENCES [Session] ([Id]) ON DELETE NO ACTION ON UPDATE NO ACTION,
    CONSTRAINT [FK_QuestionId_forSessionQuestion] FOREIGN KEY ([QuestionId]) REFERENCES [Question] ([Id]) ON DELETE NO ACTION ON UPDATE NO ACTION,
 );
 

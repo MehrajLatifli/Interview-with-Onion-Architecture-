@@ -16,13 +16,12 @@ public class Candidate : BaseEntity
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
 
-
     public int CandidateDocumentId { get; set; }
 
     [ForeignKey("CandidateDocumentId")]
-    [InverseProperty("Candidates")]
+    [InverseProperty("Candidate")]
     public virtual CandidateDocument CandidateDocument { get; set; }
 
     [InverseProperty("Candidate")]
-    public virtual ICollection<Session> Sessions { get; set; } = new List<Session>();
+    public virtual ICollection<Session> Session { get; set; } = new List<Session>();
 }

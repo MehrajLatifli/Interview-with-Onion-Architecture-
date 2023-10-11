@@ -8,7 +8,7 @@ namespace Interview.Domain.EntityFrameworkConfigurations
     {
         public void Configure(EntityTypeBuilder<StructureType> builder)
         {
-
+           
             builder.HasKey(e => e.Id).HasName("PK__StructureType");
 
         }

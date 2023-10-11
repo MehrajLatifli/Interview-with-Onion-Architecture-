@@ -9,7 +9,7 @@
 
         public int LevelId { get; set; }
 
-        public int SessionTypeId { get; set; }
+        public int CategoryId { get; set; }
 
         public int StructureId { get; set; }
 

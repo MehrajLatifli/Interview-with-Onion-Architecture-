@@ -2,7 +2,7 @@
 
 namespace Interview.Application.Mapper.DTO
 {
-    public class SessionTypeDTO_forUpdate
+    public class CategoryDTO_forUpdate
     {
 
         [Required(ErrorMessage = "Id is required")]

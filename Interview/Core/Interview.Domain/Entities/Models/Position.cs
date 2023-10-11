@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Interview.Domain.Entities.Models;
 
 [Table("Positions")]
-public  class Position : BaseEntity
+public class Position : BaseEntity
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -20,5 +20,5 @@ public  class Position : BaseEntity
     public string Name { get; set; }
 
     [InverseProperty("Position")]
-    public virtual ICollection<Vacancy> Vacancies { get; set; } = new List<Vacancy>();
+    public virtual ICollection<Vacancy> Vacancy { get; set; } = new List<Vacancy>();
 }

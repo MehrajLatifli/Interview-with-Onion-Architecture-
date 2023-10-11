@@ -17,13 +17,11 @@ public class Level : BaseEntity
     public int Id { get; set; }
 
     [Required]
-    [Column("Name")]
     public string Name { get; set; }
 
-    [Required]
     [Column(TypeName = "decimal(18, 2)")]
     public decimal Coefficient { get; set; }
 
     [InverseProperty("Level")]
-    public virtual ICollection<Question> Questions { get; set; } = new List<Question>();
+    public virtual ICollection<Question> Question { get; set; } = new List<Question>();
 }

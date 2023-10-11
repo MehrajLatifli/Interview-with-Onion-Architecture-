@@ -16,20 +16,17 @@ public class SessionQuestion : BaseEntity
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
 
-    [Required]
-    public int Value { get; set; }
-
+    public int? Value { get; set; }
 
     public int SessionId { get; set; }
-
 
     public int QuestionId { get; set; }
 
     [ForeignKey("QuestionId")]
-    [InverseProperty("SessionQuestions")]
+    [InverseProperty("SessionQuestion")]
     public virtual Question Question { get; set; }
 
     [ForeignKey("SessionId")]
-    [InverseProperty("SessionQuestions")]
+    [InverseProperty("SessionQuestion")]
     public virtual Session Session { get; set; }
 }

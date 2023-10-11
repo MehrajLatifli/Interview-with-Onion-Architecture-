@@ -10,11 +10,11 @@ namespace Interview.Domain.EntityFrameworkConfigurations
         {
             builder.HasKey(e => e.Id).HasName("PK__Vacancy");
 
-            builder.HasOne(d => d.Position).WithMany(p => p.Vacancies)
+            builder.HasOne(d => d.Position).WithMany(p => p.Vacancy)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_PositionId_forVacancy");
 
-            builder.HasOne(d => d.Structure).WithMany(p => p.Vacancies)
+            builder.HasOne(d => d.Structure).WithMany(p => p.Vacancy)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_StructureId_forVacancy");
 

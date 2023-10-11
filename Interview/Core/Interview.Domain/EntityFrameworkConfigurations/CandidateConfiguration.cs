@@ -17,10 +17,10 @@ namespace Interview.Domain.EntityFrameworkConfigurations
 
             builder.HasKey(e => e.Id).HasName("PK__Candidate");
 
-            builder.HasOne(d => d.CandidateDocument).WithMany(p => p.Candidates)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_CandidateDocument_forCandidates");
-          
+            builder.HasOne(d => d.CandidateDocument).WithMany(p => p.Candidate)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_CandidateDocument_forCandidates");
+
         }
     }
 }

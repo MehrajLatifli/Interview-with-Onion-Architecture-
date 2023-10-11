@@ -31,6 +31,19 @@ namespace Interview.Persistence.Migrations.Interview
                 });
 
             migrationBuilder.CreateTable(
+                name: "Categories",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK__Category", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Levels",
                 columns: table => new
                 {
@@ -55,19 +68,6 @@ namespace Interview.Persistence.Migrations.Interview
                 constraints: table =>
                 {
                     table.PrimaryKey("PK__Position", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "SessionTypes",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK__SessionType", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -129,21 +129,21 @@ namespace Interview.Persistence.Migrations.Interview
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LevelId = table.Column<int>(type: "int", nullable: false),
-                    SessionTypeId = table.Column<int>(type: "int", nullable: false),
+                    CategoryId = table.Column<int>(type: "int", nullable: false),
                     StructureId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK__Question", x => x.Id);
                     table.ForeignKey(
+                        name: "FK_CategoryId_forQuestion",
+                        column: x => x.CategoryId,
+                        principalTable: "Categories",
+                        principalColumn: "Id");
+                    table.ForeignKey(
                         name: "FK_LevelId_forQuestion",
                         column: x => x.LevelId,
                         principalTable: "Levels",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_SessionTypeId_forQuestion",
-                        column: x => x.SessionTypeId,
-                        principalTable: "SessionTypes",
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_StructureId_forQuestion",
@@ -186,7 +186,7 @@ namespace Interview.Persistence.Migrations.Interview
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    EndValue = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
+                    EndValue = table.Column<decimal>(type: "decimal(18,2)", nullable: true, defaultValueSql: "((0.0))"),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     EndDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     VacancyId = table.Column<int>(type: "int", nullable: false),
@@ -213,7 +213,7 @@ namespace Interview.Persistence.Migrations.Interview
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Value = table.Column<int>(type: "int", nullable: false),
+                    Value = table.Column<int>(type: "int", nullable: true, defaultValueSql: "((0))"),
                     SessionId = table.Column<int>(type: "int", nullable: false),
                     QuestionId = table.Column<int>(type: "int", nullable: false)
                 },
@@ -238,14 +238,14 @@ namespace Interview.Persistence.Migrations.Interview
                 column: "CandidateDocumentId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Questions_CategoryId",
+                table: "Questions",
+                column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Questions_LevelId",
                 table: "Questions",
                 column: "LevelId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Questions_SessionTypeId",
-                table: "Questions",
-                column: "SessionTypeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Questions_StructureId",
@@ -301,10 +301,10 @@ namespace Interview.Persistence.Migrations.Interview
                 name: "Sessions");
 
             migrationBuilder.DropTable(
-                name: "Levels");
+                name: "Categories");
 
             migrationBuilder.DropTable(
-                name: "SessionTypes");
+                name: "Levels");
 
             migrationBuilder.DropTable(
                 name: "Candidates");

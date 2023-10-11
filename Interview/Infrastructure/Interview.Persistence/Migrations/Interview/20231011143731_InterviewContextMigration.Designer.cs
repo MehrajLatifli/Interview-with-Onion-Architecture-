@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Interview.Persistence.Migrations.Interview
 {
     [DbContext(typeof(InterviewContext))]
-    [Migration("20231009094832_InterviewContextMigration")]
+    [Migration("20231011143731_InterviewContextMigration")]
     partial class InterviewContextMigration
     {
         /// <inheritdoc />
@@ -83,6 +83,24 @@ namespace Interview.Persistence.Migrations.Interview
                     b.ToTable("CandidateDocuments");
                 });
 
+            modelBuilder.Entity("Interview.Domain.Entities.Models.Category", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id")
+                        .HasName("PK__Category");
+
+                    b.ToTable("Categories");
+                });
+
             modelBuilder.Entity("Interview.Domain.Entities.Models.Level", b =>
                 {
                     b.Property<int>("Id")
@@ -96,8 +114,7 @@ namespace Interview.Persistence.Migrations.Interview
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("Name");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id")
                         .HasName("PK__Level");
@@ -131,10 +148,10 @@ namespace Interview.Persistence.Migrations.Interview
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("LevelId")
+                    b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
-                    b.Property<int>("SessionTypeId")
+                    b.Property<int>("LevelId")
                         .HasColumnType("int");
 
                     b.Property<int>("StructureId")
@@ -147,9 +164,9 @@ namespace Interview.Persistence.Migrations.Interview
                     b.HasKey("Id")
                         .HasName("PK__Question");
 
-                    b.HasIndex("LevelId");
+                    b.HasIndex("CategoryId");
 
-                    b.HasIndex("SessionTypeId");
+                    b.HasIndex("LevelId");
 
                     b.HasIndex("StructureId");
 
@@ -170,8 +187,10 @@ namespace Interview.Persistence.Migrations.Interview
                     b.Property<DateTime?>("EndDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<decimal>("EndValue")
-                        .HasColumnType("decimal(18, 4)");
+                    b.Property<decimal?>("EndValue")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("decimal(18, 2)")
+                        .HasDefaultValueSql("((0.0))");
 
                     b.Property<DateTime?>("StartDate")
                         .HasColumnType("datetime2");
@@ -203,8 +222,10 @@ namespace Interview.Persistence.Migrations.Interview
                     b.Property<int>("SessionId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Value")
-                        .HasColumnType("int");
+                    b.Property<int?>("Value")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValueSql("((0))");
 
                     b.HasKey("Id")
                         .HasName("PK__SessionQuestion");
@@ -214,24 +235,6 @@ namespace Interview.Persistence.Migrations.Interview
                     b.HasIndex("SessionId");
 
                     b.ToTable("SessionQuestions");
-                });
-
-            modelBuilder.Entity("Interview.Domain.Entities.Models.SessionType", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id")
-                        .HasName("PK__SessionType");
-
-                    b.ToTable("SessionTypes");
                 });
 
             modelBuilder.Entity("Interview.Domain.Entities.Models.Structure", b =>
@@ -320,7 +323,7 @@ namespace Interview.Persistence.Migrations.Interview
             modelBuilder.Entity("Interview.Domain.Entities.Models.Candidate", b =>
                 {
                     b.HasOne("Interview.Domain.Entities.Models.CandidateDocument", "CandidateDocument")
-                        .WithMany("Candidates")
+                        .WithMany("Candidate")
                         .HasForeignKey("CandidateDocumentId")
                         .IsRequired()
                         .HasConstraintName("FK_CandidateDocument_forCandidates");
@@ -330,27 +333,27 @@ namespace Interview.Persistence.Migrations.Interview
 
             modelBuilder.Entity("Interview.Domain.Entities.Models.Question", b =>
                 {
+                    b.HasOne("Interview.Domain.Entities.Models.Category", "Category")
+                        .WithMany("Question")
+                        .HasForeignKey("CategoryId")
+                        .IsRequired()
+                        .HasConstraintName("FK_CategoryId_forQuestion");
+
                     b.HasOne("Interview.Domain.Entities.Models.Level", "Level")
-                        .WithMany("Questions")
+                        .WithMany("Question")
                         .HasForeignKey("LevelId")
                         .IsRequired()
                         .HasConstraintName("FK_LevelId_forQuestion");
 
-                    b.HasOne("Interview.Domain.Entities.Models.SessionType", "SessionType")
-                        .WithMany("Questions")
-                        .HasForeignKey("SessionTypeId")
-                        .IsRequired()
-                        .HasConstraintName("FK_SessionTypeId_forQuestion");
-
                     b.HasOne("Interview.Domain.Entities.Models.Structure", "Structure")
-                        .WithMany("Questions")
+                        .WithMany("Question")
                         .HasForeignKey("StructureId")
                         .IsRequired()
                         .HasConstraintName("FK_StructureId_forQuestion");
 
-                    b.Navigation("Level");
+                    b.Navigation("Category");
 
-                    b.Navigation("SessionType");
+                    b.Navigation("Level");
 
                     b.Navigation("Structure");
                 });
@@ -358,13 +361,13 @@ namespace Interview.Persistence.Migrations.Interview
             modelBuilder.Entity("Interview.Domain.Entities.Models.Session", b =>
                 {
                     b.HasOne("Interview.Domain.Entities.Models.Candidate", "Candidate")
-                        .WithMany("Sessions")
+                        .WithMany("Session")
                         .HasForeignKey("CandidateId")
                         .IsRequired()
                         .HasConstraintName("FK_CandidateId_forSession");
 
                     b.HasOne("Interview.Domain.Entities.Models.Vacancy", "Vacancy")
-                        .WithMany("Sessions")
+                        .WithMany("Session")
                         .HasForeignKey("VacancyId")
                         .IsRequired()
                         .HasConstraintName("FK_VacancyId_forSession");
@@ -377,13 +380,13 @@ namespace Interview.Persistence.Migrations.Interview
             modelBuilder.Entity("Interview.Domain.Entities.Models.SessionQuestion", b =>
                 {
                     b.HasOne("Interview.Domain.Entities.Models.Question", "Question")
-                        .WithMany("SessionQuestions")
+                        .WithMany("SessionQuestion")
                         .HasForeignKey("QuestionId")
                         .IsRequired()
                         .HasConstraintName("FK_QuestionId_forSessionQuestion");
 
                     b.HasOne("Interview.Domain.Entities.Models.Session", "Session")
-                        .WithMany("SessionQuestions")
+                        .WithMany("SessionQuestion")
                         .HasForeignKey("SessionId")
                         .IsRequired()
                         .HasConstraintName("FK_SessionId_forSessionQuestion");
@@ -396,7 +399,7 @@ namespace Interview.Persistence.Migrations.Interview
             modelBuilder.Entity("Interview.Domain.Entities.Models.Structure", b =>
                 {
                     b.HasOne("Interview.Domain.Entities.Models.StructureType", "StructureType")
-                        .WithMany("Structures")
+                        .WithMany("Structure")
                         .HasForeignKey("StructureTypeId")
                         .IsRequired()
                         .HasConstraintName("FK_StructureType_forStructure");
@@ -407,13 +410,13 @@ namespace Interview.Persistence.Migrations.Interview
             modelBuilder.Entity("Interview.Domain.Entities.Models.Vacancy", b =>
                 {
                     b.HasOne("Interview.Domain.Entities.Models.Position", "Position")
-                        .WithMany("Vacancies")
+                        .WithMany("Vacancy")
                         .HasForeignKey("PositionId")
                         .IsRequired()
                         .HasConstraintName("FK_PositionId_forVacancy");
 
                     b.HasOne("Interview.Domain.Entities.Models.Structure", "Structure")
-                        .WithMany("Vacancies")
+                        .WithMany("Vacancy")
                         .HasForeignKey("StructureId")
                         .IsRequired()
                         .HasConstraintName("FK_StructureId_forVacancy");
@@ -425,54 +428,54 @@ namespace Interview.Persistence.Migrations.Interview
 
             modelBuilder.Entity("Interview.Domain.Entities.Models.Candidate", b =>
                 {
-                    b.Navigation("Sessions");
+                    b.Navigation("Session");
                 });
 
             modelBuilder.Entity("Interview.Domain.Entities.Models.CandidateDocument", b =>
                 {
-                    b.Navigation("Candidates");
+                    b.Navigation("Candidate");
+                });
+
+            modelBuilder.Entity("Interview.Domain.Entities.Models.Category", b =>
+                {
+                    b.Navigation("Question");
                 });
 
             modelBuilder.Entity("Interview.Domain.Entities.Models.Level", b =>
                 {
-                    b.Navigation("Questions");
+                    b.Navigation("Question");
                 });
 
             modelBuilder.Entity("Interview.Domain.Entities.Models.Position", b =>
                 {
-                    b.Navigation("Vacancies");
+                    b.Navigation("Vacancy");
                 });
 
             modelBuilder.Entity("Interview.Domain.Entities.Models.Question", b =>
                 {
-                    b.Navigation("SessionQuestions");
+                    b.Navigation("SessionQuestion");
                 });
 
             modelBuilder.Entity("Interview.Domain.Entities.Models.Session", b =>
                 {
-                    b.Navigation("SessionQuestions");
-                });
-
-            modelBuilder.Entity("Interview.Domain.Entities.Models.SessionType", b =>
-                {
-                    b.Navigation("Questions");
+                    b.Navigation("SessionQuestion");
                 });
 
             modelBuilder.Entity("Interview.Domain.Entities.Models.Structure", b =>
                 {
-                    b.Navigation("Questions");
+                    b.Navigation("Question");
 
-                    b.Navigation("Vacancies");
+                    b.Navigation("Vacancy");
                 });
 
             modelBuilder.Entity("Interview.Domain.Entities.Models.StructureType", b =>
                 {
-                    b.Navigation("Structures");
+                    b.Navigation("Structure");
                 });
 
             modelBuilder.Entity("Interview.Domain.Entities.Models.Vacancy", b =>
                 {
-                    b.Navigation("Sessions");
+                    b.Navigation("Session");
                 });
 #pragma warning restore 612, 618
         }

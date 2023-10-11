@@ -2,7 +2,7 @@
 
 namespace Interview.Application.Mapper.DTO
 {
-    public class SessionTypeDTO_forCreate
+    public class CategoryDTO_forCreate
     {
 
 

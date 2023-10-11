@@ -51,17 +51,17 @@ namespace Interview.Application.Services.Abstract
         #endregion
 
 
-        #region SessionType service
+        #region Category service
 
-        public Task SessionTypeCreate(SessionTypeDTO_forCreate model);
+        public Task CategoryCreate(CategoryDTO_forCreate model);
 
-        public Task<List<SessionTypeDTO_forGetandGetAll>> GetSessionType();
+        public Task<List<CategoryDTO_forGetandGetAll>> GetCategory();
 
-        public Task<SessionTypeDTO_forGetandGetAll> GetSessionTypeById(int id);
+        public Task<CategoryDTO_forGetandGetAll> GetCategoryById(int id);
 
-        public Task SessionTypeUpdate(SessionTypeDTO_forUpdate model);
+        public Task CategoryUpdate(CategoryDTO_forUpdate model);
 
-        public Task<SessionTypeDTO_forGetandGetAll> DeleteSessionTypeById(int id);
+        public Task<CategoryDTO_forGetandGetAll> DeleteCategoryById(int id);
 
         #endregion
 

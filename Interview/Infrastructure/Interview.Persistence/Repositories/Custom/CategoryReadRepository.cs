@@ -5,9 +5,9 @@ using Interview.Persistence.Repositories.Concrete;
 
 namespace Interview.Persistence.Repositories.Custom
 {
-    public class SessionTypeReadRepository : ReadRepository<SessionType>, ISessionTypeReadRepository
+    public class CategoryReadRepository : ReadRepository<Category>, ICategoryReadRepository
     {
-        public SessionTypeReadRepository(InterviewContext context) : base(context)
+        public CategoryReadRepository(InterviewContext context) : base(context)
         {
         }
     }

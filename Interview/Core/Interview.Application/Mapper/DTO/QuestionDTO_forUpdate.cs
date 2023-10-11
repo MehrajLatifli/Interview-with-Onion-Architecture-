@@ -13,8 +13,8 @@ namespace Interview.Application.Mapper.DTO
         [Required(ErrorMessage = "LevelId is required")]
         public int LevelId { get; set; }
 
-        [Required(ErrorMessage = "SessionTypeId is required")]
-        public int SessionTypeId { get; set; }
+        [Required(ErrorMessage = "CategoryId is required")]
+        public int CategoryId { get; set; }
 
         [Required(ErrorMessage = "StructureId is required")]
         public int StructureId { get; set; }

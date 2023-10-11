@@ -8,14 +8,15 @@ namespace Interview.Domain.EntityFrameworkConfigurations
     {
         public void Configure(EntityTypeBuilder<Session> builder)
         {
-
             builder.HasKey(e => e.Id).HasName("PK__Session");
 
-            builder.HasOne(d => d.Candidate).WithMany(p => p.Sessions)
+            builder.Property(e => e.EndValue).HasDefaultValueSql("((0.0))");
+
+            builder.HasOne(d => d.Candidate).WithMany(p => p.Session)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_CandidateId_forSession");
 
-            builder.HasOne(d => d.Vacancy).WithMany(p => p.Sessions)
+            builder.HasOne(d => d.Vacancy).WithMany(p => p.Session)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_VacancyId_forSession");
 

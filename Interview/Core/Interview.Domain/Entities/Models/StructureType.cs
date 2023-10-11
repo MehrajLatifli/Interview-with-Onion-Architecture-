@@ -20,5 +20,5 @@ public class StructureType : BaseEntity
     public string Name { get; set; }
 
     [InverseProperty("StructureType")]
-    public virtual ICollection<Structure> Structures { get; set; } = new List<Structure>();
+    public virtual ICollection<Structure> Structure { get; set; } = new List<Structure>();
 }

@@ -16,11 +16,11 @@ public class Session : BaseEntity
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
 
-    [Column(TypeName = "decimal(18, 4)")]
-    public decimal EndValue { get; set; }
+    [Column(TypeName = "decimal(18, 2)")]
+    public decimal? EndValue { get; set; }
 
     public DateTime? StartDate { get; set; }
-  
+
     public DateTime? EndDate { get; set; }
 
     public int VacancyId { get; set; }
@@ -28,13 +28,13 @@ public class Session : BaseEntity
     public int CandidateId { get; set; }
 
     [ForeignKey("CandidateId")]
-    [InverseProperty("Sessions")]
+    [InverseProperty("Session")]
     public virtual Candidate Candidate { get; set; }
 
     [InverseProperty("Session")]
-    public virtual ICollection<SessionQuestion> SessionQuestions { get; set; } = new List<SessionQuestion>();
+    public virtual ICollection<SessionQuestion> SessionQuestion { get; set; } = new List<SessionQuestion>();
 
     [ForeignKey("VacancyId")]
-    [InverseProperty("Sessions")]
+    [InverseProperty("Session")]
     public virtual Vacancy Vacancy { get; set; }
 }

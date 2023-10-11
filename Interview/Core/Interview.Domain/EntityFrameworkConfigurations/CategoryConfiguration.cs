@@ -4,12 +4,12 @@ using Interview.Domain.Entities.Models;
 
 namespace Interview.Domain.EntityFrameworkConfigurations
 {
-    public class SessionTypeConfiguration : IEntityTypeConfiguration<SessionType>
+    public class CategoryConfiguration : IEntityTypeConfiguration<Category>
     {
-        public void Configure(EntityTypeBuilder<SessionType> builder)
+        public void Configure(EntityTypeBuilder<Category> builder)
         {
 
-            builder.HasKey(e => e.Id).HasName("PK__SessionType");
+            builder.HasKey(e => e.Id).HasName("PK__Category");
 
         }
     }

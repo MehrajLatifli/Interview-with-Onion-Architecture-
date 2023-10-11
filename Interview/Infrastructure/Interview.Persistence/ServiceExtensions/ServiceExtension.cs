@@ -94,8 +94,8 @@ namespace Interview.Persistence.ServiceExtensions
             services.AddScoped<IQuestionWriteRepository, QuestionWriteRepository>();
             services.AddScoped<IQuestionReadRepository, QuestionReadRepository>();
 
-            services.AddScoped<ISessionTypeWriteRepository, SessionTypeWriteRepository>();
-            services.AddScoped<ISessionTypeReadRepository, SessionTypeReadRepository>();
+            services.AddScoped<ICategoryWriteRepository, CategoryWriteRepository>();
+            services.AddScoped<ICategoryReadRepository, CategoryReadRepository>();
 
             services.AddScoped<ILevelWriteRepository, LevelWriteRepository>();
             services.AddScoped<ILevelReadRepository, LevelReadRepository>();

@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Interview.Domain.Entities.Models;
 
-[Table("SessionTypes")]
-public class SessionType : BaseEntity
+[Table("Categories")]
+public class Category : BaseEntity
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -19,6 +19,6 @@ public class SessionType : BaseEntity
     [Required]
     public string Name { get; set; }
 
-    [InverseProperty("SessionType")]
-    public virtual ICollection<Question> Questions { get; set; } = new List<Question>();
+    [InverseProperty("Category")]
+    public virtual ICollection<Question> Question { get; set; } = new List<Question>();
 }

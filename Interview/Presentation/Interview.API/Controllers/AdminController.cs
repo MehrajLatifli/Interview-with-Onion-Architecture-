@@ -331,25 +331,25 @@ namespace Interview.API.Controllers
         #endregion
 
 
-        #region SessionType
+        #region Category
 
 
-        [HttpGet("SessionType/{id}")]
-        public async Task<IActionResult> GetSessionTypeById(int id)
+        [HttpGet("Category/{id}")]
+        public async Task<IActionResult> GetCategoryById(int id)
         {
 
-            var data = await _service.GetSessionTypeById(id);
+            var data = await _service.GetCategoryById(id);
 
             return Ok(data);
 
         }
 
 
-        [HttpGet("SessionType")]
-        public async Task<IActionResult> GetSessionType()
+        [HttpGet("Category")]
+        public async Task<IActionResult> GetCategory()
         {
 
-            var data = await _service.GetSessionType();
+            var data = await _service.GetCategory();
 
 
             return Ok(data);
@@ -358,11 +358,11 @@ namespace Interview.API.Controllers
 
 
         [HttpPost]
-        [Route("SessionType")]
-        public async Task<IActionResult> SessionTypeCreate([FromForm] SessionTypeDTO_forCreate model)
+        [Route("Category")]
+        public async Task<IActionResult> CategoryCreate([FromForm] CategoryDTO_forCreate model)
         {
 
-            await _service.SessionTypeCreate(model);
+            await _service.CategoryCreate(model);
 
             return Ok(new Response { Status = "Success", Message = "The SessionType created successfully!" });
 
@@ -370,12 +370,12 @@ namespace Interview.API.Controllers
 
 
         [HttpPut]
-        [Route("SessionType")]
-        public async Task<IActionResult> SessionTypeUpdate([FromForm] SessionTypeDTO_forUpdate model)
+        [Route("Category")]
+        public async Task<IActionResult> CategoryUpdate([FromForm] CategoryDTO_forUpdate model)
         {
 
 
-            await _service.SessionTypeUpdate(model);
+            await _service.CategoryUpdate(model);
 
 
             return Ok(new Response { Status = "Success", Message = "The SessionType updated successfully!" });
@@ -386,11 +386,11 @@ namespace Interview.API.Controllers
         }
 
 
-        [HttpDelete("SessionType/{id}")]
-        public async Task<IActionResult> SessionTypeDelete(int id)
+        [HttpDelete("Category/{id}")]
+        public async Task<IActionResult> DeleteCategoryById(int id)
         {
 
-            await _service.DeleteSessionTypeById(id);
+            await _service.DeleteCategoryById(id);
 
             return Ok(new Response { Status = "Success", Message = "The SessionType deleted successfully!" });
         }
@@ -876,7 +876,7 @@ namespace Interview.API.Controllers
         public async Task<IActionResult> GetRandomQuestion(int questionCount, int positionId, int vacantionId, int sessionId)
         {
 
-            var data = await _service.GetRandomQuestion( questionCount,  sessionId,  vacantionId,  positionId);
+            var data = await _service.GetRandomQuestion( questionCount,  positionId,  vacantionId,  sessionId);
 
 
             return Ok(data);

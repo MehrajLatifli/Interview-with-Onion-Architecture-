@@ -9,8 +9,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Interview.Domain.Entities.Models;
 
+
 [Table("CandidateDocuments")]
-public  class CandidateDocument : BaseEntity
+public class CandidateDocument : BaseEntity
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -35,5 +36,5 @@ public  class CandidateDocument : BaseEntity
     public string Address { get; set; }
 
     [InverseProperty("CandidateDocument")]
-    public virtual ICollection<Candidate> Candidates { get; set; } = new List<Candidate>();
+    public virtual ICollection<Candidate> Candidate { get; set; } = new List<Candidate>();
 }

@@ -3,7 +3,7 @@ using Interview.Domain.Entities.Models;
 
 namespace Interview.Application.Repositories.Custom
 {
-    public interface ISessionTypeWriteRepository : IWriteRepository<SessionType>
+    public interface ICategoryReadRepository : IReadRepository<Category>
     {
     }
 }

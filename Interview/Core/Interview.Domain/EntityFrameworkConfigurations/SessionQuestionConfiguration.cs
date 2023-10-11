@@ -11,11 +11,13 @@ namespace Interview.Domain.EntityFrameworkConfigurations
 
             builder.HasKey(e => e.Id).HasName("PK__SessionQuestion");
 
-            builder.HasOne(d => d.Question).WithMany(p => p.SessionQuestions)
+            builder.Property(e => e.Value).HasDefaultValueSql("((0))");
+
+            builder.HasOne(d => d.Question).WithMany(p => p.SessionQuestion)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_QuestionId_forSessionQuestion");
 
-            builder.HasOne(d => d.Session).WithMany(p => p.SessionQuestions)
+            builder.HasOne(d => d.Session).WithMany(p => p.SessionQuestion)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_SessionId_forSessionQuestion");
 

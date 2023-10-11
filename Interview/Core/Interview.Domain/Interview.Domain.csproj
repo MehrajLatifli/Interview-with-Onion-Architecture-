@@ -50,8 +50,4 @@
     <PackageReference Include="System.Text.Json" Version="7.0.3" />
   </ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="Entities\Models\" />
-	</ItemGroup>
-
 </Project>

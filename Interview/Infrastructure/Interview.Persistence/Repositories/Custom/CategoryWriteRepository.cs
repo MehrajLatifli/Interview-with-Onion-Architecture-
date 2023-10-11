@@ -5,9 +5,9 @@ using Interview.Persistence.Repositories.Concrete;
 
 namespace Interview.Persistence.Repositories.Custom
 {
-    public class SessionTypeWriteRepository : WriteRepository<SessionType>, ISessionTypeWriteRepository
+    public class CategoryWriteRepository : WriteRepository<Category>, ICategoryWriteRepository
     {
-        public SessionTypeWriteRepository(InterviewContext context) : base(context)
+        public CategoryWriteRepository(InterviewContext context) : base(context)
         {
         }
     }

@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Interview.Domain.Entities.Models;
 
+
 [Table("Structures")]
 public class Structure : BaseEntity
 {
@@ -22,16 +23,15 @@ public class Structure : BaseEntity
     [Required]
     public string ParentId { get; set; }
 
-
     public int StructureTypeId { get; set; }
 
     [InverseProperty("Structure")]
-    public virtual ICollection<Question> Questions { get; set; } = new List<Question>();
+    public virtual ICollection<Question> Question { get; set; } = new List<Question>();
 
     [ForeignKey("StructureTypeId")]
-    [InverseProperty("Structures")]
+    [InverseProperty("Structure")]
     public virtual StructureType StructureType { get; set; }
 
     [InverseProperty("Structure")]
-    public virtual ICollection<Vacancy> Vacancies { get; set; } = new List<Vacancy>();
+    public virtual ICollection<Vacancy> Vacancy { get; set; } = new List<Vacancy>();
 }

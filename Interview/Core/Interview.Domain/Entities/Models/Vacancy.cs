@@ -22,10 +22,8 @@ public class Vacancy : BaseEntity
     [Required]
     public string Description { get; set; }
 
-    [Required]
     public DateTime StartDate { get; set; }
 
-    [Required]
     public DateTime EndDate { get; set; }
 
     public int PositionId { get; set; }
@@ -33,13 +31,13 @@ public class Vacancy : BaseEntity
     public int StructureId { get; set; }
 
     [ForeignKey("PositionId")]
-    [InverseProperty("Vacancies")]
+    [InverseProperty("Vacancy")]
     public virtual Position Position { get; set; }
 
     [InverseProperty("Vacancy")]
-    public virtual ICollection<Session> Sessions { get; set; } = new List<Session>();
+    public virtual ICollection<Session> Session { get; set; } = new List<Session>();
 
     [ForeignKey("StructureId")]
-    [InverseProperty("Vacancies")]
+    [InverseProperty("Vacancy")]
     public virtual Structure Structure { get; set; }
 }
