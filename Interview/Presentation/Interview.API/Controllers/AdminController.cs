@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Interview.API.API_Routes;
 using Interview.Application.Exception;
 using Interview.Application.Mapper.DTO;
 using Interview.Application.Services.Abstract;
@@ -130,7 +131,7 @@ namespace Interview.API.Controllers
         #region CandidateDocument
 
 
-        [HttpGet("candidatedocument/{id}")]
+        [HttpGet(Routes.CandidateDocumentById)]
         public async Task<IActionResult> GetCandidateDocumentById(int id)
         {
 
@@ -141,7 +142,7 @@ namespace Interview.API.Controllers
         }
 
 
-        [HttpGet("candidatedocument")]
+        [HttpGet(Routes.CandidateDocument)]
         public async Task<IActionResult> GetCandidateDocument()
         {
 
@@ -154,7 +155,7 @@ namespace Interview.API.Controllers
 
 
         [HttpPost]
-        [Route("candidatedocument")]
+        [Route(Routes.CandidateDocument)]
         public async Task<IActionResult> CandidateDocumentCreate([FromForm] CandidateDocumentDTO_forCreate model)
         {
 
@@ -166,7 +167,7 @@ namespace Interview.API.Controllers
 
 
         [HttpPut]
-        [Route("candidatedocument")]
+        [Route(Routes.CandidateDocument)]
         public async Task<IActionResult> CandidateDocumentUpdate([FromForm] CandidateDocumentDTO_forUpdate model)
         {
 
@@ -182,7 +183,7 @@ namespace Interview.API.Controllers
         }
 
 
-        [HttpDelete("candidatedocument/{id}")]
+        [HttpDelete(Routes.CandidateDocumentById)]
         public async Task<IActionResult> CandidateDocumentDelete(int id)
         {
 
@@ -198,7 +199,7 @@ namespace Interview.API.Controllers
         #region Candidate
 
 
-        [HttpGet("Candidate/{id}")]
+        [HttpGet(Routes.CandidateById)]
         public async Task<IActionResult> GetCandidateById(int id)
         {
 
@@ -209,7 +210,7 @@ namespace Interview.API.Controllers
         }
 
 
-        [HttpGet("Candidate")]
+        [HttpGet(Routes.Candidate)]
         public async Task<IActionResult> GetCandidate()
         {
 
@@ -221,8 +222,7 @@ namespace Interview.API.Controllers
         }
 
 
-        [HttpPost]
-        [Route("Candidate")]
+        [HttpPost(Routes.Candidate)]
         public async Task<IActionResult> CandidateCreate([FromForm] CandidateDTO_forCreate model)
         {
 
@@ -233,8 +233,8 @@ namespace Interview.API.Controllers
         }
 
 
-        [HttpPut]
-        [Route("Candidate")]
+        [HttpPut(Routes.Candidate)]
+     
         public async Task<IActionResult> CandidateUpdate([FromForm] CandidateDTO_forUpdate model)
         {
 
@@ -250,7 +250,7 @@ namespace Interview.API.Controllers
         }
 
 
-        [HttpDelete("Candidate/{id}")]
+        [HttpDelete(Routes.CandidateById)]
         public async Task<IActionResult> CandidateDelete(int id)
         {
 
@@ -266,7 +266,7 @@ namespace Interview.API.Controllers
         #region Level
 
 
-        [HttpGet("Level/{id}")]
+        [HttpGet(Routes.LevelById)]
         public async Task<IActionResult> GetLevelById(int id)
         {
 
@@ -277,7 +277,7 @@ namespace Interview.API.Controllers
         }
 
 
-        [HttpGet("Level")]
+        [HttpGet(Routes.Level)]
         public async Task<IActionResult> GetLevel()
         {
 
@@ -289,8 +289,8 @@ namespace Interview.API.Controllers
         }
 
 
-        [HttpPost]
-        [Route("Level")]
+        [HttpPost(Routes.Level)]
+  
         public async Task<IActionResult> LevelCreate([FromForm] LevelDTO_forCreate model)
         {
 
@@ -301,8 +301,7 @@ namespace Interview.API.Controllers
         }
 
 
-        [HttpPut]
-        [Route("Level")]
+        [HttpPut(Routes.Level)]
         public async Task<IActionResult> LevelUpdate([FromForm] LevelDTO_forUpdate model)
         {
 
@@ -318,7 +317,7 @@ namespace Interview.API.Controllers
         }
 
 
-        [HttpDelete("Level/{id}")]
+        [HttpDelete(Routes.LevelById)]
         public async Task<IActionResult> LevelDelete(int id)
         {
 
@@ -334,7 +333,7 @@ namespace Interview.API.Controllers
         #region Category
 
 
-        [HttpGet("Category/{id}")]
+        [HttpGet(Routes.CategoryById)]
         public async Task<IActionResult> GetCategoryById(int id)
         {
 
@@ -345,7 +344,7 @@ namespace Interview.API.Controllers
         }
 
 
-        [HttpGet("Category")]
+        [HttpGet(Routes.Category)]
         public async Task<IActionResult> GetCategory()
         {
 
@@ -357,8 +356,7 @@ namespace Interview.API.Controllers
         }
 
 
-        [HttpPost]
-        [Route("Category")]
+        [HttpPost(Routes.Category)]
         public async Task<IActionResult> CategoryCreate([FromForm] CategoryDTO_forCreate model)
         {
 
@@ -369,8 +367,7 @@ namespace Interview.API.Controllers
         }
 
 
-        [HttpPut]
-        [Route("Category")]
+        [HttpPut(Routes.Category)]
         public async Task<IActionResult> CategoryUpdate([FromForm] CategoryDTO_forUpdate model)
         {
 
@@ -386,7 +383,7 @@ namespace Interview.API.Controllers
         }
 
 
-        [HttpDelete("Category/{id}")]
+        [HttpDelete(Routes.CategoryById)]
         public async Task<IActionResult> DeleteCategoryById(int id)
         {
 
@@ -402,7 +399,7 @@ namespace Interview.API.Controllers
         #region StructureType
 
 
-        [HttpGet("StructureType/{id}")]
+        [HttpGet(Routes.StructureTypeById)]
         public async Task<IActionResult> GetStructureTypeById(int id)
         {
 
@@ -413,7 +410,7 @@ namespace Interview.API.Controllers
         }
 
 
-        [HttpGet("StructureType")]
+        [HttpGet(Routes.StructureType)]
         public async Task<IActionResult> GetStructureType()
         {
 
@@ -426,7 +423,7 @@ namespace Interview.API.Controllers
 
 
         [HttpPost]
-        [Route("StructureType")]
+        [Route(Routes.StructureType)]
         public async Task<IActionResult> StructureTypeCreate([FromForm] StructureTypeDTO_forCreate model)
         {
 
@@ -438,7 +435,7 @@ namespace Interview.API.Controllers
 
 
         [HttpPut]
-        [Route("StructureType")]
+        [Route(Routes.StructureType)]
         public async Task<IActionResult> StructureTypeUpdate([FromForm] StructureTypeDTO_forUpdate model)
         {
 
@@ -454,7 +451,7 @@ namespace Interview.API.Controllers
         }
 
 
-        [HttpDelete("StructureType/{id}")]
+        [HttpDelete(Routes.StructureTypeById)]
         public async Task<IActionResult> StructureTypeDelete(int id)
         {
 
@@ -470,7 +467,7 @@ namespace Interview.API.Controllers
         #region Structure
 
 
-        [HttpGet("Structure/{id}")]
+        [HttpGet(Routes.StructureById)]
         public async Task<IActionResult> GetStructureById(int id)
         {
 
@@ -481,7 +478,7 @@ namespace Interview.API.Controllers
         }
 
 
-        [HttpGet("Structure")]
+        [HttpGet(Routes.Structure)]
         public async Task<IActionResult> GetStructure()
         {
 
@@ -493,8 +490,7 @@ namespace Interview.API.Controllers
         }
 
 
-        [HttpPost]
-        [Route("Structure")]
+        [HttpPost(Routes.Structure)]
         public async Task<IActionResult> StructureCreate([FromForm] StructureDTO_forCreate model)
         {
 
@@ -505,8 +501,7 @@ namespace Interview.API.Controllers
         }
 
 
-        [HttpPut]
-        [Route("Structure")]
+        [HttpPut(Routes.Structure)]
         public async Task<IActionResult> StructureUpdate([FromForm] StructureDTO_forUpdate model)
         {
 
@@ -522,7 +517,7 @@ namespace Interview.API.Controllers
         }
 
 
-        [HttpDelete("Structure/{id}")]
+        [HttpDelete(Routes.StructureById)]
         public async Task<IActionResult> StructureDelete(int id)
         {
 
@@ -537,7 +532,7 @@ namespace Interview.API.Controllers
 
         #region Position
 
-        [HttpGet("Position/{id}")]
+        [HttpGet(Routes.PositionById)]
         public async Task<IActionResult> GetPositionById(int id)
         {
 
@@ -548,7 +543,7 @@ namespace Interview.API.Controllers
         }
 
 
-        [HttpGet("Position")]
+        [HttpGet(Routes.Position)]
         public async Task<IActionResult> GetPosition()
         {
 
@@ -560,8 +555,7 @@ namespace Interview.API.Controllers
         }
 
 
-        [HttpPost]
-        [Route("Position")]
+        [HttpPost(Routes.Position)]
         public async Task<IActionResult> PositionCreate([FromForm] PositionDTO_forCreate model)
         {
 
@@ -572,8 +566,7 @@ namespace Interview.API.Controllers
         }
 
 
-        [HttpPut]
-        [Route("Position")]
+        [HttpPut(Routes.Position)]
         public async Task<IActionResult> PositionUpdate([FromForm] PositionDTO_forUpdate model)
         {
 
@@ -589,7 +582,7 @@ namespace Interview.API.Controllers
         }
 
 
-        [HttpDelete("Position/{id}")]
+        [HttpDelete(Routes.PositionById)]
         public async Task<IActionResult> PositionDelete(int id)
         {
 
@@ -605,7 +598,7 @@ namespace Interview.API.Controllers
         #region Vacancy
 
 
-        [HttpGet("Vacancy/{id}")]
+        [HttpGet(Routes.VacancyById)]
         public async Task<IActionResult> GetVacancyById(int id)
         {
 
@@ -616,7 +609,7 @@ namespace Interview.API.Controllers
         }
 
 
-        [HttpGet("Vacancy")]
+        [HttpGet(Routes.Vacancy)]
         public async Task<IActionResult> GetVacancy()
         {
 
@@ -628,8 +621,7 @@ namespace Interview.API.Controllers
         }
 
 
-        [HttpPost]
-        [Route("Vacancy")]
+        [HttpPost(Routes.Vacancy)]
         public async Task<IActionResult> VacancyCreate([FromForm] VacancyDTO_forCreate model)
         {
 
@@ -640,8 +632,7 @@ namespace Interview.API.Controllers
         }
 
 
-        [HttpPut]
-        [Route("Vacancy")]
+        [HttpPut(Routes.Vacancy)]
         public async Task<IActionResult> VacancyUpdate([FromForm] VacancyDTO_forUpdate model)
         {
 
@@ -657,7 +648,7 @@ namespace Interview.API.Controllers
         }
 
 
-        [HttpDelete("Vacancy/{id}")]
+        [HttpDelete(Routes.VacancyById)]
         public async Task<IActionResult> VacancyDelete(int id)
         {
 
@@ -673,7 +664,7 @@ namespace Interview.API.Controllers
         #region Session
 
 
-        [HttpGet("Session/{id}")]
+        [HttpGet(Routes.SessionById)]
         public async Task<IActionResult> GetSessionById(int id)
         {
 
@@ -684,7 +675,7 @@ namespace Interview.API.Controllers
         }
 
 
-        [HttpGet("Session")]
+        [HttpGet(Routes.Session)]
         public async Task<IActionResult> GetSession()
         {
 
@@ -696,8 +687,7 @@ namespace Interview.API.Controllers
         }
 
 
-        [HttpPost]
-        [Route("Session")]
+        [HttpPost(Routes.Session)]
         public async Task<IActionResult> SessionCreate([FromForm] SessionDTO_forCreate model)
         {
 
@@ -708,8 +698,7 @@ namespace Interview.API.Controllers
         }
 
 
-        [HttpPut]
-        [Route("Session")]
+        [HttpPut(Routes.Session)]
         public async Task<IActionResult> SessionUpdate([FromForm] SessionDTO_forUpdate model)
         {
 
@@ -725,7 +714,7 @@ namespace Interview.API.Controllers
         }
 
 
-        [HttpDelete("Session/{id}")]
+        [HttpDelete(Routes.SessionById)]
         public async Task<IActionResult> SessionDelete(int id)
         {
 
@@ -741,7 +730,7 @@ namespace Interview.API.Controllers
         #region Question
 
 
-        [HttpGet("Question/{id}")]
+        [HttpGet(Routes.QuestionById)]
         public async Task<IActionResult> GetQuestionById(int id)
         {
 
@@ -752,7 +741,7 @@ namespace Interview.API.Controllers
         }
 
 
-        [HttpGet("Question")]
+        [HttpGet(Routes.Question)]
         public async Task<IActionResult> GetQuestion()
         {
 
@@ -765,8 +754,7 @@ namespace Interview.API.Controllers
 
 
 
-        [HttpPost]
-        [Route("Question")]
+        [HttpPost(Routes.Question)]
         public async Task<IActionResult> QuestionCreate([FromForm] QuestionDTO_forCreate model)
         {
 
@@ -777,8 +765,7 @@ namespace Interview.API.Controllers
         }
 
 
-        [HttpPut]
-        [Route("Question")]
+        [HttpPut(Routes.Question)]
         public async Task<IActionResult> QuestionUpdate([FromForm] QuestionDTO_forUpdate model)
         {
 
@@ -794,7 +781,7 @@ namespace Interview.API.Controllers
         }
 
 
-        [HttpDelete("Question/{id}")]
+        [HttpDelete(Routes.QuestionById)]
         public async Task<IActionResult> QuestionDelete(int id)
         {
 
@@ -810,7 +797,7 @@ namespace Interview.API.Controllers
         #region SessionQuestion
 
 
-        [HttpGet("SessionQuestion/{id}")]
+        [HttpGet(Routes.SessionQuestionById)]
         public async Task<IActionResult> GetSessionQuestionById(int id)
         {
 
@@ -821,7 +808,7 @@ namespace Interview.API.Controllers
         }
 
 
-        [HttpGet("SessionQuestion")]
+        [HttpGet(Routes.SessionQuestion)]
         public async Task<IActionResult> GetSessionQuestion()
         {
 
@@ -833,8 +820,7 @@ namespace Interview.API.Controllers
         }
 
 
-        [HttpPost]
-        [Route("SessionQuestion")]
+        [HttpPost(Routes.SessionQuestion)]
         public async Task<IActionResult> SessionQuestionCreate([FromForm] SessionQuestionDTO_forCreate model)
         {
 
@@ -845,8 +831,7 @@ namespace Interview.API.Controllers
         }
 
 
-        [HttpPut]
-        [Route("SessionQuestion")]
+        [HttpPut(Routes.SessionQuestion)]
         public async Task<IActionResult> SessionQuestionUpdate([FromForm] SessionQuestionDTO_forUpdate model)
         {
 
@@ -862,7 +847,7 @@ namespace Interview.API.Controllers
         }
 
 
-        [HttpDelete("SessionQuestion/{id}")]
+        [HttpDelete(Routes.SessionQuestionById)]
         public async Task<IActionResult> SessionQuestionDelete(int id)
         {
 
@@ -872,7 +857,7 @@ namespace Interview.API.Controllers
         }
 
 
-        [HttpGet("RandomQuestion/{questionCount}/{sessionId}/{vacantionId}/{positionId}")]
+        [HttpGet(Routes.RandomQuestionById)]
         public async Task<IActionResult> GetRandomQuestion(int questionCount, int positionId, int vacantionId, int sessionId)
         {
 
