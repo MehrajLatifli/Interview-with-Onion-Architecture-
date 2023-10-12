@@ -2,7 +2,7 @@
 
 namespace Interview.API.API_Routes
 {
-    public static class Routes
+    public struct Routes
     {
         public  const string CandidateDocument = "candidatedocument";
 

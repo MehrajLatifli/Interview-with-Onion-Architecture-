@@ -76,4 +76,8 @@
     <ProjectReference Include="..\..\Infrastructure\Interview.Persistence\Interview.Persistence.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Controllers\Operations\" />
+  </ItemGroup>
+
 </Project>

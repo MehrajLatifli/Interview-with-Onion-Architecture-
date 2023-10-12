@@ -17,11 +17,11 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Interview.API.Controllers
+namespace Interview.API.Controllers.Auth
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AdminAuthController : ControllerBase
+    public class AuthController : ControllerBase
     {
         private readonly UserManager<CustomUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
@@ -29,7 +29,7 @@ namespace Interview.API.Controllers
         private readonly SignInManager<CustomUser> _signInManager;
         public readonly IMapper _mapper;
 
-        public AdminAuthController(UserManager<CustomUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration, SignInManager<CustomUser> signInManager, IMapper mapper)
+        public AuthController(UserManager<CustomUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration, SignInManager<CustomUser> signInManager, IMapper mapper)
         {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -38,8 +38,9 @@ namespace Interview.API.Controllers
             _mapper = mapper;
         }
 
+        [Authorize(Policy = "AdminOnly")]
         [HttpPost]
-        [Route("register")]
+        [Route("registerAdmin")]
         public async Task<IActionResult> RegisterAdmin([FromForm] RegisterDTO model)
         {
 
@@ -61,8 +62,8 @@ namespace Interview.API.Controllers
             }
 
             string containerName = "profile-images";
-         
-            string blobName = entity.Username + "_" + Guid.NewGuid().ToString() + Path.GetExtension(entity.ImagePath.FileName); 
+
+            string blobName = entity.Username + "_" + Guid.NewGuid().ToString() + Path.GetExtension(entity.ImagePath.FileName);
 
             BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
             BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
@@ -78,7 +79,7 @@ namespace Interview.API.Controllers
 
             string imageUrl = blobClient.Uri.ToString();
 
-            
+
 
             CustomUser user = new()
             {
@@ -95,7 +96,7 @@ namespace Interview.API.Controllers
             if (!result.Succeeded)
             {
                 var errors = result.Errors.Select(e => e.Description);
-                var errorMessage = string.Join($" ", errors); 
+                var errorMessage = string.Join($" ", errors);
 
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = $"User creation failed! \n {errorMessage}" });
             }
@@ -117,11 +118,89 @@ namespace Interview.API.Controllers
             TimeZone localZone = TimeZone.CurrentTimeZone;
             DateTime localTime = localZone.ToLocalTime(DateTime.UtcNow);
 
-          
+
             return Ok(new Response { Status = "Success", Message = "User created successfully!" });
         }
 
+        [Authorize(Policy = "AdminOnly,HROnly")]
+        [HttpPost]
+        [Route("registerHR")]
+        public async Task<IActionResult> RegisterHR([FromForm] RegisterDTO model)
+        {
 
+            var entity = _mapper.Map<Register>(model);
+
+            var userExists = await _userManager.FindByNameAsync(entity.Username);
+
+            if (userExists != null)
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User already exists!" });
+
+
+
+            string connectionString = ServiceExtension.ConnectionStringAzure;
+
+            string azuriteConnectionString = Environment.GetEnvironmentVariable("CUSTOMCONNSTR_AZURE_STORAGE_CONNECTION_STRING");
+            if (!string.IsNullOrEmpty(azuriteConnectionString))
+            {
+                connectionString = azuriteConnectionString;
+            }
+
+            string containerName = "profile-images";
+
+            string blobName = entity.Username + "_" + Guid.NewGuid().ToString() + Path.GetExtension(entity.ImagePath.FileName);
+
+            BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
+            BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
+
+            await containerClient.CreateIfNotExistsAsync(PublicAccessType.Blob);
+
+            BlobClient blobClient = containerClient.GetBlobClient(blobName);
+
+            using (Stream stream = entity.ImagePath.OpenReadStream())
+            {
+                await blobClient.UploadAsync(stream, true);
+            }
+
+            string imageUrl = blobClient.Uri.ToString();
+
+
+
+            CustomUser user = new()
+            {
+                Email = entity.Email,
+                SecurityStamp = Guid.NewGuid().ToString(),
+                UserName = entity.Username,
+                PhoneNumber = entity.PhoneNumber,
+                ImagePath = imageUrl,
+                Roles = $"{UserRoles.HR}",
+            };
+
+            var result = await _userManager.CreateAsync(user, entity.Password);
+
+            if (!result.Succeeded)
+            {
+                var errors = result.Errors.Select(e => e.Description);
+                var errorMessage = string.Join($" ", errors);
+
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = $"User creation failed! \n {errorMessage}" });
+            }
+
+
+            if (!await _roleManager.RoleExistsAsync(UserRoles.HR))
+                await _roleManager.CreateAsync(new IdentityRole(UserRoles.HR));
+
+            if (await _roleManager.RoleExistsAsync(UserRoles.HR))
+                await _userManager.AddToRoleAsync(user, UserRoles.HR);
+
+
+            System.Globalization.CultureInfo.CurrentCulture.ClearCachedData();
+
+            TimeZone localZone = TimeZone.CurrentTimeZone;
+            DateTime localTime = localZone.ToLocalTime(DateTime.UtcNow);
+
+
+            return Ok(new Response { Status = "Success", Message = "User created successfully!" });
+        }
 
 
         [HttpPost]
@@ -268,7 +347,7 @@ namespace Interview.API.Controllers
             return NoContent();
         }
 
-        [Authorize(Policy = "AdminOnly")]
+        [Authorize(Policy = "AdminOnly,HROnly")]
         [HttpPut]
         [Route("updateProfile")]
         public async Task<IActionResult> UpdateProfile([FromForm] UpdateProfileDTO model)
@@ -305,7 +384,7 @@ namespace Interview.API.Controllers
                 currentUser.Email = entity.Email;
                 currentUser.PhoneNumber = entity.PhoneNumber;
 
-    
+
 
                 if (!string.IsNullOrEmpty(entity.OldPassword))
                 {
@@ -366,9 +445,9 @@ namespace Interview.API.Controllers
             }
 
 
-    
 
-      
+
+
 
 
             return Ok(new Response { Status = "Success", Message = "User updated successfully!" });
@@ -376,7 +455,7 @@ namespace Interview.API.Controllers
 
 
 
-        [Authorize(Policy = "AdminOnly")]
+        [Authorize(Policy = "AdminOnly,HROnly")]
         [HttpPut]
         [Route("updatePassword")]
         public async Task<IActionResult> UpdatePassword([FromForm] UpdatePasswordDTO model)
@@ -424,7 +503,7 @@ namespace Interview.API.Controllers
                     }
                 }
 
-               
+
 
 
                 var identityResult = await _userManager.UpdateAsync(currentUser);
@@ -445,6 +524,97 @@ namespace Interview.API.Controllers
         }
 
 
+        [Authorize(Policy = "AdminOnly")]
+        [HttpGet("getAdmins")]
+        public async Task<IActionResult> GetAdmins()
+        {
+
+            var list = new List<GetAuthModel>();
+
+
+            foreach (var user in _userManager.Users.ToList().Where(i => i.Roles == UserRoles.Admin))
+            {
+
+                if (user != null)
+                {
+
+
+                    list.Add(new GetAuthModel()
+                    {
+                        Username = user.UserName,
+                        PhoneNumber = user.PhoneNumber,
+                        Email = user.Email,
+                        ImagePath = user.ImagePath,
+                        Roles = user.Roles,
+
+                    });
+                }
+
+                else
+                {
+                    return StatusCode(StatusCodes.Status404NotFound, new Response { Status = "Error", Message = "User not found" });
+                }
+
+            }
+            if (list.Any())
+            {
+
+                return Ok(list);
+            }
+
+            else
+            {
+                return StatusCode(StatusCodes.Status404NotFound, new Response { Status = "Error", Message = "Nothing found" });
+            }
+
+        }
+
+        [Authorize(Policy = "AdminOnly,HROnly")]
+        [HttpGet("getHR")]
+        public async Task<IActionResult> GetHR()
+        {
+
+            var list = new List<GetAuthModel>();
+
+
+            foreach (var user in _userManager.Users.ToList().Where(i => i.Roles == UserRoles.HR))
+            {
+
+                if (user != null)
+                {
+
+
+                    list.Add(new GetAuthModel()
+                    {
+                        Username = user.UserName,
+                        PhoneNumber = user.PhoneNumber,
+                        Email = user.Email,
+                        ImagePath = user.ImagePath,
+                        Roles = user.Roles,
+
+
+
+                    });
+                }
+
+                else
+                {
+                    return StatusCode(StatusCodes.Status404NotFound, new Response { Status = "Error", Message = "User not found" });
+                }
+
+            }
+            if (list.Any())
+            {
+
+                return Ok(list);
+            }
+
+            else
+            {
+                return StatusCode(StatusCodes.Status404NotFound, new Response { Status = "Error", Message = "Nothing found" });
+            }
+
+        }
 
 
         private JwtSecurityToken CreateToken(List<Claim> authClaims)
