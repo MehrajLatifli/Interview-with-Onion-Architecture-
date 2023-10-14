@@ -38,7 +38,6 @@ namespace Interview.API.Controllers.Auth
             _mapper = mapper;
         }
 
-        [Authorize(Policy = "AdminOnly")]
         [HttpPost]
         [Route("registerAdmin")]
         public async Task<IActionResult> RegisterAdmin([FromForm] RegisterDTO model)
@@ -122,7 +121,7 @@ namespace Interview.API.Controllers.Auth
             return Ok(new Response { Status = "Success", Message = "User created successfully!" });
         }
 
-        [Authorize(Policy = "AdminOnly,HROnly")]
+
         [HttpPost]
         [Route("registerHR")]
         public async Task<IActionResult> RegisterHR([FromForm] RegisterDTO model)

@@ -1646,6 +1646,38 @@ namespace Interview.Application.Services.Concrete
                             randomList.AddRange(await SelectRandomItems(mediumList, Convert.ToInt32(Math.Round(Convert.ToDouble(questionCount) * 30 / 100, MidpointRounding.AwayFromZero)), rnd,"medium"));
                             randomList.AddRange(await SelectRandomItems(hardList, Convert.ToInt32(Math.Round(Convert.ToDouble(questionCount) * 20 / 100, MidpointRounding.AwayFromZero)), rnd, "difficult"));
 
+
+                            //List<SessionQuestionDTO_forGetandGetAll> sessionQuestions = null;
+
+                            //await Task.Run(() =>
+                            //{
+                            //    sessionQuestions = _mapper.Map<List<SessionQuestionDTO_forGetandGetAll>>(_sessionQuestionReadRepository.GetAll(false));
+                            //});
+
+
+                            //foreach (var entity in sessionQuestions)
+                            //{
+                            //    await _sessionQuestionWriteRepository.RemoveByIdAsync(entity.Id.ToString());
+                            //}
+
+                            //await _sessionQuestionWriteRepository.SaveAsync();
+
+
+                            foreach (var entity in randomList)
+                            {
+                                var sessionQuestion = new SessionQuestion
+                                {
+                                    QuestionId = entity.Id,
+                                    SessionId = sessionId
+                                };
+
+                                await _sessionQuestionWriteRepository.AddAsync(sessionQuestion);
+                            }
+
+
+                            await _sessionQuestionWriteRepository.SaveAsync();
+
+
                             //await Task.Run(() =>
                             //{
                             //    easyList = _mapper.Map<List<QuestionDTO_forGetandGetAll>>(_questionReadRepository.GetAll(false).Where(i => i.LevelId == 1));
@@ -1654,7 +1686,7 @@ namespace Interview.Application.Services.Concrete
                             //    .OrderBy(x => rnd.Next())
                             //    .Take(Convert.ToInt32(Math.Round(Convert.ToDouble(questionCount) * 50 / 100, MidpointRounding.AwayFromZero)))
                             //    .ToList();
-                       
+
 
                             //    foreach (var id in easyrandomNumbers)
                             //    {
@@ -1734,6 +1766,37 @@ namespace Interview.Application.Services.Concrete
                             randomList.AddRange(await SelectRandomItems(easyList, Convert.ToInt32(Math.Round(Convert.ToDouble(questionCount) * 20 / 100, MidpointRounding.AwayFromZero)), rnd, "easy"));
                             randomList.AddRange(await SelectRandomItems(mediumList, Convert.ToInt32(Math.Round(Convert.ToDouble(questionCount) * 50 / 100, MidpointRounding.AwayFromZero)), rnd, "medium"));
                             randomList.AddRange(await SelectRandomItems(hardList, Convert.ToInt32(Math.Round(Convert.ToDouble(questionCount) * 30 / 100, MidpointRounding.AwayFromZero)), rnd, "difficult"));
+
+
+                            //List<SessionQuestionDTO_forGetandGetAll> sessionQuestions = null;
+
+                            //await Task.Run(() =>
+                            //{
+                            //    sessionQuestions = _mapper.Map<List<SessionQuestionDTO_forGetandGetAll>>(_sessionQuestionReadRepository.GetAll(false));
+                            //});
+
+
+                            //foreach (var entity in sessionQuestions)
+                            //{
+                            //    await _sessionQuestionWriteRepository.RemoveByIdAsync(entity.Id.ToString());
+                            //}
+
+                            //await _sessionQuestionWriteRepository.SaveAsync();
+
+
+                            foreach (var entity in randomList)
+                            {
+                                var sessionQuestion = new SessionQuestion
+                                {
+                                    QuestionId = entity.Id,
+                                    SessionId = sessionId
+                                };
+
+                                await _sessionQuestionWriteRepository.AddAsync(sessionQuestion);
+                            }
+
+
+                            await _sessionQuestionWriteRepository.SaveAsync();
 
 
                             //await Task.Run(() =>
@@ -1820,6 +1883,38 @@ namespace Interview.Application.Services.Concrete
                             randomList.AddRange(await SelectRandomItems(easyList, Convert.ToInt32(Math.Round(Convert.ToDouble(questionCount) * 20 / 100, MidpointRounding.AwayFromZero)), rnd, "easy"));
                             randomList.AddRange(await SelectRandomItems(mediumList, Convert.ToInt32(Math.Round(Convert.ToDouble(questionCount) * 30 / 100, MidpointRounding.AwayFromZero)), rnd, "medium"));
                             randomList.AddRange(await SelectRandomItems(hardList, Convert.ToInt32(Math.Round(Convert.ToDouble(questionCount) * 50 / 100, MidpointRounding.AwayFromZero)), rnd, "difficult"));
+
+
+                            //List<SessionQuestionDTO_forGetandGetAll> sessionQuestions = null;
+
+                            //await Task.Run(() =>
+                            //{
+                            //    sessionQuestions = _mapper.Map<List<SessionQuestionDTO_forGetandGetAll>>(_sessionQuestionReadRepository.GetAll(false));
+                            //});
+
+
+                            //foreach (var entity in sessionQuestions)
+                            //{
+                            //    await _sessionQuestionWriteRepository.RemoveByIdAsync(entity.Id.ToString());
+                            //}
+
+                            //await _sessionQuestionWriteRepository.SaveAsync();
+
+
+                            foreach (var entity in randomList)
+                            {
+                                var sessionQuestion = new SessionQuestion
+                                {
+                                    QuestionId = entity.Id,
+                                    SessionId = sessionId
+                                };
+
+                                await _sessionQuestionWriteRepository.AddAsync(sessionQuestion);
+                            }
+
+
+                            await _sessionQuestionWriteRepository.SaveAsync();
+
 
 
 
