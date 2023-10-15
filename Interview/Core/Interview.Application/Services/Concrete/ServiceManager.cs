@@ -1589,13 +1589,6 @@ namespace Interview.Application.Services.Concrete
                 }
             });
 
-            await Task.Run(() =>
-            {
-                if (!_mapper.Map<List<QuestionDTO_forGetandGetAll>>(_questionReadRepository.GetAll(false)).Any(i => i.StructureId == structureId))
-                {
-                    throw new NotFoundException("There are no questions about the selected structure.");
-                }
-            });
 
             await Task.Run(() =>
             {
@@ -1603,6 +1596,14 @@ namespace Interview.Application.Services.Concrete
                 {
 
                     throw new NotFoundException("Structure not found");
+                }
+            });
+
+            await Task.Run(() =>
+            {
+                if (!_mapper.Map<List<QuestionDTO_forGetandGetAll>>(_questionReadRepository.GetAll(false)).Any(i => i.StructureId == structureId))
+                {
+                    throw new NotFoundException("There are no questions about the selected structure.");
                 }
             });
 
@@ -1631,6 +1632,7 @@ namespace Interview.Application.Services.Concrete
                 }
             });
 
+  
 
             if (_mapper.Map<List<StructureDTO_forGetandGetAll>>(_structureReadRepository.GetAll(false)).Any(i => i.Id == structureId))
             {
