@@ -61,6 +61,6 @@ namespace Interview.API.API_Routes
 
         public const string RandomQuestion = "randomQuestion";
 
-        public const string RandomQuestionById = RandomQuestion + "/{questionCount}/{positionId}/{vacantionId}/{sessionId}";
+        public const string RandomQuestionById = RandomQuestion + "/{questionCount}/{structureId}/{positionId}/{vacantionId}/{sessionId}";
     }
 }

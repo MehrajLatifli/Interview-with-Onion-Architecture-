@@ -95,7 +95,7 @@ namespace Interview.Application.Services.Abstract
 
         public Task<SessionQuestionDTO_forGetandGetAll> DeleteSessionQuestionById(int id);
 
-        public Task<List<QuestionDTO_forGetandGetAll>> GetRandomQuestion(int questionCount, int positionId, int vacantionId, int sessionId);
+        public Task<List<QuestionDTO_forGetandGetAll>> GetRandomQuestion(int questionCount, int structureId, int positionId, int vacantionId, int sessionId);
 
         #endregion
 

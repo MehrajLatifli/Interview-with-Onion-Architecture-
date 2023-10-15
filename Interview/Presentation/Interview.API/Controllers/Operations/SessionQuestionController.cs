@@ -95,10 +95,10 @@ namespace Interview.API.Controllers.Operations
 
 
         [HttpGet(Routes.RandomQuestionById)]
-        public async Task<IActionResult> GetRandomQuestion(int questionCount, int positionId, int vacantionId, int sessionId)
+        public async Task<IActionResult> GetRandomQuestion(int questionCount, int structureId, int positionId, int vacantionId, int sessionId)
         {
 
-            var data = await _service.GetRandomQuestion(questionCount, positionId, vacantionId, sessionId);
+            var data = await _service.GetRandomQuestion( questionCount,  structureId,  positionId,  vacantionId,  sessionId);
 
 
             return Ok(data);
