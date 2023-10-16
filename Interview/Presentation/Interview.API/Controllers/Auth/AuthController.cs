@@ -48,7 +48,7 @@ namespace Interview.API.Controllers.Auth
             var userExists = await _userManager.FindByNameAsync(entity.Username);
 
             if (userExists != null)
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User already exists!" });
+                return StatusCode(StatusCodes.Status409Conflict, new Response { Status = "Error", Message = "User already exists!" });
 
 
 
@@ -132,7 +132,7 @@ namespace Interview.API.Controllers.Auth
             var userExists = await _userManager.FindByNameAsync(entity.Username);
 
             if (userExists != null)
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User already exists!" });
+                return StatusCode(StatusCodes.Status409Conflict, new Response { Status = "Error", Message = "User already exists!" });
 
 
 

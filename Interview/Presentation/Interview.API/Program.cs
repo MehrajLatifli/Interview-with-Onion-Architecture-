@@ -22,42 +22,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddMvcCore().AddApiExplorer();
 
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
-    {
-
-        Title = "Interview WebAPI",
-        Version = "v1",
-        Description = "Authentication & Authorization"
-    });
-
-    c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme()
-    {
-        Name = "Authorization",
-        Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey,
-        Scheme = "Bearer",
-        BearerFormat = "JWT",
-        In = Microsoft.OpenApi.Models.ParameterLocation.Header,
-        Description = "Enter `Bearer` [space] and then your valid token in the text input below. \r\n\r\n Example: \"Bearer apikey \""
-    });
-
-    c.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference=new OpenApiReference
-                {
-                    Type=ReferenceType.SecurityScheme,
-                    Id="Bearer"
-                }
-            }, new string[]{}
-        }
-    });
-
-
-});
+builder.Services.AddSwaggerGenServiceExtension();
 
 
 builder.Services.AddCors();
@@ -66,44 +31,25 @@ builder.Services.AddCors();
 builder.Services.AddPersistenceServices();
 
 
+builder.Services.AddCustomAuthorizationPoliciesServiceExtension();
 
 
-
-
-builder.Services.AddAuthorization(options =>
+builder.Services.AddControllers(options =>
 {
-    options.AddPolicy("AdminOnly", policy =>
-        policy.RequireRole(UserRoles.Admin));
-
-    options.AddPolicy("HROnly", policy =>
-    policy.RequireRole(UserRoles.HR));
-
-    options.AddPolicy("AllRoles", policy =>
-    {
-        policy.RequireRole(UserRoles.Admin);
-        policy.RequireRole(UserRoles.HR);
-    });
-});
-
-
-builder.Services.AddControllers(x => x.Filters.Add<ApiExceptionFilterAttribute>())
-    .AddJsonOptions(options =>
+    options.Filters.Add<ApiExceptionFilterAttribute>();
+    options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
+})
+.AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-});
-
-
-
-builder.Services.AddControllers(options => options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true);
-
-builder.Services.AddControllers().AddNewtonsoftJson();
-
-builder.Services.AddControllers().AddJsonOptions(o =>
+})
+.AddNewtonsoftJson()
+.AddJsonOptions(options =>
 {
-
-    o.JsonSerializerOptions.PropertyNamingPolicy = null;
-    o.JsonSerializerOptions.DictionaryKeyPolicy = null;
+    options.JsonSerializerOptions.PropertyNamingPolicy = null;
+    options.JsonSerializerOptions.DictionaryKeyPolicy = null;
 });
+
 
 builder.Services.Configure<FormOptions>(x =>
 {
@@ -123,6 +69,7 @@ builder.Services.AddDbContext<CustomDbContext>(option => option.UseSqlServer(Ser
 builder.Services.AddIdentity<CustomUser, IdentityRole>(options => {
     options.User.RequireUniqueEmail = false;
 }).AddEntityFrameworkStores<CustomDbContext>().AddDefaultTokenProviders();
+
 
 builder.Services.AddAuthentication(options =>
 {
@@ -167,9 +114,7 @@ builder.Services.AddAzureClients(clientBuilder =>
 
 
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 builder.Services.AddAzureClients(clientBuilder =>
 {
     clientBuilder.AddBlobServiceClient(builder.Configuration["AzureConnectionStrings:blob"], preferMsi: true);

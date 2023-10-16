@@ -18,6 +18,9 @@ using System.Text;
 using System.Threading.RateLimiting;
 using System.Threading.Tasks;
 using ConfigurationManager = Microsoft.Extensions.Configuration.ConfigurationManager;
+using Swashbuckle.AspNetCore.SwaggerGen;
+using Microsoft.OpenApi.Models;
+using Interview.Domain.Entities.AuthModels;
 
 namespace Interview.Persistence.ServiceExtensions
 {
@@ -104,7 +107,70 @@ namespace Interview.Persistence.ServiceExtensions
 
         }
 
-            public static void AddRateLimiterServiceExtension(this IServiceCollection services)
+
+        public static IServiceCollection AddSwaggerGenServiceExtension(this IServiceCollection services)
+        {
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "Interview WebAPI",
+                    Version = "v1",
+                    Description = "Authentication & Authorization"
+                });
+
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer",
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header,
+                    Description = "Enter `Bearer` [space] and then your valid token in the text input below. \r\n\r\n Example: \"Bearer apikey \""
+                });
+
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+        {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                    }, new string[]{}
+                }
+        });
+            });
+
+            return services;
+        }
+
+
+
+
+        public static void AddCustomAuthorizationPoliciesServiceExtension(this IServiceCollection services)
+        {
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("AdminOnly", policy =>
+                    policy.RequireRole(UserRoles.Admin));
+
+                options.AddPolicy("HROnly", policy =>
+                    policy.RequireRole(UserRoles.HR));
+
+                options.AddPolicy("AllRoles", policy =>
+                {
+                    policy.RequireRole(UserRoles.Admin);
+                    policy.RequireRole(UserRoles.HR);
+                });
+            });
+        }
+
+
+
+        public static void AddRateLimiterServiceExtension(this IServiceCollection services)
         {
             services.AddRateLimiter(options =>
             {
@@ -140,7 +206,6 @@ namespace Interview.Persistence.ServiceExtensions
                 };
             });
         }
-
     }
 }
 
