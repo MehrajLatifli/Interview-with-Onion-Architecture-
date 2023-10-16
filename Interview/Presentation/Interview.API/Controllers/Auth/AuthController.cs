@@ -568,7 +568,7 @@ namespace Interview.API.Controllers.Auth
 
         }
 
-        [Authorize(Policy = "AdminOnly,HROnly")]
+        [Authorize(Policy = "AllRoles")]
         [HttpGet("getHR")]
         public async Task<IActionResult> GetHR()
         {

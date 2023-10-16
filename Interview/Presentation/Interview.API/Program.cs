@@ -77,6 +77,12 @@ builder.Services.AddAuthorization(options =>
 
     options.AddPolicy("HROnly", policy =>
     policy.RequireRole(UserRoles.HR));
+
+    options.AddPolicy("AllRoles", policy =>
+    {
+        policy.RequireRole(UserRoles.Admin);
+        policy.RequireRole(UserRoles.HR);
+    });
 });
 
 
