@@ -23,9 +23,22 @@ namespace Interview.API.Attribute
                 {typeof(ValidationException), HandleValidationException},
                 {typeof(NotFoundException), HandleNotFoundException},
                 {typeof(UnauthorizedException), HandleUnauthorizedException},
-                {typeof(BadHttpRequestException), HandleBadHttpRequestException}
+                {typeof(BadHttpRequestException), HandleBadHttpRequestException},
+                {typeof(ConflictException), HandleConflictException},
 
             };
+        }
+
+        private void HandleConflictException(ExceptionContext context)
+        {
+            var details = new ProblemDetails()
+            {
+                Status = StatusCodes.Status409Conflict,
+                Title = context.Exception.Message
+            };
+
+            context.ExceptionHandled = true;
+            context.Result = new NotFoundObjectResult(details);
         }
 
         public override async Task OnExceptionAsync(ExceptionContext context)

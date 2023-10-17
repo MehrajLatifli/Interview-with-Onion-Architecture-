@@ -1,4 +1,5 @@
-﻿using Interview.Persistence.Contexts.AuthDbContext.IdentityAuth;
+﻿
+using Interview.Domain.Entities.IdentityAuth;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;

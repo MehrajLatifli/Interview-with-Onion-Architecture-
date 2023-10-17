@@ -1,7 +1,7 @@
 using Interview.Application.Mapper;
 using Interview.Persistence;
 using Interview.Persistence.Contexts.AuthDbContext.DbContext;
-using Interview.Persistence.Contexts.AuthDbContext.IdentityAuth;
+using Interview.Domain.Entities.IdentityAuth;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;

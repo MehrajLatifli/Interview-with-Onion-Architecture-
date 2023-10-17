@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Interview.Persistence.Contexts.AuthDbContext.IdentityAuth
+namespace Interview.Domain.Entities.IdentityAuth
 {
     public class CustomUser : IdentityUser
     {

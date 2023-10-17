@@ -97,6 +97,9 @@ namespace Interview.Application.Mapper
             CreateMap<Login, LoginDTO>();
             CreateMap<LoginDTO, Login>();
 
+            CreateMap<LoginResponse, LoginResponseDTO>();
+            CreateMap<LoginResponseDTO, LoginResponse>();
+
             CreateMap<Register, RegisterDTO>();
             CreateMap<RegisterDTO, Register>();
 

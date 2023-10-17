@@ -69,6 +69,7 @@ namespace Interview.Persistence.ServiceExtensions
             services.AddDbContext<InterviewContext>(options => options.UseSqlServer(ConnectionString));
 
             services.AddScoped<IService, ServiceManager>();
+            services.AddScoped<IAuthService, AuthServiceManager>();
 
             services.AddScoped<ICandidateDocumentWriteRepository, CandidateDocumentWriteRepository>();
             services.AddScoped<ICandidateDocumentReadRepository, CandidateDocumentReadRepository>();
@@ -116,7 +117,7 @@ namespace Interview.Persistence.ServiceExtensions
                 {
                     Title = "Interview WebAPI",
                     Version = "v1",
-                    Description = "Authentication & Authorization"
+                    Description = "It is intended for the convenience of the interview process."
                 });
 
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme

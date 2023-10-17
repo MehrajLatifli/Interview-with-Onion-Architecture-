@@ -2,6 +2,7 @@
 
 namespace Interview.Application.Mapper.AuthDTO
 {
+
     public class LoginDTO
     {
         [Required(ErrorMessage = "User Name is required")]
@@ -10,4 +11,7 @@ namespace Interview.Application.Mapper.AuthDTO
         [Required(ErrorMessage = "User Password is required")]
         public string Password { get; set; }
     }
+
+
 }
+
