@@ -14,21 +14,15 @@ namespace Interview.API.Controllers.Operations
     [Authorize(Policy = "AdminOnly")]
     public class SessionController : ControllerBase
     {
-        private readonly UserManager<CustomUser> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly IConfiguration _configuration;
-        private readonly SignInManager<CustomUser> _signInManager;
 
-        private readonly IService _service;
 
-        public SessionController(UserManager<CustomUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration, SignInManager<CustomUser> signInManager, IService service)
+        private readonly ISessionService _sessionService;
+
+        public SessionController(ISessionService sessionService)
         {
-            _userManager = userManager;
-            _roleManager = roleManager;
-            _configuration = configuration;
-            _signInManager = signInManager;
-            _service = service;
+            _sessionService = sessionService;
         }
+
 
 
 
@@ -39,7 +33,7 @@ namespace Interview.API.Controllers.Operations
         public async Task<IActionResult> GetSessionById(int id)
         {
 
-            var data = await _service.GetSessionById(id);
+            var data = await _sessionService.GetSessionById(id);
 
             return Ok(data);
 
@@ -50,7 +44,7 @@ namespace Interview.API.Controllers.Operations
         public async Task<IActionResult> GetSession()
         {
 
-            var data = await _service.GetSession();
+            var data = await _sessionService.GetSession();
 
 
             return Ok(data);
@@ -62,7 +56,7 @@ namespace Interview.API.Controllers.Operations
         public async Task<IActionResult> SessionCreate([FromForm] SessionDTO_forCreate model)
         {
 
-            await _service.SessionCreate(model);
+            await _sessionService.SessionCreate(model);
 
             return Ok(new Response { Status = "Success", Message = "The Session created successfully!" });
 
@@ -74,7 +68,7 @@ namespace Interview.API.Controllers.Operations
         {
 
 
-            await _service.SessionUpdate(model);
+            await _sessionService.SessionUpdate(model);
 
 
             return Ok(new Response { Status = "Success", Message = "The Session updated successfully!" });
@@ -89,7 +83,7 @@ namespace Interview.API.Controllers.Operations
         public async Task<IActionResult> SessionDelete(int id)
         {
 
-            await _service.DeleteSessionById(id);
+            await _sessionService.DeleteSessionById(id);
 
             return Ok(new Response { Status = "Success", Message = "The Session deleted successfully!" });
         }

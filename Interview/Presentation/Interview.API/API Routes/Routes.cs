@@ -62,5 +62,20 @@ namespace Interview.API.API_Routes
         public const string RandomQuestion = "randomQuestion";
 
         public const string RandomQuestionById = RandomQuestion + "/{questionCount}/{structureId}/{positionId}/{vacantionId}/{sessionId}";
+
+
+
+
+        public const string RegisterAdmin = "registerAdmin";
+        public const string RegisterHR = "registerHR";
+        public const string Login = "login";
+        public const string Logout = "logout";
+        public const string RefreshToken = "refresh-token";
+        public const string RevokeUsername = "revoke/{username}";
+        public const string RevokeAll = "revoke-all";
+        public const string UpdateProfile = "updateProfile";
+        public const string UpdatePassword = "updatePassword";
+        public const string GetAdmins = "getAdmins";
+        public const string GetHR = "getHR";
     }
 }

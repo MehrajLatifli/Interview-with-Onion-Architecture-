@@ -14,21 +14,17 @@ namespace Interview.API.Controllers.Operations
     [Authorize(Policy = "AdminOnly")]
     public class QuestionController : ControllerBase
     {
-        private readonly UserManager<CustomUser> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly IConfiguration _configuration;
-        private readonly SignInManager<CustomUser> _signInManager;
 
-        private readonly IService _service;
 
-        public QuestionController(UserManager<CustomUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration, SignInManager<CustomUser> signInManager, IService service)
+        private readonly IQuestionService _questionService;
+
+        public QuestionController(IQuestionService questionService)
         {
-            _userManager = userManager;
-            _roleManager = roleManager;
-            _configuration = configuration;
-            _signInManager = signInManager;
-            _service = service;
+            _questionService = questionService;
         }
+
+
+
 
 
         #region Question
@@ -38,7 +34,7 @@ namespace Interview.API.Controllers.Operations
         public async Task<IActionResult> GetQuestionById(int id)
         {
 
-            var data = await _service.GetQuestionById(id);
+            var data = await _questionService.GetQuestionById(id);
 
             return Ok(data);
 
@@ -49,7 +45,7 @@ namespace Interview.API.Controllers.Operations
         public async Task<IActionResult> GetQuestion()
         {
 
-            var data = await _service.GetQuestion();
+            var data = await _questionService.GetQuestion();
 
 
             return Ok(data);
@@ -62,7 +58,7 @@ namespace Interview.API.Controllers.Operations
         public async Task<IActionResult> QuestionCreate([FromForm] QuestionDTO_forCreate model)
         {
 
-            await _service.QuestionCreate(model);
+            await _questionService.QuestionCreate(model);
 
             return Ok(new Response { Status = "Success", Message = "The Question created successfully!" });
 
@@ -74,7 +70,7 @@ namespace Interview.API.Controllers.Operations
         {
 
 
-            await _service.QuestionUpdate(model);
+            await _questionService.QuestionUpdate(model);
 
 
             return Ok(new Response { Status = "Success", Message = "The Question updated successfully!" });
@@ -89,7 +85,7 @@ namespace Interview.API.Controllers.Operations
         public async Task<IActionResult> QuestionDelete(int id)
         {
 
-            await _service.DeleteQuestionById(id);
+            await _questionService.DeleteQuestionById(id);
 
             return Ok(new Response { Status = "Success", Message = "The Question deleted successfully!" });
         }

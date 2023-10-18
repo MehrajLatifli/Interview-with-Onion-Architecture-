@@ -68,8 +68,35 @@ namespace Interview.Persistence.ServiceExtensions
         {
             services.AddDbContext<InterviewContext>(options => options.UseSqlServer(ConnectionString));
 
-            services.AddScoped<IService, ServiceManager>();
+
+
+
             services.AddScoped<IAuthService, AuthServiceManager>();
+
+            services.AddScoped<ICandidateDocumentService, CandidateDocumentServiceManager>();
+
+            services.AddScoped<ICandidateService, CandidateServiceManager>();
+
+            services.AddScoped<ICategoryService, CategoryServiceManager>();
+
+            services.AddScoped<ILevelService, LevelServiceManager>();
+
+            services.AddScoped<IPositionService, PositionServiceManager>();
+
+            services.AddScoped<IQuestionService, QuestionServiceManager>();
+
+            services.AddScoped<ISessionQuestionService, SessionQuestionServiceManager>();
+
+            services.AddScoped<ISessionService, SessionServiceManager>();
+
+            services.AddScoped<IStructureService, StructureServiceManager>();
+
+            services.AddScoped<IStructureTypeService, StructureTypeServiceManager>();
+
+            services.AddScoped<IVacancyService, VacancyServiceManager>();
+
+
+
 
             services.AddScoped<ICandidateDocumentWriteRepository, CandidateDocumentWriteRepository>();
             services.AddScoped<ICandidateDocumentReadRepository, CandidateDocumentReadRepository>();

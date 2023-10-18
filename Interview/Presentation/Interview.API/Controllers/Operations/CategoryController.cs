@@ -14,21 +14,17 @@ namespace Interview.API.Controllers.Operations
     [Authorize(Policy = "AdminOnly")]
     public class CategoryController : ControllerBase
     {
-        private readonly UserManager<CustomUser> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly IConfiguration _configuration;
-        private readonly SignInManager<CustomUser> _signInManager;
 
-        private readonly IService _service;
 
-        public CategoryController(UserManager<CustomUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration, SignInManager<CustomUser> signInManager, IService service)
+        private readonly ICategoryService _categoryService;
+
+        public CategoryController(ICategoryService categoryService)
         {
-            _userManager = userManager;
-            _roleManager = roleManager;
-            _configuration = configuration;
-            _signInManager = signInManager;
-            _service = service;
+            _categoryService = categoryService;
         }
+
+
+
 
         #region Category
 
@@ -37,7 +33,7 @@ namespace Interview.API.Controllers.Operations
         public async Task<IActionResult> GetCategoryById(int id)
         {
 
-            var data = await _service.GetCategoryById(id);
+            var data = await _categoryService.GetCategoryById(id);
 
             return Ok(data);
 
@@ -48,7 +44,7 @@ namespace Interview.API.Controllers.Operations
         public async Task<IActionResult> GetCategory()
         {
 
-            var data = await _service.GetCategory();
+            var data = await _categoryService.GetCategory();
 
 
             return Ok(data);
@@ -60,7 +56,7 @@ namespace Interview.API.Controllers.Operations
         public async Task<IActionResult> CategoryCreate([FromForm] CategoryDTO_forCreate model)
         {
 
-            await _service.CategoryCreate(model);
+            await _categoryService.CategoryCreate(model);
 
             return Ok(new Response { Status = "Success", Message = "The SessionType created successfully!" });
 
@@ -72,7 +68,7 @@ namespace Interview.API.Controllers.Operations
         {
 
 
-            await _service.CategoryUpdate(model);
+            await _categoryService.CategoryUpdate(model);
 
 
             return Ok(new Response { Status = "Success", Message = "The SessionType updated successfully!" });
@@ -87,7 +83,7 @@ namespace Interview.API.Controllers.Operations
         public async Task<IActionResult> DeleteCategoryById(int id)
         {
 
-            await _service.DeleteCategoryById(id);
+            await _categoryService.DeleteCategoryById(id);
 
             return Ok(new Response { Status = "Success", Message = "The SessionType deleted successfully!" });
         }

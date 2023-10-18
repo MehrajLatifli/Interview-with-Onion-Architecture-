@@ -20,6 +20,7 @@ using Interview.Application.Services.Abstract;
 using Microsoft.IdentityModel.Claims;
 using Claim = System.Security.Claims.Claim;
 using ClaimsPrincipal = System.Security.Claims.ClaimsPrincipal;
+using Interview.API.API_Routes;
 
 namespace Interview.API.Controllers.Auth
 {
@@ -38,7 +39,7 @@ namespace Interview.API.Controllers.Auth
         }
 
         [HttpPost]
-        [Route("registerAdmin")]
+        [Route(Routes.RegisterAdmin)]
         public async Task<IActionResult> RegisterAdmin([FromForm] RegisterDTO model)
         {
 
@@ -50,7 +51,7 @@ namespace Interview.API.Controllers.Auth
 
 
         [HttpPost]
-        [Route("registerHR")]
+        [Route(Routes.RegisterHR)]
         public async Task<IActionResult> RegisterHR([FromForm] RegisterDTO model)
         {
 
@@ -62,7 +63,7 @@ namespace Interview.API.Controllers.Auth
 
 
         [HttpPost]
-        [Route("login")]
+        [Route(Routes.Login)]
         public async Task<IActionResult> Login([FromBody] LoginDTO model)
         {
 
@@ -73,7 +74,7 @@ namespace Interview.API.Controllers.Auth
 
 
         [HttpPost]
-        [Route("logout")]
+        [Route(Routes.Logout)]
         public async Task<IActionResult> Logout()
         {
             await _authservice.Logout();
@@ -89,7 +90,7 @@ namespace Interview.API.Controllers.Auth
 
         [Authorize(Policy = "AdminOnly")]
         [HttpPost]
-        [Route("refresh-token")]
+        [Route(Routes.RefreshToken)]
         public async Task<IActionResult> RefreshToken(TokenModel tokenModel)
         {
            return Ok(await _authservice.RefreshToken(tokenModel));
@@ -98,7 +99,7 @@ namespace Interview.API.Controllers.Auth
 
         [Authorize(Policy = "AdminOnly")]
         [HttpPost]
-        [Route("revoke/{username}")]
+        [Route(Routes.RevokeUsername)]
         public async Task<IActionResult> Revoke(string username)
         {
             await _authservice.Revoke(username);
@@ -108,7 +109,7 @@ namespace Interview.API.Controllers.Auth
 
         [Authorize(Policy = "AdminOnly")]
         [HttpPost]
-        [Route("revoke-all")]
+        [Route(Routes.RevokeAll)]
         public async Task<IActionResult> RevokeAll()
         {
             await _authservice.RevokeAll();
@@ -118,7 +119,7 @@ namespace Interview.API.Controllers.Auth
 
         [Authorize(Policy = "AllRoles")]
         [HttpPut]
-        [Route("updateProfile")]
+        [Route(Routes.UpdateProfile)]
         public async Task<IActionResult> UpdateProfile([FromForm] UpdateProfileDTO model)
         {
         
@@ -133,7 +134,7 @@ namespace Interview.API.Controllers.Auth
 
         [Authorize(Policy = "AllRoles")]
         [HttpPut]
-        [Route("updatePassword")]
+        [Route(Routes.UpdatePassword)]
         public async Task<IActionResult> UpdatePassword([FromForm] UpdatePasswordDTO model)
         {
 
@@ -147,7 +148,7 @@ namespace Interview.API.Controllers.Auth
 
 
         [Authorize(Policy = "AdminOnly")]
-        [HttpGet("getAdmins")]
+        [HttpGet(Routes.GetAdmins)]
         public async Task<IActionResult> GetAdmins()
         {
 
@@ -157,7 +158,7 @@ namespace Interview.API.Controllers.Auth
         }
 
         [Authorize(Policy = "AllRoles")]
-        [HttpGet("getHR")]
+        [HttpGet(Routes.GetHR)]
         public async Task<IActionResult> GetHR()
         {
 

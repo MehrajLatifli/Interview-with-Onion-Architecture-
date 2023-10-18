@@ -14,21 +14,18 @@ namespace Interview.API.Controllers.Operations
     [Authorize(Policy = "AdminOnly")]
     public class StructureTypeController : ControllerBase
     {
-        private readonly UserManager<CustomUser> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly IConfiguration _configuration;
-        private readonly SignInManager<CustomUser> _signInManager;
 
-        private readonly IService _service;
 
-        public StructureTypeController(UserManager<CustomUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration, SignInManager<CustomUser> signInManager, IService service)
+
+        private readonly IStructureTypeService _structureTypeService;
+
+        public StructureTypeController(IStructureTypeService structureTypeService)
         {
-            _userManager = userManager;
-            _roleManager = roleManager;
-            _configuration = configuration;
-            _signInManager = signInManager;
-            _service = service;
+            _structureTypeService = structureTypeService;
         }
+
+
+
 
         #region StructureType
 
@@ -37,7 +34,7 @@ namespace Interview.API.Controllers.Operations
         public async Task<IActionResult> GetStructureTypeById(int id)
         {
 
-            var data = await _service.GetStructureTypeById(id);
+            var data = await _structureTypeService.GetStructureTypeById(id);
 
             return Ok(data);
 
@@ -48,7 +45,7 @@ namespace Interview.API.Controllers.Operations
         public async Task<IActionResult> GetStructureType()
         {
 
-            var data = await _service.GetStructureType();
+            var data = await _structureTypeService.GetStructureType();
 
 
             return Ok(data);
@@ -61,7 +58,7 @@ namespace Interview.API.Controllers.Operations
         public async Task<IActionResult> StructureTypeCreate([FromForm] StructureTypeDTO_forCreate model)
         {
 
-            await _service.StructureTypeCreate(model);
+            await _structureTypeService.StructureTypeCreate(model);
 
             return Ok(new Response { Status = "Success", Message = "The StructureType created successfully!" });
 
@@ -74,7 +71,7 @@ namespace Interview.API.Controllers.Operations
         {
 
 
-            await _service.StructureTypeUpdate(model);
+            await _structureTypeService.StructureTypeUpdate(model);
 
 
             return Ok(new Response { Status = "Success", Message = "The StructureType updated successfully!" });
@@ -89,7 +86,7 @@ namespace Interview.API.Controllers.Operations
         public async Task<IActionResult> StructureTypeDelete(int id)
         {
 
-            await _service.DeleteStructureTypeById(id);
+            await _structureTypeService.DeleteStructureTypeById(id);
 
             return Ok(new Response { Status = "Success", Message = "The StructureType deleted successfully!" });
         }

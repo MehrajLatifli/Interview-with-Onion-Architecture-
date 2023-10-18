@@ -14,21 +14,15 @@ namespace Interview.API.Controllers.Operations
     [Authorize(Policy = "AdminOnly")]
     public class PositionController : ControllerBase
     {
-        private readonly UserManager<CustomUser> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly IConfiguration _configuration;
-        private readonly SignInManager<CustomUser> _signInManager;
 
-        private readonly IService _service;
+        private readonly IPositionService _positionService;
 
-        public PositionController(UserManager<CustomUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration, SignInManager<CustomUser> signInManager, IService service)
+        public PositionController(IPositionService positionService)
         {
-            _userManager = userManager;
-            _roleManager = roleManager;
-            _configuration = configuration;
-            _signInManager = signInManager;
-            _service = service;
+            _positionService = positionService;
         }
+
+
 
 
         #region Position
@@ -37,7 +31,7 @@ namespace Interview.API.Controllers.Operations
         public async Task<IActionResult> GetPositionById(int id)
         {
 
-            var data = await _service.GetPositionById(id);
+            var data = await _positionService.GetPositionById(id);
 
             return Ok(data);
 
@@ -48,7 +42,7 @@ namespace Interview.API.Controllers.Operations
         public async Task<IActionResult> GetPosition()
         {
 
-            var data = await _service.GetPosition();
+            var data = await _positionService.GetPosition();
 
 
             return Ok(data);
@@ -60,7 +54,7 @@ namespace Interview.API.Controllers.Operations
         public async Task<IActionResult> PositionCreate([FromForm] PositionDTO_forCreate model)
         {
 
-            await _service.PositionCreate(model);
+            await _positionService.PositionCreate(model);
 
             return Ok(new Response { Status = "Success", Message = "The Position created successfully!" });
 
@@ -72,7 +66,7 @@ namespace Interview.API.Controllers.Operations
         {
 
 
-            await _service.PositionUpdate(model);
+            await _positionService.PositionUpdate(model);
 
 
             return Ok(new Response { Status = "Success", Message = "The Position updated successfully!" });
@@ -87,7 +81,7 @@ namespace Interview.API.Controllers.Operations
         public async Task<IActionResult> PositionDelete(int id)
         {
 
-            await _service.DeletePositionById(id);
+            await _positionService.DeletePositionById(id);
 
             return Ok(new Response { Status = "Success", Message = "The Position deleted successfully!" });
         }

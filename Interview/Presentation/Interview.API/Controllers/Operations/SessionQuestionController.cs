@@ -14,21 +14,15 @@ namespace Interview.API.Controllers.Operations
     [Authorize(Policy = "AdminOnly")]
     public class SessionQuestionController : ControllerBase
     {
-        private readonly UserManager<CustomUser> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly IConfiguration _configuration;
-        private readonly SignInManager<CustomUser> _signInManager;
 
-        private readonly IService _service;
 
-        public SessionQuestionController(UserManager<CustomUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration, SignInManager<CustomUser> signInManager, IService service)
+        private readonly ISessionQuestionService _sessionQuestionService;
+
+        public SessionQuestionController(ISessionQuestionService sessionQuestionService)
         {
-            _userManager = userManager;
-            _roleManager = roleManager;
-            _configuration = configuration;
-            _signInManager = signInManager;
-            _service = service;
+            _sessionQuestionService = sessionQuestionService;
         }
+
 
 
         #region SessionQuestion
@@ -38,7 +32,7 @@ namespace Interview.API.Controllers.Operations
         public async Task<IActionResult> GetSessionQuestionById(int id)
         {
 
-            var data = await _service.GetSessionQuestionById(id);
+            var data = await _sessionQuestionService.GetSessionQuestionById(id);
 
             return Ok(data);
 
@@ -49,7 +43,7 @@ namespace Interview.API.Controllers.Operations
         public async Task<IActionResult> GetSessionQuestion()
         {
 
-            var data = await _service.GetSessionQuestion();
+            var data = await _sessionQuestionService.GetSessionQuestion();
 
 
             return Ok(data);
@@ -61,7 +55,7 @@ namespace Interview.API.Controllers.Operations
         public async Task<IActionResult> SessionQuestionCreate([FromForm] SessionQuestionDTO_forCreate model)
         {
 
-            await _service.SessionQuestionCreate(model);
+            await _sessionQuestionService.SessionQuestionCreate(model);
 
             return Ok(new Response { Status = "Success", Message = "The SessionQuestion created successfully!" });
 
@@ -73,7 +67,7 @@ namespace Interview.API.Controllers.Operations
         {
 
 
-            await _service.SessionQuestionUpdate(model);
+            await _sessionQuestionService.SessionQuestionUpdate(model);
 
 
             return Ok(new Response { Status = "Success", Message = "The SessionQuestion updated successfully!" });
@@ -88,7 +82,7 @@ namespace Interview.API.Controllers.Operations
         public async Task<IActionResult> SessionQuestionDelete(int id)
         {
 
-            await _service.DeleteSessionQuestionById(id);
+            await _sessionQuestionService.DeleteSessionQuestionById(id);
 
             return Ok(new Response { Status = "Success", Message = "The SessionQuestion deleted successfully!" });
         }
@@ -98,7 +92,7 @@ namespace Interview.API.Controllers.Operations
         public async Task<IActionResult> GetRandomQuestion(int questionCount, int structureId, int positionId, int vacantionId, int sessionId)
         {
 
-            var data = await _service.GetRandomQuestion( questionCount,  structureId,  positionId,  vacantionId,  sessionId);
+            var data = await _sessionQuestionService.GetRandomQuestion( questionCount,  structureId,  positionId,  vacantionId,  sessionId);
 
 
             return Ok(data);

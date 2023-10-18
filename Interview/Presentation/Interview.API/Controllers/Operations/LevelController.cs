@@ -14,21 +14,18 @@ namespace Interview.API.Controllers.Operations
     [Authorize(Policy = "AdminOnly")]
     public class LevelController : ControllerBase
     {
-        private readonly UserManager<CustomUser> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly IConfiguration _configuration;
-        private readonly SignInManager<CustomUser> _signInManager;
 
-        private readonly IService _service;
 
-        public LevelController(UserManager<CustomUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration, SignInManager<CustomUser> signInManager, IService service)
+
+        private readonly ILevelService _levelService;
+
+        public LevelController(ILevelService levelService)
         {
-            _userManager = userManager;
-            _roleManager = roleManager;
-            _configuration = configuration;
-            _signInManager = signInManager;
-            _service = service;
+            _levelService = levelService;
         }
+
+
+
 
 
         #region Level
@@ -38,7 +35,7 @@ namespace Interview.API.Controllers.Operations
         public async Task<IActionResult> GetLevelById(int id)
         {
 
-            var data = await _service.GetLevelById(id);
+            var data = await _levelService.GetLevelById(id);
 
             return Ok(data);
 
@@ -49,7 +46,7 @@ namespace Interview.API.Controllers.Operations
         public async Task<IActionResult> GetLevel()
         {
 
-            var data = await _service.GetLevel();
+            var data = await _levelService.GetLevel();
 
 
             return Ok(data);
@@ -62,7 +59,7 @@ namespace Interview.API.Controllers.Operations
         public async Task<IActionResult> LevelCreate([FromForm] LevelDTO_forCreate model)
         {
 
-            await _service.LevelCreate(model);
+            await _levelService.LevelCreate(model);
 
             return Ok(new Response { Status = "Success", Message = "The Level created successfully!" });
 
@@ -74,7 +71,7 @@ namespace Interview.API.Controllers.Operations
         {
 
 
-            await _service.LevelUpdate(model);
+            await _levelService.LevelUpdate(model);
 
 
             return Ok(new Response { Status = "Success", Message = "The Level updated successfully!" });
@@ -89,7 +86,7 @@ namespace Interview.API.Controllers.Operations
         public async Task<IActionResult> LevelDelete(int id)
         {
 
-            await _service.DeleteLevelById(id);
+            await _levelService.DeleteLevelById(id);
 
             return Ok(new Response { Status = "Success", Message = "The Level deleted successfully!" });
         }

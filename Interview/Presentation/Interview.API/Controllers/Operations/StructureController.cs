@@ -14,21 +14,17 @@ namespace Interview.API.Controllers.Operations
     [Authorize(Policy = "AdminOnly")]
     public class StructureController : ControllerBase
     {
-        private readonly UserManager<CustomUser> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly IConfiguration _configuration;
-        private readonly SignInManager<CustomUser> _signInManager;
 
-        private readonly IService _service;
 
-        public StructureController(UserManager<CustomUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration, SignInManager<CustomUser> signInManager, IService service)
+        private readonly IStructureService _structureService;
+
+        public StructureController(IStructureService structureService)
         {
-            _userManager = userManager;
-            _roleManager = roleManager;
-            _configuration = configuration;
-            _signInManager = signInManager;
-            _service = service;
+            _structureService = structureService;
         }
+
+
+
 
 
         #region Structure
@@ -38,7 +34,7 @@ namespace Interview.API.Controllers.Operations
         public async Task<IActionResult> GetStructureById(int id)
         {
 
-            var data = await _service.GetStructureById(id);
+            var data = await _structureService.GetStructureById(id);
 
             return Ok(data);
 
@@ -49,7 +45,7 @@ namespace Interview.API.Controllers.Operations
         public async Task<IActionResult> GetStructure()
         {
 
-            var data = await _service.GetStructure();
+            var data = await _structureService.GetStructure();
 
 
             return Ok(data);
@@ -61,7 +57,7 @@ namespace Interview.API.Controllers.Operations
         public async Task<IActionResult> StructureCreate([FromForm] StructureDTO_forCreate model)
         {
 
-            await _service.StructureCreate(model);
+            await _structureService.StructureCreate(model);
 
             return Ok(new Response { Status = "Success", Message = "The Structure created successfully!" });
 
@@ -73,7 +69,7 @@ namespace Interview.API.Controllers.Operations
         {
 
 
-            await _service.StructureUpdate(model);
+            await _structureService.StructureUpdate(model);
 
 
             return Ok(new Response { Status = "Success", Message = "The Structure updated successfully!" });
@@ -88,7 +84,7 @@ namespace Interview.API.Controllers.Operations
         public async Task<IActionResult> StructureDelete(int id)
         {
 
-            await _service.DeleteStructureById(id);
+            await _structureService.DeleteStructureById(id);
 
             return Ok(new Response { Status = "Success", Message = "The Structure deleted successfully!" });
         }

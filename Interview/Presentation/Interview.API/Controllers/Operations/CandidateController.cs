@@ -14,21 +14,17 @@ namespace Interview.API.Controllers.Operations
     [Authorize(Policy = "AdminOnly")]
     public class CandidateController : ControllerBase
     {
-        private readonly UserManager<CustomUser> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly IConfiguration _configuration;
-        private readonly SignInManager<CustomUser> _signInManager;
 
-        private readonly IService _service;
 
-        public CandidateController(UserManager<CustomUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration, SignInManager<CustomUser> signInManager, IService service)
+
+        private readonly ICandidateService  _candidateService;
+
+        public CandidateController(ICandidateService candidateService)
         {
-            _userManager = userManager;
-            _roleManager = roleManager;
-            _configuration = configuration;
-            _signInManager = signInManager;
-            _service = service;
+            _candidateService = candidateService;
         }
+
+
 
         #region Candidate
 
@@ -37,7 +33,7 @@ namespace Interview.API.Controllers.Operations
         public async Task<IActionResult> GetCandidateById(int id)
         {
 
-            var data = await _service.GetCandidateById(id);
+            var data = await _candidateService.GetCandidateById(id);
 
             return Ok(data);
 
@@ -48,7 +44,7 @@ namespace Interview.API.Controllers.Operations
         public async Task<IActionResult> GetCandidate()
         {
 
-            var data = await _service.GetCandidate();
+            var data = await _candidateService.GetCandidate();
 
 
             return Ok(data);
@@ -60,7 +56,7 @@ namespace Interview.API.Controllers.Operations
         public async Task<IActionResult> CandidateCreate([FromForm] CandidateDTO_forCreate model)
         {
 
-            await _service.CandidateCreate(model);
+            await _candidateService.CandidateCreate(model);
 
             return Ok(new Response { Status = "Success", Message = "The Candidate created successfully!" });
 
@@ -73,7 +69,7 @@ namespace Interview.API.Controllers.Operations
         {
 
 
-            await _service.CandidateUpdate(model);
+            await _candidateService.CandidateUpdate(model);
 
 
             return Ok(new Response { Status = "Success", Message = "The Candidate updated successfully!" });
@@ -88,7 +84,7 @@ namespace Interview.API.Controllers.Operations
         public async Task<IActionResult> CandidateDelete(int id)
         {
 
-            await _service.DeleteCandidateById(id);
+            await _candidateService.DeleteCandidateById(id);
 
             return Ok(new Response { Status = "Success", Message = "The Candidate deleted successfully!" });
         }

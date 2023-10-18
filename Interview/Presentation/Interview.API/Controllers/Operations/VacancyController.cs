@@ -14,21 +14,15 @@ namespace Interview.API.Controllers.Operations
     [Authorize(Policy = "AdminOnly")]
     public class VacancyController : ControllerBase
     {
-        private readonly UserManager<CustomUser> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly IConfiguration _configuration;
-        private readonly SignInManager<CustomUser> _signInManager;
 
-        private readonly IService _service;
 
-        public VacancyController(UserManager<CustomUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration, SignInManager<CustomUser> signInManager, IService service)
+        private readonly IVacancyService _vacancyService;
+
+        public VacancyController(IVacancyService vacancyService)
         {
-            _userManager = userManager;
-            _roleManager = roleManager;
-            _configuration = configuration;
-            _signInManager = signInManager;
-            _service = service;
+            _vacancyService = vacancyService;
         }
+
 
 
         #region Vacancy
@@ -38,7 +32,7 @@ namespace Interview.API.Controllers.Operations
         public async Task<IActionResult> GetVacancyById(int id)
         {
 
-            var data = await _service.GetVacancyById(id);
+            var data = await _vacancyService.GetVacancyById(id);
 
             return Ok(data);
 
@@ -49,7 +43,7 @@ namespace Interview.API.Controllers.Operations
         public async Task<IActionResult> GetVacancy()
         {
 
-            var data = await _service.GetVacancy();
+            var data = await _vacancyService.GetVacancy();
 
 
             return Ok(data);
@@ -61,7 +55,7 @@ namespace Interview.API.Controllers.Operations
         public async Task<IActionResult> VacancyCreate([FromForm] VacancyDTO_forCreate model)
         {
 
-            await _service.VacancyCreate(model);
+            await _vacancyService.VacancyCreate(model);
 
             return Ok(new Response { Status = "Success", Message = "The Vacancy created successfully!" });
 
@@ -73,7 +67,7 @@ namespace Interview.API.Controllers.Operations
         {
 
 
-            await _service.VacancyUpdate(model);
+            await _vacancyService.VacancyUpdate(model);
 
 
             return Ok(new Response { Status = "Success", Message = "The Vacancy updated successfully!" });
@@ -88,7 +82,7 @@ namespace Interview.API.Controllers.Operations
         public async Task<IActionResult> VacancyDelete(int id)
         {
 
-            await _service.DeleteVacancyById(id);
+            await _vacancyService.DeleteVacancyById(id);
 
             return Ok(new Response { Status = "Success", Message = "The Vacancy deleted successfully!" });
         }
