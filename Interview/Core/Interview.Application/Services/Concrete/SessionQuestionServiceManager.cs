@@ -4,6 +4,11 @@ using Interview.Application.Mapper.DTO;
 using Interview.Application.Repositories.Custom;
 using Interview.Application.Services.Abstract;
 using Interview.Domain.Entities.Models;
+using Interview.Domain.Entities.Models.Requests;
+using Microsoft.CodeAnalysis.Elfie.Diagnostics;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Drawing.Printing;
 
 namespace Interview.Application.Services.Concrete
 {
@@ -124,6 +129,23 @@ namespace Interview.Application.Services.Concrete
             return item;
         }
 
+        public async Task<List<SessionQuestionDTO_forGetandGetAll>> GetSessionQuestionBySessionId(int sessionId)
+        {
+            List<SessionQuestionDTO_forGetandGetAll> datas = null;
+
+            await Task.Run(() =>
+            {
+                datas = _mapper.Map<List<SessionQuestionDTO_forGetandGetAll>>(_sessionQuestionReadRepository.GetAll(false).Where(i=>i.SessionId== sessionId));
+            });
+
+            if (datas.Count <= 0)
+            {
+                throw new NotFoundException("SessionQuestion not found");
+            }
+
+            return datas;
+        }
+
         public async Task SessionQuestionUpdate(SessionQuestionDTO_forUpdate model)
         {
 
@@ -217,9 +239,10 @@ namespace Interview.Application.Services.Concrete
             return selectedItems;
         }
 
-        public async Task<List<QuestionDTO_forGetandGetAll>> GetRandomQuestion(int questionCount, int structureId, int positionId, int vacantionId, int sessionId)
-        {
 
+        public async Task<List<QuestionDTO_forGetandGetAll>> GetRandomQuestion(RandomQuestionRequestModel model)
+        {
+            //int questionCount, int structureId, int positionId, int vacantionId, int sessionId
 
             List<QuestionDTO_forGetandGetAll> easyList = new List<QuestionDTO_forGetandGetAll>();
             List<QuestionDTO_forGetandGetAll> mediumList = new List<QuestionDTO_forGetandGetAll>();
@@ -230,7 +253,7 @@ namespace Interview.Application.Services.Concrete
 
             await Task.Run(() =>
             {
-                if (_mapper.Map<List<QuestionDTO_forGetandGetAll>>(_questionReadRepository.GetAll(false)).Count < questionCount)
+                if (_mapper.Map<List<QuestionDTO_forGetandGetAll>>(_questionReadRepository.GetAll(false)).Count < model.QuestionCount)
                 {
                     throw new NotFoundException("Not enough questions");
                 }
@@ -239,7 +262,7 @@ namespace Interview.Application.Services.Concrete
 
             await Task.Run(() =>
             {
-                if (!_mapper.Map<List<StructureDTO_forGetandGetAll>>(_structureReadRepository.GetAll(false)).Any(i => i.Id == structureId))
+                if (!_mapper.Map<List<StructureDTO_forGetandGetAll>>(_structureReadRepository.GetAll(false)).Any(i => i.Id == model.StructureId))
                 {
 
                     throw new NotFoundException("Structure not found");
@@ -248,7 +271,7 @@ namespace Interview.Application.Services.Concrete
 
             await Task.Run(() =>
             {
-                if (!_mapper.Map<List<QuestionDTO_forGetandGetAll>>(_questionReadRepository.GetAll(false)).Any(i => i.StructureId == structureId))
+                if (!_mapper.Map<List<QuestionDTO_forGetandGetAll>>(_questionReadRepository.GetAll(false)).Any(i => i.StructureId == model.StructureId))
                 {
                     throw new NotFoundException("There are no questions about the selected structure.");
                 }
@@ -257,7 +280,7 @@ namespace Interview.Application.Services.Concrete
             await Task.Run(() =>
             {
 
-                if (!_mapper.Map<List<PositionDTO_forGetandGetAll>>(_positionReadRepository.GetAll(false)).Any(i => i.Id == positionId))
+                if (!_mapper.Map<List<PositionDTO_forGetandGetAll>>(_positionReadRepository.GetAll(false)).Any(i => i.Id == model.PositionId))
                 {
                     throw new NotFoundException("Position not found");
                 }
@@ -265,7 +288,7 @@ namespace Interview.Application.Services.Concrete
 
             await Task.Run(() =>
             {
-                if (!_mapper.Map<List<VacancyDTO_forGetandGetAll>>(_vacancyReadRepository.GetAll(false)).Any(i => i.Id == vacantionId && i.PositionId == positionId && i.StructureId == structureId))
+                if (!_mapper.Map<List<VacancyDTO_forGetandGetAll>>(_vacancyReadRepository.GetAll(false)).Any(i => i.Id == model.VacantionId && i.PositionId == model.PositionId && i.StructureId == model.StructureId))
                 {
                     throw new NotFoundException("Vacancy not found");
                 }
@@ -273,7 +296,7 @@ namespace Interview.Application.Services.Concrete
 
             await Task.Run(() =>
             {
-                if (!_mapper.Map<List<SessionDTO_forGetandGetAll>>(_sessionReadRepository.GetAll(false)).Any(i => i.Id == sessionId && i.VacancyId == vacantionId))
+                if (!_mapper.Map<List<SessionDTO_forGetandGetAll>>(_sessionReadRepository.GetAll(false)).Any(i => i.Id == model.SessionId && i.VacancyId == model.VacantionId))
                 {
                     throw new NotFoundException("Session not found");
                 }
@@ -281,46 +304,46 @@ namespace Interview.Application.Services.Concrete
 
 
 
-            if (_mapper.Map<List<StructureDTO_forGetandGetAll>>(_structureReadRepository.GetAll(false)).Any(i => i.Id == structureId))
+            if (_mapper.Map<List<StructureDTO_forGetandGetAll>>(_structureReadRepository.GetAll(false)).Any(i => i.Id == model.StructureId))
             {
-                if (_mapper.Map<List<PositionDTO_forGetandGetAll>>(_positionReadRepository.GetAll(false)).Any(i => i.Id == positionId))
+                if (_mapper.Map<List<PositionDTO_forGetandGetAll>>(_positionReadRepository.GetAll(false)).Any(i => i.Id == model.PositionId))
                 {
-                    if (_mapper.Map<List<VacancyDTO_forGetandGetAll>>(_vacancyReadRepository.GetAll(false)).Any(i => i.Id == vacantionId && i.PositionId == positionId))
+                    if (_mapper.Map<List<VacancyDTO_forGetandGetAll>>(_vacancyReadRepository.GetAll(false)).Any(i => i.Id == model.VacantionId && i.PositionId == model.PositionId))
                     {
-                        if (_mapper.Map<List<SessionDTO_forGetandGetAll>>(_sessionReadRepository.GetAll(false)).Any(i => i.Id == sessionId && i.VacancyId == vacantionId))
+                        if (_mapper.Map<List<SessionDTO_forGetandGetAll>>(_sessionReadRepository.GetAll(false)).Any(i => i.Id == model.SessionId && i.VacancyId == model.VacantionId))
                         {
 
 
 
-                            if (_mapper.Map<PositionDTO_forGetandGetAll>(await _positionReadRepository.GetByIdAsync(positionId.ToString(), false)).Name == "Junior")
+                            if (_mapper.Map<PositionDTO_forGetandGetAll>(await _positionReadRepository.GetByIdAsync(model.PositionId.ToString(), false)).Name == "Junior")
                             {
                                 rnd = new Random();
 
                                 await Task.Run(() =>
                                 {
-                                    easyList = _mapper.Map<List<QuestionDTO_forGetandGetAll>>(_questionReadRepository.GetAll(false).Where(i => i.LevelId == 1 && i.StructureId == structureId));
+                                    easyList = _mapper.Map<List<QuestionDTO_forGetandGetAll>>(_questionReadRepository.GetAll(false).Where(i => i.LevelId == 1 && i.StructureId == model.StructureId));
                                 });
 
                                 await Task.Run(() =>
                                 {
-                                    mediumList = _mapper.Map<List<QuestionDTO_forGetandGetAll>>(_questionReadRepository.GetAll(false).Where(i => i.LevelId == 2 && i.StructureId == structureId));
+                                    mediumList = _mapper.Map<List<QuestionDTO_forGetandGetAll>>(_questionReadRepository.GetAll(false).Where(i => i.LevelId == 2 && i.StructureId == model.StructureId));
                                 });
 
                                 await Task.Run(() =>
                                 {
-                                    hardList = _mapper.Map<List<QuestionDTO_forGetandGetAll>>(_questionReadRepository.GetAll(false).Where(i => i.LevelId == 3 && i.StructureId == structureId));
+                                    hardList = _mapper.Map<List<QuestionDTO_forGetandGetAll>>(_questionReadRepository.GetAll(false).Where(i => i.LevelId == 3 && i.StructureId == model.StructureId));
                                 });
 
-                                randomList.AddRange(await SelectRandomItems(easyList, Convert.ToInt32(Math.Round(Convert.ToDouble(questionCount) * 50 / 100, MidpointRounding.AwayFromZero)), rnd, "easy"));
-                                randomList.AddRange(await SelectRandomItems(mediumList, Convert.ToInt32(Math.Round(Convert.ToDouble(questionCount) * 30 / 100, MidpointRounding.AwayFromZero)), rnd, "medium"));
-                                randomList.AddRange(await SelectRandomItems(hardList, Convert.ToInt32(Math.Round(Convert.ToDouble(questionCount) * 20 / 100, MidpointRounding.AwayFromZero)), rnd, "difficult"));
+                                randomList.AddRange(await SelectRandomItems(easyList, Convert.ToInt32(Math.Round(Convert.ToDouble(model.QuestionCount) * 50 / 100, MidpointRounding.AwayFromZero)), rnd, "easy"));
+                                randomList.AddRange(await SelectRandomItems(mediumList, Convert.ToInt32(Math.Round(Convert.ToDouble(model.QuestionCount) * 30 / 100, MidpointRounding.AwayFromZero)), rnd, "medium"));
+                                randomList.AddRange(await SelectRandomItems(hardList, Convert.ToInt32(Math.Round(Convert.ToDouble(model.QuestionCount) * 20 / 100, MidpointRounding.AwayFromZero)), rnd, "difficult"));
 
 
                                 await Task.Run(() =>
                                 {
-                                    if (randomList.Count > questionCount)
+                                    if (randomList.Count > model.QuestionCount)
                                     {
-                                        var c = randomList.Count - questionCount;
+                                        var c = randomList.Count - model.QuestionCount;
 
                                         for (int i = 0; i < c; i++)
                                         {
@@ -353,7 +376,7 @@ namespace Interview.Application.Services.Concrete
                                     var sessionQuestion = new SessionQuestion
                                     {
                                         QuestionId = entity.Id,
-                                        SessionId = sessionId
+                                        SessionId = model.SessionId
                                     };
 
                                     await _sessionQuestionWriteRepository.AddAsync(sessionQuestion);
@@ -443,30 +466,30 @@ namespace Interview.Application.Services.Concrete
 
                             }
 
-                            if (_mapper.Map<PositionDTO_forGetandGetAll>(await _positionReadRepository.GetByIdAsync(positionId.ToString(), false)).Name == "Middle")
+                            if (_mapper.Map<PositionDTO_forGetandGetAll>(await _positionReadRepository.GetByIdAsync(model.PositionId.ToString(), false)).Name == "Middle")
                             {
                                 rnd = new Random();
 
 
                                 await Task.Run(() =>
                                 {
-                                    easyList = _mapper.Map<List<QuestionDTO_forGetandGetAll>>(_questionReadRepository.GetAll(false).Where(i => i.LevelId == 1 && i.StructureId == structureId));
+                                    easyList = _mapper.Map<List<QuestionDTO_forGetandGetAll>>(_questionReadRepository.GetAll(false).Where(i => i.LevelId == 1 && i.StructureId == model.StructureId));
                                 });
 
                                 await Task.Run(() =>
                                 {
-                                    mediumList = _mapper.Map<List<QuestionDTO_forGetandGetAll>>(_questionReadRepository.GetAll(false).Where(i => i.LevelId == 2 && i.StructureId == structureId));
+                                    mediumList = _mapper.Map<List<QuestionDTO_forGetandGetAll>>(_questionReadRepository.GetAll(false).Where(i => i.LevelId == 2 && i.StructureId == model.StructureId));
                                 });
 
                                 await Task.Run(() =>
                                 {
-                                    hardList = _mapper.Map<List<QuestionDTO_forGetandGetAll>>(_questionReadRepository.GetAll(false).Where(i => i.LevelId == 3 && i.StructureId == structureId));
+                                    hardList = _mapper.Map<List<QuestionDTO_forGetandGetAll>>(_questionReadRepository.GetAll(false).Where(i => i.LevelId == 3 && i.StructureId == model.StructureId));
                                 });
 
 
-                                randomList.AddRange(await SelectRandomItems(easyList, Convert.ToInt32(Math.Round(Convert.ToDouble(questionCount) * 20 / 100, MidpointRounding.AwayFromZero)), rnd, "easy"));
-                                randomList.AddRange(await SelectRandomItems(mediumList, Convert.ToInt32(Math.Round(Convert.ToDouble(questionCount) * 50 / 100, MidpointRounding.AwayFromZero)), rnd, "medium"));
-                                randomList.AddRange(await SelectRandomItems(hardList, Convert.ToInt32(Math.Round(Convert.ToDouble(questionCount) * 30 / 100, MidpointRounding.AwayFromZero)), rnd, "difficult"));
+                                randomList.AddRange(await SelectRandomItems(easyList, Convert.ToInt32(Math.Round(Convert.ToDouble(model.QuestionCount) * 20 / 100, MidpointRounding.AwayFromZero)), rnd, "easy"));
+                                randomList.AddRange(await SelectRandomItems(mediumList, Convert.ToInt32(Math.Round(Convert.ToDouble(model.QuestionCount) * 50 / 100, MidpointRounding.AwayFromZero)), rnd, "medium"));
+                                randomList.AddRange(await SelectRandomItems(hardList, Convert.ToInt32(Math.Round(Convert.ToDouble(model.QuestionCount) * 30 / 100, MidpointRounding.AwayFromZero)), rnd, "difficult"));
 
 
                                 //List<SessionQuestionDTO_forGetandGetAll> sessionQuestions = null;
@@ -487,9 +510,9 @@ namespace Interview.Application.Services.Concrete
 
                                 await Task.Run(() =>
                                 {
-                                    if (randomList.Count > questionCount)
+                                    if (randomList.Count > model.QuestionCount)
                                     {
-                                        var c = randomList.Count - questionCount;
+                                        var c = randomList.Count - model.QuestionCount;
 
                                         for (int i = 0; i < c; i++)
                                         {
@@ -506,7 +529,7 @@ namespace Interview.Application.Services.Concrete
                                     var sessionQuestion = new SessionQuestion
                                     {
                                         QuestionId = entity.Id,
-                                        SessionId = sessionId
+                                        SessionId = model.SessionId
                                     };
 
                                     await _sessionQuestionWriteRepository.AddAsync(sessionQuestion);
@@ -589,38 +612,38 @@ namespace Interview.Application.Services.Concrete
 
                             }
 
-                            if (_mapper.Map<PositionDTO_forGetandGetAll>(await _positionReadRepository.GetByIdAsync(positionId.ToString(), false)).Name == "Senior")
+                            if (_mapper.Map<PositionDTO_forGetandGetAll>(await _positionReadRepository.GetByIdAsync(model.PositionId.ToString(), false)).Name == "Senior")
                             {
                                 rnd = new Random();
 
 
                                 await Task.Run(() =>
                                 {
-                                    easyList = _mapper.Map<List<QuestionDTO_forGetandGetAll>>(_questionReadRepository.GetAll(false).Where(i => i.LevelId == 1 && i.StructureId == structureId));
+                                    easyList = _mapper.Map<List<QuestionDTO_forGetandGetAll>>(_questionReadRepository.GetAll(false).Where(i => i.LevelId == 1 && i.StructureId == model.StructureId));
                                 });
 
                                 await Task.Run(() =>
                                 {
-                                    mediumList = _mapper.Map<List<QuestionDTO_forGetandGetAll>>(_questionReadRepository.GetAll(false).Where(i => i.LevelId == 2 && i.StructureId == structureId));
+                                    mediumList = _mapper.Map<List<QuestionDTO_forGetandGetAll>>(_questionReadRepository.GetAll(false).Where(i => i.LevelId == 2 && i.StructureId == model.StructureId));
                                 });
 
                                 await Task.Run(() =>
                                 {
-                                    hardList = _mapper.Map<List<QuestionDTO_forGetandGetAll>>(_questionReadRepository.GetAll(false).Where(i => i.LevelId == 3 && i.StructureId == structureId));
+                                    hardList = _mapper.Map<List<QuestionDTO_forGetandGetAll>>(_questionReadRepository.GetAll(false).Where(i => i.LevelId == 3 && i.StructureId == model.StructureId));
                                 });
 
 
-                                randomList.AddRange(await SelectRandomItems(easyList, Convert.ToInt32(Math.Round(Convert.ToDouble(questionCount) * 20 / 100, MidpointRounding.AwayFromZero)), rnd, "easy"));
-                                randomList.AddRange(await SelectRandomItems(mediumList, Convert.ToInt32(Math.Round(Convert.ToDouble(questionCount) * 30 / 100, MidpointRounding.AwayFromZero)), rnd, "medium"));
-                                randomList.AddRange(await SelectRandomItems(hardList, Convert.ToInt32(Math.Round(Convert.ToDouble(questionCount) * 50 / 100, MidpointRounding.AwayFromZero)), rnd, "difficult"));
+                                randomList.AddRange(await SelectRandomItems(easyList, Convert.ToInt32(Math.Round(Convert.ToDouble(model.QuestionCount) * 20 / 100, MidpointRounding.AwayFromZero)), rnd, "easy"));
+                                randomList.AddRange(await SelectRandomItems(mediumList, Convert.ToInt32(Math.Round(Convert.ToDouble(model.QuestionCount) * 30 / 100, MidpointRounding.AwayFromZero)), rnd, "medium"));
+                                randomList.AddRange(await SelectRandomItems(hardList, Convert.ToInt32(Math.Round(Convert.ToDouble(model.QuestionCount) * 50 / 100, MidpointRounding.AwayFromZero)), rnd, "difficult"));
 
 
 
                                 await Task.Run(() =>
                                 {
-                                    if (randomList.Count > questionCount)
+                                    if (randomList.Count > model.QuestionCount)
                                     {
-                                        var c = randomList.Count - questionCount;
+                                        var c = randomList.Count - model.QuestionCount;
 
                                         for (int i = 0; i < c; i++)
                                         {
@@ -653,7 +676,7 @@ namespace Interview.Application.Services.Concrete
                                     var sessionQuestion = new SessionQuestion
                                     {
                                         QuestionId = entity.Id,
-                                        SessionId = sessionId
+                                        SessionId = model.SessionId
                                     };
 
                                     await _sessionQuestionWriteRepository.AddAsync(sessionQuestion);
@@ -764,6 +787,66 @@ namespace Interview.Application.Services.Concrete
 
 
             return randomList;
+        }
+
+
+        public async Task<List<QuestionDTO_forGetandGetAll>> GetAllQuestionByPage(QuestionByPageRequestModel questionByPageRequestModel)
+        {
+
+
+            await Task.Run(() =>
+            {
+                if (!_mapper.Map<List<VacancyDTO_forGetandGetAll>>(_vacancyReadRepository.GetAll(false)).Any(i => i.Id == questionByPageRequestModel.VacantionId))
+                {
+                    throw new NotFoundException("Vacancy not found");
+                }
+            });
+
+
+            IEnumerable<QuestionDTO_forGetandGetAll> questionQuery = null;
+
+
+            await Task.Run(() =>
+            {
+
+                questionQuery = from q in _mapper.Map<List<QuestionDTO_forGetandGetAll>>(_questionReadRepository.GetAll(false))
+                                join s in _mapper.Map<List<StructureDTO_forGetandGetAll>>(_structureReadRepository.GetAll(false)) 
+                                on q.StructureId equals s.Id
+                                join v in _mapper.Map<List<VacancyDTO_forGetandGetAll>>(_vacancyReadRepository.GetAll(false))
+                                on s.Id equals v.StructureId
+                                where v.Id == questionByPageRequestModel.VacantionId
+                                select new QuestionDTO_forGetandGetAll
+                                {
+                                    Id = q.Id,
+                                    Text = q.Text,
+                                    LevelId = q.LevelId,
+                                    CategoryId = q.CategoryId,
+                                    StructureId= q.StructureId,
+                                };
+
+            });
+
+         
+
+            
+
+            var questions = questionQuery.ToList();
+
+            List<QuestionDTO_forGetandGetAll> pagequestion = null;
+
+             pagequestion = questions
+            .OrderBy(q => q.Id)
+            .Skip((questionByPageRequestModel.Page - 1) * 10)
+             .Take(10)
+             .ToList();
+
+            if (pagequestion.Count == 0)
+            {
+
+                throw new NotFoundException("Page not found");
+            }
+
+                return pagequestion;
         }
 
 

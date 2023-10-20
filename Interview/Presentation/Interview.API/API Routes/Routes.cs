@@ -56,13 +56,17 @@ namespace Interview.API.API_Routes
 
         public const string SessionQuestion = "sessionQuestion";
 
-        public const string SessionQuestionById = SessionQuestion + "/{id}";
+        public const string SessionQuestionById = "Id" + "/{id:int}";
+
+
+        public const string GetSessionQuestionBySessionId = "sessionId" + "/{sessionId:int}";
+
+        public const string GetAllQuestionByPage = "bypage";
 
 
         public const string RandomQuestion = "randomQuestion";
 
-        public const string RandomQuestionById = RandomQuestion + "/{questionCount}/{structureId}/{positionId}/{vacantionId}/{sessionId}";
-
+        public const string RandomQuestionById = RandomQuestion;
 
 
 

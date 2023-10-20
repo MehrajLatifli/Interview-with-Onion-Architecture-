@@ -3,6 +3,8 @@ using Interview.Application.Mapper.DTO;
 using Interview.Application.Services.Abstract;
 using Interview.Domain.Entities.AuthModels;
 using Interview.Domain.Entities.IdentityAuth;
+using Interview.Domain.Entities.Models;
+using Interview.Domain.Entities.Models.Requests;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +13,7 @@ namespace Interview.API.Controllers.Operations
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Policy = "AdminOnly")]
+    //[Authorize(Policy = "AdminOnly")]
     public class SessionQuestionController : ControllerBase
     {
 
@@ -28,7 +30,8 @@ namespace Interview.API.Controllers.Operations
         #region SessionQuestion
 
 
-        [HttpGet(Routes.SessionQuestionById)]
+        [HttpGet]
+        [Route(Routes.SessionQuestionById, Name = "GetSessionQuestionById")]
         public async Task<IActionResult> GetSessionQuestionById(int id)
         {
 
@@ -39,12 +42,25 @@ namespace Interview.API.Controllers.Operations
         }
 
 
-        [HttpGet(Routes.SessionQuestion)]
+        [HttpGet]
+        [Route(Routes.SessionQuestion, Name = "sessionQuestion")]
         public async Task<IActionResult> GetSessionQuestion()
         {
 
             var data = await _sessionQuestionService.GetSessionQuestion();
 
+
+            return Ok(data);
+
+        }
+
+
+        [HttpGet]
+        [Route(Routes.GetSessionQuestionBySessionId, Name = "getSessionQuestionBySessionId")]
+        public async Task<IActionResult> GetSessionQuestionBySessionId(int sessionId)
+        {
+
+            var data = await _sessionQuestionService.GetSessionQuestionBySessionId(sessionId);
 
             return Ok(data);
 
@@ -89,10 +105,22 @@ namespace Interview.API.Controllers.Operations
 
 
         [HttpGet(Routes.RandomQuestionById)]
-        public async Task<IActionResult> GetRandomQuestion(int questionCount, int structureId, int positionId, int vacantionId, int sessionId)
+        public async Task<IActionResult> GetRandomQuestion([FromQuery] RandomQuestionRequestModel request)
         {
 
-            var data = await _sessionQuestionService.GetRandomQuestion( questionCount,  structureId,  positionId,  vacantionId,  sessionId);
+            var data = await _sessionQuestionService.GetRandomQuestion(request);
+
+
+            return Ok(data);
+
+        }
+
+
+        [HttpGet(Routes.GetAllQuestionByPage)]
+        public async Task<IActionResult> GetAllQuestionByVacancyId([FromQuery] QuestionByPageRequestModel model)
+        {
+
+            var data = await _sessionQuestionService.GetAllQuestionByPage(model);
 
 
             return Ok(data);

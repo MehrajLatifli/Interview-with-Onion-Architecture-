@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Interview.Persistence.Migrations
 {
     [DbContext(typeof(CustomDbContext))]
-    [Migration("20231015220305_CustomDbContextMigration")]
+    [Migration("20231019080045_CustomDbContextMigration")]
     partial class CustomDbContextMigration
     {
         /// <inheritdoc />
@@ -25,7 +25,7 @@ namespace Interview.Persistence.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Interview.Persistence.Contexts.AuthDbContext.IdentityAuth.CustomUser", b =>
+            modelBuilder.Entity("Interview.Domain.Entities.IdentityAuth.CustomUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -246,7 +246,7 @@ namespace Interview.Persistence.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("Interview.Persistence.Contexts.AuthDbContext.IdentityAuth.CustomUser", null)
+                    b.HasOne("Interview.Domain.Entities.IdentityAuth.CustomUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -255,7 +255,7 @@ namespace Interview.Persistence.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("Interview.Persistence.Contexts.AuthDbContext.IdentityAuth.CustomUser", null)
+                    b.HasOne("Interview.Domain.Entities.IdentityAuth.CustomUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -270,7 +270,7 @@ namespace Interview.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Interview.Persistence.Contexts.AuthDbContext.IdentityAuth.CustomUser", null)
+                    b.HasOne("Interview.Domain.Entities.IdentityAuth.CustomUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -279,7 +279,7 @@ namespace Interview.Persistence.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("Interview.Persistence.Contexts.AuthDbContext.IdentityAuth.CustomUser", null)
+                    b.HasOne("Interview.Domain.Entities.IdentityAuth.CustomUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)

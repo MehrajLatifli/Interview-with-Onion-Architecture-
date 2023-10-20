@@ -23,7 +23,17 @@ namespace Interview.Application.Services.Concrete
         private readonly ICandidateWriteRepository  _candidateWriteRepository;
         private readonly ICandidateReadRepository  _candidateReadRepository;
 
-        public SessionServiceManager(IMapper mapper, ISessionWriteRepository sessionWriteRepository, ISessionReadRepository sessionReadRepository, IVacancyWriteRepository vacancyWriteRepository, IVacancyReadRepository vacancyReadRepository, ICandidateWriteRepository candidateWriteRepository, ICandidateReadRepository candidateReadRepository)
+        private readonly ISessionQuestionWriteRepository _sessionQuestionWriteRepository;
+        private readonly ISessionQuestionReadRepository _sessionQuestionReadRepository;
+
+
+        private readonly IQuestionWriteRepository _questionWriteRepository;
+        private readonly IQuestionReadRepository _questionReadRepository;
+
+        private readonly ILevelWriteRepository _levelWriteRepository;
+        private readonly ILevelReadRepository _levelReadRepository;
+
+        public SessionServiceManager(IMapper mapper, ISessionWriteRepository sessionWriteRepository, ISessionReadRepository sessionReadRepository, IVacancyWriteRepository vacancyWriteRepository, IVacancyReadRepository vacancyReadRepository, ICandidateWriteRepository candidateWriteRepository, ICandidateReadRepository candidateReadRepository, ISessionQuestionWriteRepository sessionQuestionWriteRepository, ISessionQuestionReadRepository sessionQuestionReadRepository, IQuestionWriteRepository questionWriteRepository, IQuestionReadRepository questionReadRepository, ILevelWriteRepository levelWriteRepository, ILevelReadRepository levelReadRepository)
         {
             _mapper = mapper;
             _sessionWriteRepository = sessionWriteRepository;
@@ -32,7 +42,17 @@ namespace Interview.Application.Services.Concrete
             _vacancyReadRepository = vacancyReadRepository;
             _candidateWriteRepository = candidateWriteRepository;
             _candidateReadRepository = candidateReadRepository;
+            _sessionQuestionWriteRepository = sessionQuestionWriteRepository;
+            _sessionQuestionReadRepository = sessionQuestionReadRepository;
+            _questionWriteRepository = questionWriteRepository;
+            _questionReadRepository = questionReadRepository;
+            _levelWriteRepository = levelWriteRepository;
+            _levelReadRepository = levelReadRepository;
         }
+
+
+
+
 
 
 
@@ -115,33 +135,41 @@ namespace Interview.Application.Services.Concrete
         {
 
 
-            var existing = await _sessionReadRepository.GetByIdAsync(model.Id.ToString(), false);
-            var existing2 = await _vacancyReadRepository.GetByIdAsync(model.VacancyId.ToString(), false);
-            var existing3 = await _candidateReadRepository.GetByIdAsync(model.CandidateId.ToString(), false);
 
 
-
-
-            if (existing is null)
+            await Task.Run(() =>
             {
-                throw new NotFoundException("Session not found");
-
-            }
-
-            if (existing2 is null)
-            {
-                throw new NotFoundException("Vacancy not found");
-
-            }
-
-            if (existing3 is null)
-            {
-                throw new NotFoundException("Candidate not found");
-
-            }
+                if (!_mapper.Map<List<SessionDTO_forGetandGetAll>>(_sessionReadRepository.GetAll(false)).Any(i => i.Id == model.Id))
+                {
+                    throw new NotFoundException("Session not found");
+                }
+            });
 
 
+  
 
+
+            var  sessionQuery = from sq in _mapper.Map<List<SessionQuestionDTO_forGetandGetAll>>(_sessionQuestionReadRepository.GetAll(false))
+                            join q in _mapper.Map<List<QuestionDTO_forGetandGetAll>>(_questionReadRepository.GetAll(false))
+                            on sq.QuestionId equals q.Id
+                            join s in _mapper.Map<List<SessionDTO_forGetandGetAll>>(_sessionReadRepository.GetAll(false))
+                            on sq.SessionId equals s.Id
+                            join l in _mapper.Map<List<LevelDTO_forGetandGetAll>>(_levelReadRepository.GetAll(false))
+                            on q.LevelId equals l.Id
+                            where s.Id == model.Id
+                            select new 
+                            {
+                                SessionId = model.Id,
+                                EndValue = l.Coefficient * sq.Value,
+                                SessionEndDate = model.EndDate,
+                            
+                            };
+
+
+
+          
+
+            var totalEndValue = sessionQuery.ToList().Sum(session => session.EndValue);
 
             var entity = _mapper.Map<Session>(model);
 
@@ -150,11 +178,11 @@ namespace Interview.Application.Services.Concrete
             entity = new Session
             {
                 Id = model.Id,
-                EndValue = entity.EndValue,
+                EndValue = totalEndValue,
                 StartDate = entity.StartDate,
                 EndDate = entity.EndDate,
-                VacancyId = model.VacancyId,
-                CandidateId = model.CandidateId,
+                VacancyId = _sessionReadRepository.GetAll(false).Where(i => i.Id == model.Id).FirstOrDefault().VacancyId,
+                CandidateId = _sessionReadRepository.GetAll(false).Where(i => i.Id == model.Id).FirstOrDefault().VacancyId,
 
 
             };

@@ -5,12 +5,13 @@ namespace Interview.Application.Mapper.DTO
 {
     public class SessionDTO_forCreate
     {
-        [Column(TypeName = "decimal(18, 4)")]
-        public decimal EndValue { get; set; }
+        //[Column(TypeName = "decimal(18, 4)")]
+        //public decimal EndValue { get; set; }
 
+        [Required(ErrorMessage = "StartDate is required")]
         public DateTime? StartDate { get; set; }
 
-        public DateTime? EndDate { get; set; }
+        //public DateTime? EndDate { get; set; }
 
         [Required(ErrorMessage = "VacancyId is required")]
         public int VacancyId { get; set; }
