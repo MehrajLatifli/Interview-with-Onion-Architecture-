@@ -15,6 +15,31 @@ docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=admin1234@" -p 1430:1433 --n
 
 </br>
 
+<h1> PostgreSQL </h1>
+docker run --name some-Logpostgres -p 5432:5432 -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=Interview_LogDB -d postgres:15.4
+</br>
+After Create new database -> Interview_LogDB 
+</br>
+
+<h1> Seq log server </h1>
+docker run --name some-seq -d --restart unless-stopped -e ACCEPT_EULA=Y -p 5341:80 datalust/seq:latest
+
+</br>
+SELECT
+    @Id AS Id,
+    @MessageTemplate AS Message,
+    @Timestamp AS Timestamp,
+    user_name AS UserName
+FROM
+    stream
+WHERE
+    user_name IS NOT NULL
+ORDER BY Timestamp DESC
+
+</br>
+
+
+
 <h1> Migration </h1>
 add-migration CustomDbContextMigration -Context Interview.Persistence.Contexts.AuthDbContext.DbContext.CustomDbContext 
 </br>

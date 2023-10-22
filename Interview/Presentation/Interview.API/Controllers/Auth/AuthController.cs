@@ -153,7 +153,7 @@ namespace Interview.API.Controllers.Auth
         {
 
 
-           return Ok( await _authservice.GetAdmins());
+           return Ok( await _authservice.GetAdmins(User));
 
         }
 
@@ -162,7 +162,7 @@ namespace Interview.API.Controllers.Auth
         public async Task<IActionResult> GetHR()
         {
 
-            return Ok(await _authservice.GetHR());
+            return Ok(await _authservice.GetHR(User));
 
         }
 

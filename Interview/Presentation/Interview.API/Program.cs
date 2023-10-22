@@ -14,6 +14,18 @@ using Interview.Persistence.ServiceExtensions;
 using Microsoft.Extensions.Azure;
 using Interview.API.Attribute;
 using Interview.Domain.Entities.AuthModels;
+using Serilog;
+using Serilog.Core;
+using Serilog.Sinks.PostgreSQL;
+using System.Security.Claims;
+using Microsoft.IdentityModel.Logging;
+using Serilog.Context;
+using Interview.API.LogSettings.ColumnWriters;
+using Microsoft.AspNetCore.HttpLogging;
+using static System.Net.WebRequestMethods;
+using Microsoft.Data.SqlClient;
+using Interview.API.LogSettings.GlobalException;
+using Serilog.Events;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -89,7 +101,8 @@ builder.Services.AddAuthentication(options =>
         ClockSkew = TimeSpan.Zero,
         ValidAudience = builder.Configuration["JWT:ValidateAudience"],
         ValidIssuer = builder.Configuration["JWT:ValidateIssuer"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"])),
+        NameClaimType=ClaimTypes.Name
 
     };
 });
@@ -121,6 +134,40 @@ builder.Services.AddAzureClients(clientBuilder =>
     clientBuilder.AddQueueServiceClient(builder.Configuration["AzureConnectionStrings:queue"], preferMsi: true);
 });
 
+
+builder.Services.AddHttpLogging(logging =>
+{
+    logging.LoggingFields = HttpLoggingFields.All;
+    logging.RequestHeaders.Add("sec-ch-ua");
+    logging.ResponseHeaders.Add("Interview.API");
+    logging.MediaTypeOptions.AddText("application/javascript");
+    logging.RequestBodyLogLimit = 40960;
+    logging.ResponseBodyLogLimit = 40960;
+
+});
+
+Logger log = new LoggerConfiguration()
+    .WriteTo.Console()
+    .WriteTo.File("logs/log.txt")
+    .WriteTo.PostgreSQL(builder.Configuration.GetConnectionString("LogConnection"), "Logs",
+             needAutoCreateTable: true,
+             columnOptions: new Dictionary<string, ColumnWriterBase>
+             {
+                 { "message", new RenderedMessageColumnWriter() },
+                 { "message_template", new MessageTemplateColumnWriter() },
+                 { "level", new LevelColumnWriter() },
+                 { "time_stamp", new TimestampColumnWriter() },
+                 { "exeptions", new ExceptionColumnWriter() },
+                 { "log_event", new LogEventSerializedColumnWriter() },
+                 { "user_name", new UsernameColumnWriter() },
+             })
+    .WriteTo.Seq(builder.Configuration["Seq:SeqConnection"], restrictedToMinimumLevel: LogEventLevel.Information)
+    .Enrich.FromLogContext()
+    .MinimumLevel.Information()
+    .CreateLogger();
+
+builder.Host.UseSerilog(log);
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -130,6 +177,15 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+
+app.UseStaticFiles();
+
+app.UseHttpLogging();
+
+app.UseSerilogRequestLogging();
+
+app.ConfigureExceptionHandler<Program>(app.Services.GetRequiredService<ILogger<Program>>());
+
 app.UseRateLimiter();
 
 app.UseRouting();
@@ -138,6 +194,17 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.Use(async (context, next) => 
+{
+    var username = context.User?.Identity?.IsAuthenticated !=null || true ?  context.User.Identity.Name : null;
+
+    LogContext.PushProperty("user_name", username);
+
+    await next();
+
+});
+
 
 app.UseCors(x => x.AllowAnyMethod().AllowAnyHeader().SetIsOriginAllowed(origin => true).AllowCredentials());
 

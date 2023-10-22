@@ -30,9 +30,9 @@ namespace Interview.Application.Services.Abstract
         public Task RevokeAll();
 
 
-        public Task<List<GetAuthModel>> GetAdmins();
+        public Task<List<GetAuthModel>> GetAdmins(ClaimsPrincipal User);
 
-        public Task<List<GetAuthModel>> GetHR();
+        public Task<List<GetAuthModel>> GetHR(ClaimsPrincipal User);
 
         public Task UpdateProfile(UpdateProfileDTO model, System.Security.Claims.ClaimsPrincipal claims, string ConnectionStringAzure);
 

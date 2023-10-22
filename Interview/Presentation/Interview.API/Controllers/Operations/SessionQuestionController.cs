@@ -13,7 +13,7 @@ namespace Interview.API.Controllers.Operations
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize(Policy = "AdminOnly")]
+    [Authorize(Policy = "AdminOnly")]
     public class SessionQuestionController : ControllerBase
     {
 
