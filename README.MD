@@ -19,7 +19,7 @@ docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=admin1234@" -p 1430:1433 --n
 docker run --name some-Logpostgres -p 5432:5432 -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=Interview_LogDB -d postgres:15.4
 </br>
 </br>
-After Create new database -> Interview_LogDB 
+<p> After Create new database -> Interview_LogDB </p>
 </br>
 
 <h1> Seq log server </h1>
@@ -28,7 +28,7 @@ docker run --name some-seq -d --restart unless-stopped -e ACCEPT_EULA=Y -p 5341:
 </br>
 </br>
 
-SELECT
+<p> SELECT
     @Id AS Id,
     @MessageTemplate AS Message,
     @Timestamp AS Timestamp,
@@ -37,7 +37,7 @@ FROM
     stream
 WHERE
     user_name IS NOT NULL
-ORDER BY Timestamp DESC
+ORDER BY Timestamp DESC </p>
 
 </br>
 
