@@ -18,6 +18,7 @@ docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=admin1234@" -p 1430:1433 --n
 <h1> PostgreSQL </h1>
 docker run --name some-Logpostgres -p 5432:5432 -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=Interview_LogDB -d postgres:15.4
 </br>
+</br>
 After Create new database -> Interview_LogDB 
 </br>
 
@@ -25,6 +26,8 @@ After Create new database -> Interview_LogDB
 docker run --name some-seq -d --restart unless-stopped -e ACCEPT_EULA=Y -p 5341:80 datalust/seq:latest
 
 </br>
+</br>
+
 SELECT
     @Id AS Id,
     @MessageTemplate AS Message,
