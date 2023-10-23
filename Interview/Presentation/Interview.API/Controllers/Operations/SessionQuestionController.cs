@@ -115,6 +115,17 @@ namespace Interview.API.Controllers.Operations
 
         }
 
+        [HttpGet(Routes.RandomQuestion2)]
+        public async Task<IActionResult> GetRandomQuestion2(int QuestionCount, int VacantionId, int SessionId)
+        {
+
+            var data = await _sessionQuestionService.GetRandomQuestion2( QuestionCount,  VacantionId,  SessionId);
+
+
+            return Ok(data);
+
+        }
+
 
         [HttpGet(Routes.GetAllQuestionByPage)]
         public async Task<IActionResult> GetAllQuestionByVacancyId([FromQuery] QuestionByPageRequestModel model)
