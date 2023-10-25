@@ -9,15 +9,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastru
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{404E4989-E5DB-4E9F-A83F-5AC5FF89B56E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Interview.API", "Presentation\Interview.API\Interview.API.csproj", "{97F2DF0D-396C-44FA-82D7-FB8F17B8E41D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Interview.API", "Presentation\Interview.API\Interview.API.csproj", "{97F2DF0D-396C-44FA-82D7-FB8F17B8E41D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Interview.Application", "Core\Interview.Application\Interview.Application.csproj", "{DBA7A560-84A6-46D8-A05F-39946B65C957}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Interview.Application", "Core\Interview.Application\Interview.Application.csproj", "{DBA7A560-84A6-46D8-A05F-39946B65C957}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Interview.Domain", "Core\Interview.Domain\Interview.Domain.csproj", "{1A9D026A-7BCB-4D83-89A9-998E161A1F61}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Interview.Domain", "Core\Interview.Domain\Interview.Domain.csproj", "{1A9D026A-7BCB-4D83-89A9-998E161A1F61}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Interview.Infrastructure", "Infrastructure\Interview.Infrastructure\Interview.Infrastructure.csproj", "{85B504AD-63B6-440A-973F-4236A8E34DDB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Interview.Infrastructure", "Infrastructure\Interview.Infrastructure\Interview.Infrastructure.csproj", "{85B504AD-63B6-440A-973F-4236A8E34DDB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Interview.Persistence", "Infrastructure\Interview.Persistence\Interview.Persistence.csproj", "{0E6D696D-E35B-4BC3-B485-18AC002016C5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Interview.Persistence", "Infrastructure\Interview.Persistence\Interview.Persistence.csproj", "{0E6D696D-E35B-4BC3-B485-18AC002016C5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

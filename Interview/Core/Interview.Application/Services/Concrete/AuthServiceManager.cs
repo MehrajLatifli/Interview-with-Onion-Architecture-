@@ -54,17 +54,9 @@ namespace Interview.Application.Services.Concrete
             if (!User.Identity.IsAuthenticated)
             {
      
-                try
-                {
-
+            
                     throw new UnauthorizedException("User not authenticated.");
-                }
-                catch (UnauthorizedException ex)
-                {
-                    _logger.LogError(ex, $"GetAdmins -> {ex.Message}");
-
-                    throw;
-                }
+           
             }
 
             var list = new List<GetAuthModel>();
@@ -93,17 +85,10 @@ namespace Interview.Application.Services.Concrete
 
               
 
-                    try
-                    {
+               
 
                         throw new NotFoundException("User not found!");
-                    }
-                    catch (NotFoundException ex)
-                    {
-                        _logger.LogError(ex, $"GetAdmins -> {ex.Message}");
-
-                        throw;
-                    }
+              
 
                 }
 
@@ -117,16 +102,9 @@ namespace Interview.Application.Services.Concrete
             else
             {
             
-                try
-                {
+              
                     throw new NotFoundException("Nothing found!");
-                }
-                catch (NotFoundException ex)
-                {
-                    _logger.LogError(ex, $"GetAdmins -> {ex.Message}");
-
-                    throw;
-                }
+           
             }
         }
 
@@ -135,17 +113,10 @@ namespace Interview.Application.Services.Concrete
             if (!User.Identity.IsAuthenticated)
             {
 
-                try
-                {
 
                     throw new UnauthorizedException("User not authenticated.");
 
-                }
-                catch (UnauthorizedException ex)
-                {
-                    _logger.LogError(ex, $"GetHR ->  {ex.Message}");
-                    throw;
-                }
+            
 
             }
 
@@ -172,18 +143,11 @@ namespace Interview.Application.Services.Concrete
 
                 else
                 {
-                    try
-                    {
+
 
 
                         throw new NotFoundException("User not found");
-                    }
-                    catch (NotFoundException ex)
-                    {
-                        _logger.LogError(ex, $"GetHR -> {ex.Message}");
-
-                        throw;
-                    }
+          
 
 
                 }
@@ -197,18 +161,9 @@ namespace Interview.Application.Services.Concrete
 
             else
             {
-                try
-                {
-
+        
                     throw new NotFoundException("Nothing found!");
-                }
-                catch (NotFoundException ex)
-                {
-
-                    _logger.LogError(ex, $"GetHR -> {ex.Message}");
-
-                    throw;
-                }
+        
             }
         }
 
@@ -272,18 +227,8 @@ namespace Interview.Application.Services.Concrete
             else
             {
          
-
-                try
-                {
-
                     throw new UnauthorizedException("Username or password is incorrect.");
-                }
-                catch (UnauthorizedException ex)
-                {
-                    _logger.LogError(ex, $"{ex.Message}");
-
-                    throw;
-                }
+          
 
             }
         }
@@ -302,17 +247,9 @@ namespace Interview.Application.Services.Concrete
             if (tokenModel is null)
             {
        
-                try
-                {
-
+             
                     throw new BadHttpRequestException("Invalid client request");
-                }
-                catch (BadHttpRequestException ex)
-                {
-                    _logger.LogError(ex, $"{ex.Message}");
-
-                    throw;
-                }
+                
             }
 
             string? accessToken = tokenModel.AccessToken;
@@ -322,17 +259,9 @@ namespace Interview.Application.Services.Concrete
             if (principal == null)
             {
 
-                try
-                {
-
+             
                     throw new BadHttpRequestException("Invalid access token or refresh token");
-                }
-                catch (BadHttpRequestException ex)
-                {
-                    _logger.LogError(ex, $"{ex.Message}");
-
-                    throw;
-                }
+               
 
             }
 
@@ -346,17 +275,8 @@ namespace Interview.Application.Services.Concrete
       
 
 
-                try
-                {
-
                     throw new BadHttpRequestException("Invalid access token or refresh token");
-                }
-                catch (BadHttpRequestException ex)
-                {
-                    _logger.LogError(ex, $"{ex.Message}");
-
-                    throw;
-                }
+              
 
             }
 
@@ -385,17 +305,10 @@ namespace Interview.Application.Services.Concrete
             if (userExists != null)
             {
 
-                try
-                {
+ 
 
                     throw new ConflictException("User already exists!");
-                }
-                catch (ConflictException ex)
-                {
-                    _logger.LogError(ex, $"{ex.Message}");
-
-                    throw;
-                }
+               
             }
 
 
@@ -446,17 +359,9 @@ namespace Interview.Application.Services.Concrete
                 var errorMessage = string.Join($" ", errors);
 
      
-                try
-                {
 
                     throw new ConflictException("User creation failed.");
-                }
-                catch (ConflictException ex)
-                {
-                    _logger.LogError(ex, $"{ex.Message}");
-
-                    throw;
-                }
+                
             }
             if (!await _roleManager.RoleExistsAsync(UserRoles.Admin))
                 await _roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
@@ -487,17 +392,9 @@ namespace Interview.Application.Services.Concrete
             if (userExists != null)
             {
           
-                try
-                {
-
+          
                     throw new ConflictException("User already exists!");
-                }
-                catch (ConflictException ex)
-                {
-                    _logger.LogError(ex, $"{ex.Message}");
-
-                    throw;
-                }
+               
 
             }
 
@@ -548,17 +445,10 @@ namespace Interview.Application.Services.Concrete
 
    
 
-                try
-                {
+               
 
                     throw new ConflictException("User creation failed!");
-                }
-                catch (ConflictException ex)
-                {
-                    _logger.LogError(ex, $"{ex.Message}");
-
-                    throw;
-                }
+               
             }
 
 
@@ -584,17 +474,9 @@ namespace Interview.Application.Services.Concrete
             {
    
 
-                try
-                {
-
+              
                     throw new BadHttpRequestException("Invalid user name");
-                }
-                catch (BadHttpRequestException ex)
-                {
-                    _logger.LogError(ex, $"{ex.Message}");
-
-                    throw;
-                }
+              
             }
 
 
@@ -621,17 +503,9 @@ namespace Interview.Application.Services.Concrete
             if (!User.Identity.IsAuthenticated)
             {
           
-                try
-                {
 
                     throw new UnauthorizedException("User not authenticated.");
-                }
-                catch (UnauthorizedException ex)
-                {
-                    _logger.LogError(ex, $"{ex.Message}");
-
-                    throw;
-                }
+               
             }
 
 
@@ -649,17 +523,10 @@ namespace Interview.Application.Services.Concrete
                 if (currentUser.UserName == null)
                 {
             
-                    try
-                    {
+             
 
                         throw new NotFoundException("User not found!");
-                    }
-                    catch (NotFoundException ex)
-                    {
-                        _logger.LogError(ex, $"{ex.Message}");
-
-                        throw;
-                    }
+                 
                 }
 
 
@@ -674,17 +541,9 @@ namespace Interview.Application.Services.Concrete
                         var errorMessage = string.Join($" ", errors);
 
                 
-                        try
-                        {
 
                             throw new InvalidOperationException($"Failed to update password! \n {errorMessage}");
-                        }
-                        catch (InvalidOperationException ex)
-                        {
-                            _logger.LogError(ex, $"{ex.Message}");
-
-                            throw;
-                        }
+                    
 
                     }
                 }
@@ -697,17 +556,10 @@ namespace Interview.Application.Services.Concrete
                 {
              
 
-                    try
-                    {
+             
 
                         throw new InvalidOperationException($"Failed to update user!");
-                    }
-                    catch (InvalidOperationException ex)
-                    {
-                        _logger.LogError(ex, $"{ex.Message}");
-
-                        throw;
-                    }
+                   
 
                 }
 
@@ -723,17 +575,10 @@ namespace Interview.Application.Services.Concrete
             if (!User.Identity.IsAuthenticated)
             {
          
-                try
-                {
+             
 
                     throw new UnauthorizedException($"User not authenticated.");
-                }
-                catch (UnauthorizedException ex)
-                {
-                    _logger.LogError(ex, $"{ex.Message}");
-
-                    throw;
-                }
+               
             }
 
 
@@ -752,17 +597,10 @@ namespace Interview.Application.Services.Concrete
                 {
                
 
-                    try
-                    {
+             
 
                         throw new NotFoundException($"User not found!");
-                    }
-                    catch (NotFoundException ex)
-                    {
-                        _logger.LogError(ex, $"{ex.Message}");
-
-                        throw;
-                    }
+                  
                 }
 
 
@@ -782,17 +620,8 @@ namespace Interview.Application.Services.Concrete
                         var errorMessage = string.Join($" ", errors);
 
                  
-                        try
-                        {
-
                             throw new InvalidOperationException($"Failed to update password! \n {errorMessage}");
-                        }
-                        catch (InvalidOperationException ex)
-                        {
-                            _logger.LogError(ex, $"{ex.Message}");
-
-                            throw;
-                        }
+                      
                     }
                 }
 
@@ -830,17 +659,8 @@ namespace Interview.Application.Services.Concrete
                 if (existingUserWithUserName != null && existingUserWithUserName.Id != currentUser.Id)
                 {
                
-                    try
-                    {
-
                         throw new BadHttpRequestException("User name is already associated with another user!");
-                    }
-                    catch (BadHttpRequestException ex)
-                    {
-                        _logger.LogError(ex, $"{ex.Message}");
-
-                        throw;
-                    }
+                   
                 }
 
                 var identityResult = await _userManager.UpdateAsync(currentUser);
@@ -848,17 +668,10 @@ namespace Interview.Application.Services.Concrete
                 {
 
            
-                    try
-                    {
+                    
 
                         throw new InvalidOperationException("Failed to update user!");
-                    }
-                    catch (BadHttpRequestException ex)
-                    {
-                        _logger.LogError(ex, $"{ex.Message}");
-
-                        throw;
-                    }
+                  
 
 
                 }
@@ -906,17 +719,7 @@ namespace Interview.Application.Services.Concrete
             if (securityToken is not JwtSecurityToken jwtSecurityToken || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
             {
           
-                try
-                {
-
                     throw new SecurityTokenException("Invalid token");
-                }
-                catch (SecurityTokenException ex)
-                {
-                    _logger.LogError(ex, $"{ex.Message}");
-
-                    throw;
-                }
             }
 
             return principal;

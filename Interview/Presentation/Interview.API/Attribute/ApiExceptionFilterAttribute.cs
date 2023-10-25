@@ -1,5 +1,6 @@
 ﻿
 
+using Interview.API.LogSettings.Middlewares;
 using Interview.Application.Exception;
 using Interview.Persistence.Contexts.InterviewDbContext;
 using Microsoft.AspNetCore.Mvc;
@@ -13,7 +14,8 @@ namespace Interview.API.Attribute
         private readonly IDictionary<Type, Action<ExceptionContext>> _exceptionHandlers;
         private readonly InterviewContext db;
         private IDbContextTransaction Transaction => db.Database.CurrentTransaction;
-        public ApiExceptionFilterAttribute(InterviewContext db)
+        private readonly ILogger<ApiExceptionFilterAttribute> _logger;
+        public ApiExceptionFilterAttribute(InterviewContext db, ILogger<ApiExceptionFilterAttribute> logger)
         {
             this.db = db;
 
@@ -27,6 +29,7 @@ namespace Interview.API.Attribute
                 {typeof(ConflictException), HandleConflictException},
 
             };
+            _logger = logger;
         }
 
         private void HandleConflictException(ExceptionContext context)
@@ -74,6 +77,10 @@ namespace Interview.API.Attribute
             var details = new ValidationProblemDetails(exception?.Errors);
             context.ExceptionHandled = true;
             context.Result = new UnprocessableEntityObjectResult(details);
+
+
+            _logger.LogError(context.Exception, "ValidationException occurred: {ErrorMessage}", context.Exception.Message);
+
         }
 
         private void HandleNotFoundException(ExceptionContext context)
@@ -86,6 +93,9 @@ namespace Interview.API.Attribute
 
             context.ExceptionHandled = true;
             context.Result = new NotFoundObjectResult(details);
+
+            _logger.LogError(context.Exception, "NotFoundException occurred: {ErrorMessage}", context.Exception.Message);
+
         }
 
         private void HandleInvalidModelStateException(ExceptionContext context)
@@ -106,6 +116,8 @@ namespace Interview.API.Attribute
 
             context.ExceptionHandled = true;
             context.Result = new ObjectResult(details);
+
+            _logger.LogError(context.Exception, "UnknownException occurred: {ErrorMessage}", context.Exception.Message);
         }
 
         private void HandleUnauthorizedException(ExceptionContext context)
@@ -118,6 +130,8 @@ namespace Interview.API.Attribute
 
             context.ExceptionHandled = true;
             context.Result = new ObjectResult(details);
+
+            _logger.LogError(context.Exception, "Unauthorized occurred: {ErrorMessage}", context.Exception.Message);
         }
 
         private void HandleBadHttpRequestException(ExceptionContext context)
@@ -130,6 +144,8 @@ namespace Interview.API.Attribute
 
             context.ExceptionHandled = true;
             context.Result = new ObjectResult(details);
+
+            _logger.LogError(context.Exception, "BadHttpRequest occurred: {ErrorMessage}", context.Exception.Message);
         }
     }
 }

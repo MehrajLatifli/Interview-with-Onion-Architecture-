@@ -1128,8 +1128,8 @@ namespace Interview.Application.Services.Concrete
 
              pagequestion = questions
             .OrderBy(q => q.Id)
-            .Skip((questionByPageRequestModel.Page - 1) * 10)
-             .Take(10)
+            .Skip((questionByPageRequestModel.Page - 1) * questionByPageRequestModel.PageSize)
+             .Take(questionByPageRequestModel.PageSize)
              .ToList();
 
             if (pagequestion.Count == 0)
@@ -1138,7 +1138,13 @@ namespace Interview.Application.Services.Concrete
                 throw new NotFoundException("Page not found");
             }
 
-                return pagequestion;
+            if (pagequestion.Count < questionByPageRequestModel.PageSize)
+            {
+
+                throw new NotFoundException("The page size is not enough");
+            }
+
+            return pagequestion;
         }
 
 

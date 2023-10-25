@@ -24,8 +24,9 @@ using Interview.API.LogSettings.ColumnWriters;
 using Microsoft.AspNetCore.HttpLogging;
 using static System.Net.WebRequestMethods;
 using Microsoft.Data.SqlClient;
-using Interview.API.LogSettings.GlobalException;
 using Serilog.Events;
+using Interview.API.LogSettings.Middlewares;
+using Org.BouncyCastle.Asn1.IsisMtt.X509;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -135,6 +136,10 @@ builder.Services.AddAzureClients(clientBuilder =>
 });
 
 
+
+builder.Services.AddTransient<ExceptionMiddleware>();
+
+
 builder.Services.AddHttpLogging(logging =>
 {
     logging.LoggingFields = HttpLoggingFields.All;
@@ -178,13 +183,19 @@ if (app.Environment.IsDevelopment())
 }
 
 
+
+
 app.UseStaticFiles();
 
 app.UseHttpLogging();
 
+app.ConfigureExceptionHandler<Program>(app.Services.GetRequiredService<ILogger<Program>>());
+
+app.UseMiddleware<ExceptionMiddleware>();
+
 app.UseSerilogRequestLogging();
 
-app.ConfigureExceptionHandler<Program>(app.Services.GetRequiredService<ILogger<Program>>());
+
 
 app.UseRateLimiter();
 

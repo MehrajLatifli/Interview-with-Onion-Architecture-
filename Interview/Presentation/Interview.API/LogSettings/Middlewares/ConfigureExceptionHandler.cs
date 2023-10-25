@@ -1,13 +1,12 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Http;
 using System.Net;
 using System.Net.Mime;
 using System.Text.Json;
 using System.Web.Http;
 
-namespace Interview.API.LogSettings.GlobalException
+namespace Interview.API.LogSettings.Middlewares
 {
-     public static class ConfigureExceptionHandlerExtensions
+    public static class ConfigureExceptionHandlerExtensions
     {
         public static void ConfigureExceptionHandler<T>(this IApplicationBuilder app, ILogger<T> logger)
         {
@@ -28,14 +27,12 @@ namespace Interview.API.LogSettings.GlobalException
                         await context.Response.WriteAsync(JsonSerializer.Serialize(new
                         {
                             StatusCode = statusCode,
-                            Message = contextFeature.Error.Message,
+                            contextFeature.Error.Message,
                             Title = title,
                         }));
                     }
                 });
             });
         }
-    
-}
-    
+    }
 }

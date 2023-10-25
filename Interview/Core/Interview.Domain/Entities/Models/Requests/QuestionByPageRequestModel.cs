@@ -14,6 +14,10 @@ namespace Interview.Domain.Entities.Models.Requests
         [Required]
         [JsonPropertyName("page")]
         public int Page { get; set; }
+
+        [Required]
+        [JsonPropertyName("pageSize")]
+        public int PageSize { get; set; }
     }
 
 
