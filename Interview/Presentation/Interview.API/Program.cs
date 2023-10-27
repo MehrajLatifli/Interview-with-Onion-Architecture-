@@ -20,7 +20,6 @@ using Serilog.Sinks.PostgreSQL;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Logging;
 using Serilog.Context;
-using Interview.API.LogSettings.ColumnWriters;
 using Microsoft.AspNetCore.HttpLogging;
 using static System.Net.WebRequestMethods;
 using Microsoft.Data.SqlClient;
@@ -138,7 +137,7 @@ builder.Services.AddAzureClients(clientBuilder =>
 
 
 
-
+// Disable when use ApiExceptionFilterAttribute
 builder.Services.AddTransient<ExceptionMiddleware>();
 
 
@@ -191,7 +190,10 @@ app.UseAuthorization();
 //});
 
 
+// Disable when use ApiExceptionFilterAttribute
 app.UseMiddleware<ExceptionMiddleware>();
+
+
 
 app.UseCors(x => x.AllowAnyMethod().AllowAnyHeader().SetIsOriginAllowed(origin => true).AllowCredentials());
 
