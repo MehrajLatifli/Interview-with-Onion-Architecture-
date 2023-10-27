@@ -25,8 +25,9 @@ using Microsoft.AspNetCore.HttpLogging;
 using static System.Net.WebRequestMethods;
 using Microsoft.Data.SqlClient;
 using Serilog.Events;
-using Interview.API.LogSettings.Middlewares;
 using Org.BouncyCastle.Asn1.IsisMtt.X509;
+using Interview.API.Middlewares;
+using System.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -137,43 +138,16 @@ builder.Services.AddAzureClients(clientBuilder =>
 
 
 
+
 builder.Services.AddTransient<ExceptionMiddleware>();
 
 
-builder.Services.AddHttpLogging(logging =>
-{
-    logging.LoggingFields = HttpLoggingFields.All;
-    logging.RequestHeaders.Add("sec-ch-ua");
-    logging.ResponseHeaders.Add("Interview.API");
-    logging.MediaTypeOptions.AddText("application/javascript");
-    logging.RequestBodyLogLimit = 40960;
-    logging.ResponseBodyLogLimit = 40960;
 
-});
-
-Logger log = new LoggerConfiguration()
-    .WriteTo.Console()
-    .WriteTo.File("logs/log.txt")
-    .WriteTo.PostgreSQL(builder.Configuration.GetConnectionString("LogConnection"), "Logs",
-             needAutoCreateTable: true,
-             columnOptions: new Dictionary<string, ColumnWriterBase>
-             {
-                 { "message", new RenderedMessageColumnWriter() },
-                 { "message_template", new MessageTemplateColumnWriter() },
-                 { "level", new LevelColumnWriter() },
-                 { "time_stamp", new TimestampColumnWriter() },
-                 { "exeptions", new ExceptionColumnWriter() },
-                 { "log_event", new LogEventSerializedColumnWriter() },
-                 { "user_name", new UsernameColumnWriter() },
-             })
-    .WriteTo.Seq(builder.Configuration["Seq:SeqConnection"], restrictedToMinimumLevel: LogEventLevel.Information)
-    .Enrich.FromLogContext()
-    .MinimumLevel.Information()
-    .CreateLogger();
-
-builder.Host.UseSerilog(log);
+builder.Host.UseSerilog(builder.Services.AddCustomSerilog());
 
 var app = builder.Build();
+
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -184,16 +158,13 @@ if (app.Environment.IsDevelopment())
 
 
 
-
 app.UseStaticFiles();
 
 app.UseHttpLogging();
 
-app.ConfigureExceptionHandler<Program>(app.Services.GetRequiredService<ILogger<Program>>());
-
-app.UseMiddleware<ExceptionMiddleware>();
-
 app.UseSerilogRequestLogging();
+
+
 
 
 
@@ -206,16 +177,21 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.Use(async (context, next) => 
-{
-    var username = context.User?.Identity?.IsAuthenticated !=null || true ?  context.User.Identity.Name : null;
 
-    LogContext.PushProperty("user_name", username);
 
-    await next();
 
-});
+//app.Use(async (context, next) =>
+//{
+//    var username = context.User?.Identity?.IsAuthenticated != null || true ? context.User.Identity.Name : null;
 
+//    LogContext.PushProperty("user_name", username);
+
+//    await next();
+
+//});
+
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseCors(x => x.AllowAnyMethod().AllowAnyHeader().SetIsOriginAllowed(origin => true).AllowCredentials());
 

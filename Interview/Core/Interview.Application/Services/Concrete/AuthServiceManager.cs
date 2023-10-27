@@ -83,10 +83,6 @@ namespace Interview.Application.Services.Concrete
                 else
                 {
 
-              
-
-               
-
                         throw new NotFoundException("User not found!");
               
 
@@ -160,9 +156,11 @@ namespace Interview.Application.Services.Concrete
             }
 
             else
-            {
+                 {
+                throw new NotFoundException("Nothing found!");
+
         
-                    throw new NotFoundException("Nothing found!");
+                    //throw new NotFoundException("Nothing found!");
         
             }
         }

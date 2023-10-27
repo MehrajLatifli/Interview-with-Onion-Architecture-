@@ -21,6 +21,15 @@ using ConfigurationManager = Microsoft.Extensions.Configuration.ConfigurationMan
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Microsoft.OpenApi.Models;
 using Interview.Domain.Entities.AuthModels;
+using Microsoft.AspNetCore.HttpLogging;
+using System.Collections.ObjectModel;
+using System.Data;
+using Serilog.Core;
+using Serilog;
+using Serilog.Sinks.PostgreSQL;
+using Serilog.Events;
+using Interview.Persistence.LogSettings.ColumnWriters;
+using System.Diagnostics;
 
 namespace Interview.Persistence.ServiceExtensions
 {
@@ -197,6 +206,54 @@ namespace Interview.Persistence.ServiceExtensions
         }
 
 
+
+
+        public static Logger AddCustomSerilog(this IServiceCollection services)
+        {
+
+            ConfigurationManager configurationManager = new ConfigurationManager();
+            configurationManager.SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "../../Presentation/Interview.API"));
+            configurationManager.AddJsonFile("appsettings.json");
+
+
+
+            services.AddHttpLogging(logging =>
+            {
+                logging.LoggingFields = HttpLoggingFields.All;
+                logging.RequestHeaders.Add("sec-ch-ua");
+                logging.ResponseHeaders.Add("Interview.API");
+                logging.MediaTypeOptions.AddText("application/javascript");
+                logging.RequestBodyLogLimit = 40960;
+                logging.ResponseBodyLogLimit = 40960;
+
+            });
+
+
+
+            Logger log = new LoggerConfiguration()
+                .WriteTo.Console()
+                .WriteTo.File("logs/log.txt")
+                .WriteTo.PostgreSQL(configurationManager.GetConnectionString("LogConnection"), "Logs",
+                         needAutoCreateTable: true,
+                         columnOptions: new Dictionary<string, ColumnWriterBase>
+                         {
+                 { "message", new RenderedMessageColumnWriter() },
+                 { "message_template", new MessageTemplateColumnWriter() },
+                 { "level", new LevelColumnWriter() },
+                 { "time_stamp", new TimestampColumnWriter() },
+                 { "exeptions", new ExceptionColumnWriter() },
+                 { "log_event", new LogEventSerializedColumnWriter() },
+                 { "user_name", new UsernameColumnWriter() },
+                         })
+                .WriteTo.Seq(configurationManager["Seq:SeqConnection"], restrictedToMinimumLevel: LogEventLevel.Information)
+                .Enrich.FromLogContext()
+                .MinimumLevel.Information()
+                .CreateLogger();
+
+            
+
+            return log;
+        }
 
         public static void AddRateLimiterServiceExtension(this IServiceCollection services)
         {
