@@ -30,6 +30,7 @@ using Serilog.Sinks.PostgreSQL;
 using Serilog.Events;
 using Interview.Persistence.LogSettings.ColumnWriters;
 using System.Diagnostics;
+using Microsoft.Extensions.Hosting;
 
 namespace Interview.Persistence.ServiceExtensions
 {
@@ -208,12 +209,8 @@ namespace Interview.Persistence.ServiceExtensions
 
 
 
-        public static Logger AddCustomSerilog(this IServiceCollection services)
+        public static Logger AddCustomSerilog(this IServiceCollection services, string LogConnection, string SeqConnection)
         {
-
-            ConfigurationManager configurationManager = new ConfigurationManager();
-            configurationManager.SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "../../Presentation/Interview.API"));
-            configurationManager.AddJsonFile("appsettings.json");
 
 
 
@@ -233,24 +230,25 @@ namespace Interview.Persistence.ServiceExtensions
             Logger log = new LoggerConfiguration()
                 .WriteTo.Console()
                 .WriteTo.File("logs/log.txt")
-                .WriteTo.PostgreSQL(configurationManager.GetConnectionString("LogConnection"), "Logs",
+                .WriteTo.PostgreSQL(LogConnection, "Logs",
                          needAutoCreateTable: true,
                          columnOptions: new Dictionary<string, ColumnWriterBase>
                          {
-                 { "message", new RenderedMessageColumnWriter() },
-                 { "message_template", new MessageTemplateColumnWriter() },
-                 { "level", new LevelColumnWriter() },
-                 { "time_stamp", new TimestampColumnWriter() },
-                 { "exeptions", new ExceptionColumnWriter() },
-                 { "log_event", new LogEventSerializedColumnWriter() },
-                 { "user_name", new UsernameColumnWriter() },
+                             { "message", new RenderedMessageColumnWriter() },
+                             { "message_template", new MessageTemplateColumnWriter() },
+                             { "level", new LevelColumnWriter() },
+                             { "time_stamp", new TimestampColumnWriter() },
+                             { "exeptions", new ExceptionColumnWriter() },
+                             { "log_event", new LogEventSerializedColumnWriter() },
+                             { "user_name", new UsernameColumnWriter() },
                          })
-                .WriteTo.Seq(configurationManager["Seq:SeqConnection"], restrictedToMinimumLevel: LogEventLevel.Information)
+                .WriteTo.Seq(SeqConnection, restrictedToMinimumLevel: LogEventLevel.Information)
                 .Enrich.FromLogContext()
                 .MinimumLevel.Information()
                 .CreateLogger();
 
-            
+
+
 
             return log;
         }

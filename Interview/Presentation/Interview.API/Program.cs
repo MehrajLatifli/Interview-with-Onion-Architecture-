@@ -142,7 +142,7 @@ builder.Services.AddTransient<ExceptionMiddleware>();
 
 
 
-builder.Host.UseSerilog(builder.Services.AddCustomSerilog());
+builder.Host.UseSerilog(builder.Services.AddCustomSerilog(builder.Configuration.GetConnectionString("LogConnection"),builder.Configuration["Seq:SeqConnection"]));
 
 var app = builder.Build();
 

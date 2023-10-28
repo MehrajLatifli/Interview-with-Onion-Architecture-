@@ -24,10 +24,12 @@ namespace Interview.API.Middlewares
 
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
+
+            var username = string.Empty;
             try
             {
 
-                var username = context.User?.Identity?.IsAuthenticated != null || true ? context.User.Identity.Name : null;
+                 username = context.User?.Identity?.IsAuthenticated != null || true ? context.User.Identity.Name : null;
 
                 LogContext.PushProperty("user_name", username);
 
@@ -36,13 +38,12 @@ namespace Interview.API.Middlewares
             }
             catch (Exception exception)
             {
-                await HandleExceptionAsync(context, exception);
+                await HandleExceptionAsync(context, exception, username);
 
-                _logger.LogError(exception, "Error occurred: {ErrorMessage}", exception.Message);
             }
         }
 
-        private async Task HandleExceptionAsync(HttpContext context, Exception exception)
+        private async Task HandleExceptionAsync(HttpContext context, Exception exception, string username)
         {
             var code = HttpStatusCode.InternalServerError;
             var result = string.Empty;
@@ -76,9 +77,35 @@ namespace Interview.API.Middlewares
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)code;
 
+
             if (string.IsNullOrEmpty(result))
             {
-                result = JsonSerializer.Serialize(new { status = code, title = exception.Message });
+
+                System.Globalization.CultureInfo.CurrentCulture.ClearCachedData();
+
+                TimeZone localZone = TimeZone.CurrentTimeZone;
+                DateTime localTime = localZone.ToLocalTime(DateTime.UtcNow);
+
+
+                var data = new
+                {
+                    status = code,
+                    title = exception.Message,
+                    user = username,
+                    date = localTime
+                };
+
+
+                var options = new JsonSerializerOptions
+                {
+                    WriteIndented = true,
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+                };
+
+                result = JsonSerializer.Serialize(data, options);
+
+
+                _logger.LogError(exception, "Error occurred: {ErrorMessage}", result);
             }
 
             await context.Response.WriteAsync(result);
