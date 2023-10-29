@@ -32,6 +32,7 @@ namespace Interview.API.Middlewares
                  username = context.User?.Identity?.IsAuthenticated != null || true ? context.User.Identity.Name : null;
 
                 LogContext.PushProperty("user_name", username);
+                LogContext.PushProperty("machine_name", Environment.MachineName);
 
 
                 await next(context);

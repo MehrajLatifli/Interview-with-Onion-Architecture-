@@ -241,6 +241,7 @@ namespace Interview.Persistence.ServiceExtensions
                              { "exeptions", new ExceptionColumnWriter() },
                              { "log_event", new LogEventSerializedColumnWriter() },
                              { "user_name", new UsernameColumnWriter() },
+                             { "machine_name", new MachinenameColumnWriter() },
                          })
                 .WriteTo.Seq(SeqConnection, restrictedToMinimumLevel: LogEventLevel.Information)
                 .Enrich.FromLogContext()
