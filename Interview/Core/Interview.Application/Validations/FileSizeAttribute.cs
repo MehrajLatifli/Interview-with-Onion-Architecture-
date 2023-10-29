@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
+using ValidationException = Interview.Application.Exception.ValidationException;
 
 namespace Interview.Application.Validations
 {
@@ -23,7 +24,9 @@ namespace Interview.Application.Validations
             {
                 if (file.Length > _maxFileSizeInMB * 1024 * 1024 || file.Length < _minFileSizeInBytes)
                 {
-                    return new ValidationResult(GetErrorMessage());
+                    throw new ValidationException(GetErrorMessage());
+
+
                 }
             }
 

@@ -27,6 +27,7 @@ using Serilog.Events;
 using Org.BouncyCastle.Asn1.IsisMtt.X509;
 using Interview.API.Middlewares;
 using System.Configuration;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -66,9 +67,16 @@ builder.Services.AddControllers(options =>
 
 builder.Services.Configure<FormOptions>(x =>
 {
-    x.MultipartBodyLengthLimit = 2147483648;
+    x.MultipartBodyLengthLimit = int.MaxValue;
+    x.ValueLengthLimit = int.MaxValue;
+    x.MultipartHeadersLengthLimit = int.MaxValue;
 });
 
+builder.Services.Configure<KestrelServerOptions>(options =>
+{
+    options.Limits.MaxRequestBodySize = int.MaxValue;
+
+});
 
 builder.Services.AddHttpClient();
 

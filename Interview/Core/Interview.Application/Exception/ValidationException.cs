@@ -8,11 +8,18 @@ namespace Interview.Application.Exception
 {
     public class ValidationException : ApplicationException
     {
-        public ValidationException()
-           : base("One or more validation failures have occurred.")
-        {
-            Errors = new Dictionary<string, string[]>();
-        }
-        public IDictionary<string, string[]> Errors { get; }
+      
+            public IDictionary<string, string[]> Errors { get; }
+
+            public ValidationException(string message) : base(message)
+            {
+                Errors = new Dictionary<string, string[]>();
+            }
+
+            public ValidationException(string message, IDictionary<string, string[]> errors) : base(message)
+            {
+                Errors = errors;
+            }
+        
     }
 }

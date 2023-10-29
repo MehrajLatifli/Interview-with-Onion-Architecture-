@@ -150,12 +150,9 @@ namespace Interview.Application.Services.Concrete
 
 
             var  sessionQuery = from sq in _mapper.Map<List<SessionQuestionDTO_forGetandGetAll>>(_sessionQuestionReadRepository.GetAll(false))
-                            join q in _mapper.Map<List<QuestionDTO_forGetandGetAll>>(_questionReadRepository.GetAll(false))
-                            on sq.QuestionId equals q.Id
-                            join s in _mapper.Map<List<SessionDTO_forGetandGetAll>>(_sessionReadRepository.GetAll(false))
-                            on sq.SessionId equals s.Id
-                            join l in _mapper.Map<List<LevelDTO_forGetandGetAll>>(_levelReadRepository.GetAll(false))
-                            on q.LevelId equals l.Id
+                            join q in _mapper.Map<List<QuestionDTO_forGetandGetAll>>(_questionReadRepository.GetAll(false)) on sq.QuestionId equals q.Id
+                            join s in _mapper.Map<List<SessionDTO_forGetandGetAll>>(_sessionReadRepository.GetAll(false)) on sq.SessionId equals s.Id
+                            join l in _mapper.Map<List<LevelDTO_forGetandGetAll>>(_levelReadRepository.GetAll(false)) on q.LevelId equals l.Id
                             where s.Id == model.Id
                             select new 
                             {

@@ -185,10 +185,11 @@ namespace Interview.Application.Services.Concrete
 
             entity = new SessionQuestion
             {
+                Id= entity.Id,
                 Value = entity.Value,
 
                 SessionId = entity.SessionId,
-                QuestionId = model.QuestionId,
+                QuestionId = entity.QuestionId,
 
 
             };
@@ -809,38 +810,27 @@ namespace Interview.Application.Services.Concrete
             await Task.Run(() =>
             {
 
-                questionQuery = from q in _mapper.Map<List<QuestionDTO_forGetandGetAll>>(_questionReadRepository.GetAll(false))
-                                join s in _mapper.Map<List<StructureDTO_forGetandGetAll>>(_structureReadRepository.GetAll(false))
-                                on q.StructureId equals s.Id
-                                join v in _mapper.Map<List<VacancyDTO_forGetandGetAll>>(_vacancyReadRepository.GetAll(false))
-                                on s.Id equals v.StructureId
-                                join sq in _mapper.Map<List<SessionQuestionDTO_forGetandGetAll>>(_sessionQuestionReadRepository.GetAll(false))
-                                on q.Id equals sq.QuestionId
-                                join se in _mapper.Map<List<SessionDTO_forGetandGetAll>>(_sessionReadRepository.GetAll(false))
-                                on sq.SessionId equals se.Id
-                                join p in _mapper.Map<List<PositionDTO_forGetandGetAll>>(_positionReadRepository.GetAll(false))
-                                on v.PositionId equals p.Id
-                                where 
-                                v.Id == VacantionId
-                                &&
-                                sq.SessionId == SessionId
-                                &&
-                                v.StructureId==s.Id
-                                select new QuestionDTO_forGetandGetAll
-                                {
-                                    Id = q.Id,
-                                    Text = q.Text,
-                                    LevelId = q.LevelId,
-                                    CategoryId = q.CategoryId,
-                                    StructureId = q.StructureId,
-                                };
+                questionQuery =
+                     from q in _mapper.Map<List<QuestionDTO_forGetandGetAll>>(_questionReadRepository.GetAll(false))
+                     join s in _mapper.Map<List<StructureDTO_forGetandGetAll>>(_structureReadRepository.GetAll(false)) on q.StructureId equals s.Id
+                     join v in _mapper.Map<List<VacancyDTO_forGetandGetAll>>(_vacancyReadRepository.GetAll(false)) on s.Id equals v.StructureId
+                     join p in _mapper.Map<List<PositionDTO_forGetandGetAll>>(_positionReadRepository.GetAll(false)) on v.PositionId equals p.Id
+                     join se in _mapper.Map<List<SessionDTO_forGetandGetAll>>(_sessionReadRepository.GetAll(false)) on v.Id equals se.VacancyId
+                     where v.Id == VacantionId && se.Id == SessionId && v.StructureId == s.Id
+                     select new QuestionDTO_forGetandGetAll
+                     {
+                         Id = q.Id,
+                         Text = q.Text,
+                         LevelId = q.LevelId,
+                         CategoryId = q.CategoryId,
+                         StructureId = q.StructureId
+                     };
+
 
 
                 positonQuery = from p in _mapper.Map<List<PositionDTO_forGetandGetAll>>(_positionReadRepository.GetAll(false))
-                               join v in _mapper.Map<List<VacancyDTO_forGetandGetAll>>(_vacancyReadRepository.GetAll(false))
-                               on p.Id equals v.PositionId
-                               where
-                               v.Id == VacantionId
+                               join v in _mapper.Map<List<VacancyDTO_forGetandGetAll>>(_vacancyReadRepository.GetAll(false)) on p.Id equals v.PositionId
+                               where v.Id == VacantionId
                                select new PositionDTO_forGetandGetAll
                                {
                                    Id = p.Id,

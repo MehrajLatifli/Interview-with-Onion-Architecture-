@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
+using ValidationException = Interview.Application.Exception.ValidationException;
 
 namespace Interview.Application.Validations
 {
@@ -22,7 +23,9 @@ namespace Interview.Application.Validations
             string email = value.ToString();
             if (!IsStrongEmail(email))
             {
-                return new ValidationResult(_errorMessage);
+
+
+                throw new ValidationException(_errorMessage);
             }
 
             return ValidationResult.Success;

@@ -5,6 +5,8 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Interview.Application.Exception;
+using ValidationException = Interview.Application.Exception.ValidationException;
 
 namespace Interview.Application.Validations
 {
@@ -25,7 +27,9 @@ namespace Interview.Application.Validations
                 var extension = Path.GetExtension(file.FileName)?.ToLower();
                 if (!_extensions.Contains(extension))
                 {
-                    return new ValidationResult(GetErrorMessage());
+
+
+                    throw new ValidationException(GetErrorMessage());
                 }
             }
 

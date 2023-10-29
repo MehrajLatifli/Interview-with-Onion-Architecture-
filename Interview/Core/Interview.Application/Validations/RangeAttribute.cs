@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using ValidationException = Interview.Application.Exception.ValidationException;
 
 namespace Interview.Application.Validations
 {
@@ -15,19 +16,22 @@ namespace Interview.Application.Validations
 
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            if (value is double number)
+            if (value is double || value is decimal || value is int)
             {
+                var number = Convert.ToDouble(value);
+                
                 if (number >= _minValue && number <= _maxValue)
                 {
                     return ValidationResult.Success;
                 }
                 else
                 {
-                    return new ValidationResult($"The {validationContext.DisplayName} must be between {_minValue} and {_maxValue}.");
+                    throw new ValidationException($"The {validationContext.DisplayName} must be between {_minValue} and {_maxValue}.");
+
                 }
             }
 
-            return new ValidationResult("Invalid input type. This attribute is only applicable to double numbers.");
+            throw new ValidationException("Invalid input type. This attribute is only applicable to double numbers.");
         }
     }
 
