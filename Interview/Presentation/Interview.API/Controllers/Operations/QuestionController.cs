@@ -55,7 +55,7 @@ namespace Interview.API.Controllers.Operations
 
 
         [HttpPost(Routes.Question)]
-        public async Task<IActionResult> QuestionCreate([FromForm] QuestionDTO_forCreate model)
+        public async Task<IActionResult> QuestionCreate([FromBody] QuestionDTO_forCreate model)
         {
 
             await _questionService.QuestionCreate(model);
@@ -66,7 +66,7 @@ namespace Interview.API.Controllers.Operations
 
 
         [HttpPut(Routes.Question)]
-        public async Task<IActionResult> QuestionUpdate([FromForm] QuestionDTO_forUpdate model)
+        public async Task<IActionResult> QuestionUpdate([FromBody] QuestionDTO_forUpdate model)
         {
 
 

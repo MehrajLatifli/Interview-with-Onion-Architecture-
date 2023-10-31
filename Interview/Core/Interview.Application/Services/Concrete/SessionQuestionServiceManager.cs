@@ -791,7 +791,7 @@ namespace Interview.Application.Services.Concrete
             return randomList;
         }
 
-        public async Task<List<QuestionDTO_forGetandGetAll>> GetRandomQuestion2(int QuestionCount, int VacantionId, int SessionId)
+        public async Task<List<QuestionDTO_forGetandGetAll>> GetRandomQuestion2(RandomQuestionRequestModel2 model)
         {
             //int questionCount, int structureId, int positionId, int vacantionId, int sessionId
 
@@ -816,7 +816,7 @@ namespace Interview.Application.Services.Concrete
                      join v in _mapper.Map<List<VacancyDTO_forGetandGetAll>>(_vacancyReadRepository.GetAll(false)) on s.Id equals v.StructureId
                      join p in _mapper.Map<List<PositionDTO_forGetandGetAll>>(_positionReadRepository.GetAll(false)) on v.PositionId equals p.Id
                      join se in _mapper.Map<List<SessionDTO_forGetandGetAll>>(_sessionReadRepository.GetAll(false)) on v.Id equals se.VacancyId
-                     where v.Id == VacantionId && se.Id == SessionId && v.StructureId == s.Id
+                     where v.Id == model.VacantionId && se.Id == model.SessionId && v.StructureId == s.Id
                      select new QuestionDTO_forGetandGetAll
                      {
                          Id = q.Id,
@@ -830,7 +830,7 @@ namespace Interview.Application.Services.Concrete
 
                 positonQuery = from p in _mapper.Map<List<PositionDTO_forGetandGetAll>>(_positionReadRepository.GetAll(false))
                                join v in _mapper.Map<List<VacancyDTO_forGetandGetAll>>(_vacancyReadRepository.GetAll(false)) on p.Id equals v.PositionId
-                               where v.Id == VacantionId
+                               where v.Id == model.VacantionId
                                select new PositionDTO_forGetandGetAll
                                {
                                    Id = p.Id,
@@ -840,7 +840,7 @@ namespace Interview.Application.Services.Concrete
 
             await Task.Run(() =>
             {
-                if (_mapper.Map<List<QuestionDTO_forGetandGetAll>>(_questionReadRepository.GetAll(false)).Count < QuestionCount)
+                if (_mapper.Map<List<QuestionDTO_forGetandGetAll>>(_questionReadRepository.GetAll(false)).Count < model.QuestionCount)
                 {
                     throw new NotFoundException("Not enough questions");
                 }
@@ -878,16 +878,16 @@ namespace Interview.Application.Services.Concrete
                             hardList = _mapper.Map<List<QuestionDTO_forGetandGetAll>>(_questionReadRepository.GetAll(false).Where(i => i.LevelId == 3 && i.StructureId == questionQuery.ToList().FirstOrDefault().StructureId));
                         });
 
-                        randomList.AddRange(await SelectRandomItems(easyList, Convert.ToInt32(Math.Round(Convert.ToDouble(QuestionCount) * 50 / 100, MidpointRounding.AwayFromZero)), rnd, "easy"));
-                        randomList.AddRange(await SelectRandomItems(mediumList, Convert.ToInt32(Math.Round(Convert.ToDouble(QuestionCount) * 30 / 100, MidpointRounding.AwayFromZero)), rnd, "medium"));
-                        randomList.AddRange(await SelectRandomItems(hardList, Convert.ToInt32(Math.Round(Convert.ToDouble(QuestionCount) * 20 / 100, MidpointRounding.AwayFromZero)), rnd, "difficult"));
+                        randomList.AddRange(await SelectRandomItems(easyList, Convert.ToInt32(Math.Round(Convert.ToDouble(model.QuestionCount) * 50 / 100, MidpointRounding.AwayFromZero)), rnd, "easy"));
+                        randomList.AddRange(await SelectRandomItems(mediumList, Convert.ToInt32(Math.Round(Convert.ToDouble(model.QuestionCount) * 30 / 100, MidpointRounding.AwayFromZero)), rnd, "medium"));
+                        randomList.AddRange(await SelectRandomItems(hardList, Convert.ToInt32(Math.Round(Convert.ToDouble(model.QuestionCount) * 20 / 100, MidpointRounding.AwayFromZero)), rnd, "difficult"));
 
 
                         await Task.Run(() =>
                         {
-                            if (randomList.Count > QuestionCount)
+                            if (randomList.Count > model.QuestionCount)
                             {
-                                var c = randomList.Count - QuestionCount;
+                                var c = randomList.Count - model.QuestionCount;
 
                                 for (int i = 0; i < c; i++)
                                 {
@@ -907,7 +907,7 @@ namespace Interview.Application.Services.Concrete
                             var sessionQuestion = new SessionQuestion
                             {
                                 QuestionId = entity.Id,
-                                SessionId = SessionId
+                                SessionId = model.SessionId
                             };
 
                             await _sessionQuestionWriteRepository.AddAsync(sessionQuestion);
@@ -948,9 +948,9 @@ namespace Interview.Application.Services.Concrete
                         });
 
 
-                        randomList.AddRange(await SelectRandomItems(easyList, Convert.ToInt32(Math.Round(Convert.ToDouble(QuestionCount) * 20 / 100, MidpointRounding.AwayFromZero)), rnd, "easy"));
-                        randomList.AddRange(await SelectRandomItems(mediumList, Convert.ToInt32(Math.Round(Convert.ToDouble(QuestionCount) * 50 / 100, MidpointRounding.AwayFromZero)), rnd, "medium"));
-                        randomList.AddRange(await SelectRandomItems(hardList, Convert.ToInt32(Math.Round(Convert.ToDouble(QuestionCount) * 30 / 100, MidpointRounding.AwayFromZero)), rnd, "difficult"));
+                        randomList.AddRange(await SelectRandomItems(easyList, Convert.ToInt32(Math.Round(Convert.ToDouble(model.QuestionCount) * 20 / 100, MidpointRounding.AwayFromZero)), rnd, "easy"));
+                        randomList.AddRange(await SelectRandomItems(mediumList, Convert.ToInt32(Math.Round(Convert.ToDouble(model.QuestionCount) * 50 / 100, MidpointRounding.AwayFromZero)), rnd, "medium"));
+                        randomList.AddRange(await SelectRandomItems(hardList, Convert.ToInt32(Math.Round(Convert.ToDouble(model.QuestionCount) * 30 / 100, MidpointRounding.AwayFromZero)), rnd, "difficult"));
 
 
 
@@ -958,9 +958,9 @@ namespace Interview.Application.Services.Concrete
 
                         await Task.Run(() =>
                         {
-                            if (randomList.Count > QuestionCount)
+                            if (randomList.Count > model.QuestionCount)
                             {
-                                var c = randomList.Count - QuestionCount;
+                                var c = randomList.Count - model.QuestionCount;
 
                                 for (int i = 0; i < c; i++)
                                 {
@@ -977,7 +977,7 @@ namespace Interview.Application.Services.Concrete
                             var sessionQuestion = new SessionQuestion
                             {
                                 QuestionId = entity.Id,
-                                SessionId = SessionId
+                                SessionId = model.SessionId
                             };
 
                             await _sessionQuestionWriteRepository.AddAsync(sessionQuestion);
@@ -1011,17 +1011,17 @@ namespace Interview.Application.Services.Concrete
                         });
 
 
-                        randomList.AddRange(await SelectRandomItems(easyList, Convert.ToInt32(Math.Round(Convert.ToDouble(QuestionCount) * 20 / 100, MidpointRounding.AwayFromZero)), rnd, "easy"));
-                        randomList.AddRange(await SelectRandomItems(mediumList, Convert.ToInt32(Math.Round(Convert.ToDouble(QuestionCount) * 30 / 100, MidpointRounding.AwayFromZero)), rnd, "medium"));
-                        randomList.AddRange(await SelectRandomItems(hardList, Convert.ToInt32(Math.Round(Convert.ToDouble(QuestionCount) * 50 / 100, MidpointRounding.AwayFromZero)), rnd, "difficult"));
+                        randomList.AddRange(await SelectRandomItems(easyList, Convert.ToInt32(Math.Round(Convert.ToDouble(model.QuestionCount) * 20 / 100, MidpointRounding.AwayFromZero)), rnd, "easy"));
+                        randomList.AddRange(await SelectRandomItems(mediumList, Convert.ToInt32(Math.Round(Convert.ToDouble(model.QuestionCount) * 30 / 100, MidpointRounding.AwayFromZero)), rnd, "medium"));
+                        randomList.AddRange(await SelectRandomItems(hardList, Convert.ToInt32(Math.Round(Convert.ToDouble(model.QuestionCount) * 50 / 100, MidpointRounding.AwayFromZero)), rnd, "difficult"));
 
 
 
                         await Task.Run(() =>
                         {
-                            if (randomList.Count > QuestionCount)
+                            if (randomList.Count > model.QuestionCount)
                             {
-                                var c = randomList.Count - QuestionCount;
+                                var c = randomList.Count - model.QuestionCount;
 
                                 for (int i = 0; i < c; i++)
                                 {
@@ -1039,7 +1039,7 @@ namespace Interview.Application.Services.Concrete
                             var sessionQuestion = new SessionQuestion
                             {
                                 QuestionId = entity.Id,
-                                SessionId = SessionId
+                                SessionId = model.SessionId
                             };
 
                             await _sessionQuestionWriteRepository.AddAsync(sessionQuestion);

@@ -13,7 +13,7 @@ namespace Interview.API.Controllers.Operations
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Policy = "AdminOnly")]
+    [Authorize(Policy = "AllRoles")]
     public class SessionQuestionController : ControllerBase
     {
 
@@ -68,7 +68,7 @@ namespace Interview.API.Controllers.Operations
 
 
         [HttpPost(Routes.SessionQuestion)]
-        public async Task<IActionResult> SessionQuestionCreate([FromForm] SessionQuestionDTO_forCreate model)
+        public async Task<IActionResult> SessionQuestionCreate([FromBody] SessionQuestionDTO_forCreate model)
         {
 
             await _sessionQuestionService.SessionQuestionCreate(model);
@@ -79,7 +79,7 @@ namespace Interview.API.Controllers.Operations
 
 
         [HttpPut(Routes.SessionQuestion)]
-        public async Task<IActionResult> SessionQuestionUpdate([FromForm] SessionQuestionDTO_forUpdate model)
+        public async Task<IActionResult> SessionQuestionUpdate([FromBody] SessionQuestionDTO_forUpdate model)
         {
 
 
@@ -116,10 +116,10 @@ namespace Interview.API.Controllers.Operations
         }
 
         [HttpGet(Routes.RandomQuestion2)]
-        public async Task<IActionResult> GetRandomQuestion2(int QuestionCount, int VacantionId, int SessionId)
+        public async Task<IActionResult> GetRandomQuestion2([FromQuery] RandomQuestionRequestModel2 request)
         {
 
-            var data = await _sessionQuestionService.GetRandomQuestion2( QuestionCount,  VacantionId,  SessionId);
+            var data = await _sessionQuestionService.GetRandomQuestion2(request);
 
 
             return Ok(data);

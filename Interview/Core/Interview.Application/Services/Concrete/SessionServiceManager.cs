@@ -176,8 +176,8 @@ namespace Interview.Application.Services.Concrete
             {
                 Id = model.Id,
                 EndValue = totalEndValue,
-                StartDate = entity.StartDate,
-                EndDate = entity.EndDate,
+                StartDate = _mapper.Map<SessionDTO_forGetandGetAll>(await _sessionReadRepository.GetByIdAsync(model.Id.ToString(), false)).StartDate,
+                EndDate = model.EndDate,
                 VacancyId = _sessionReadRepository.GetAll(false).Where(i => i.Id == model.Id).FirstOrDefault().VacancyId,
                 CandidateId = _sessionReadRepository.GetAll(false).Where(i => i.Id == model.Id).FirstOrDefault().VacancyId,
 

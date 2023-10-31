@@ -1,0 +1,43 @@
+2023-10-31 19:34:45.081 +04:00 [INF] User profile is available. Using 'C:\Users\Legion\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2023-10-31 19:34:45.499 +04:00 [INF] Now listening on: https://localhost:7077
+2023-10-31 19:34:45.509 +04:00 [INF] Application started. Press Ctrl+C to shut down.
+2023-10-31 19:34:45.510 +04:00 [INF] Hosting environment: Development
+2023-10-31 19:34:45.511 +04:00 [INF] Content root path: E:\Azıntelecom Intern Program\Interview (with Onion Architecture)\Interview\Presentation\Interview.API
+2023-10-31 19:34:46.418 +04:00 [INF] Request starting HTTP/2 GET https://localhost:7077/swagger/index.html - -
+2023-10-31 19:34:46.694 +04:00 [INF] Request finished HTTP/2 GET https://localhost:7077/swagger/index.html - - - 200 - text/html;charset=utf-8 275.5427ms
+2023-10-31 19:34:46.747 +04:00 [INF] Request starting HTTP/2 GET https://localhost:7077/_vs/browserLink - -
+2023-10-31 19:34:46.747 +04:00 [INF] Request starting HTTP/2 GET https://localhost:7077/_framework/aspnetcore-browser-refresh.js - -
+2023-10-31 19:34:46.788 +04:00 [INF] Request finished HTTP/2 GET https://localhost:7077/_framework/aspnetcore-browser-refresh.js - - - 200 12358 application/javascript;+charset=utf-8 41.5851ms
+2023-10-31 19:34:46.795 +04:00 [INF] Request finished HTTP/2 GET https://localhost:7077/_vs/browserLink - - - 200 - text/javascript;+charset=UTF-8 47.9906ms
+2023-10-31 19:34:47.173 +04:00 [INF] Request starting HTTP/2 GET https://localhost:7077/swagger/v1/swagger.json - -
+2023-10-31 19:34:47.302 +04:00 [INF] Request finished HTTP/2 GET https://localhost:7077/swagger/v1/swagger.json - - - 200 - application/json;charset=utf-8 129.5652ms
+2023-10-31 19:34:59.666 +04:00 [INF] Request starting HTTP/1.1 GET https://localhost:7077/api/Level/level - -
+2023-10-31 19:34:59.672 +04:00 [INF] Request:
+Protocol: HTTP/1.1
+Method: GET
+Scheme: https
+PathBase: 
+Path: /api/Level/level
+Accept: */*
+Connection: keep-alive
+Host: localhost:7077
+User-Agent: PostmanRuntime/7.34.0
+Accept-Encoding: gzip, deflate, br
+Authorization: [Redacted]
+Postman-Token: [Redacted]
+2023-10-31 19:34:59.973 +04:00 [INF] Executing endpoint 'Interview.API.Controllers.Operations.LevelController.GetLevel (Interview.API)'
+2023-10-31 19:35:00.004 +04:00 [INF] Route matched with {action = "GetLevel", controller = "Level"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetLevel() on controller Interview.API.Controllers.Operations.LevelController (Interview.API).
+2023-10-31 19:35:00.408 +04:00 [INF] Executing action method Interview.API.Controllers.Operations.LevelController.GetLevel (Interview.API) - Validation state: "Valid"
+2023-10-31 19:35:01.667 +04:00 [INF] Executed DbCommand (23ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [l].[Id], [l].[Coefficient], [l].[Name]
+FROM [Levels] AS [l]
+2023-10-31 19:35:01.697 +04:00 [INF] Executed action method Interview.API.Controllers.Operations.LevelController.GetLevel (Interview.API), returned result Microsoft.AspNetCore.Mvc.OkObjectResult in 1282.5195ms.
+2023-10-31 19:35:01.709 +04:00 [INF] Executing OkObjectResult, writing value of type 'System.Collections.Generic.List`1[[Interview.Application.Mapper.DTO.LevelDTO_forGetandGetAll, Interview.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2023-10-31 19:35:01.817 +04:00 [INF] Response:
+StatusCode: 200
+Content-Type: application/json; charset=utf-8
+Content-Length: 134
+2023-10-31 19:35:01.825 +04:00 [INF] Executed action Interview.API.Controllers.Operations.LevelController.GetLevel (Interview.API) in 1804.6098ms
+2023-10-31 19:35:01.828 +04:00 [INF] Executed endpoint 'Interview.API.Controllers.Operations.LevelController.GetLevel (Interview.API)'
+2023-10-31 19:35:01.833 +04:00 [INF] ResponseBody: [{"id":1,"name":"Easy","coefficient":0.25},{"id":2,"name":"Medium","coefficient":0.50},{"id":3,"name":"Difficult","coefficient":1.00}]
+2023-10-31 19:35:01.842 +04:00 [INF] Request finished HTTP/1.1 GET https://localhost:7077/api/Level/level - - - 200 134 application/json;+charset=utf-8 2176.5432ms

@@ -1,8 +1,10 @@
 ﻿using Interview.Application.Exception;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.IdentityModel.Protocols.WSTrust;
 using Microsoft.IdentityModel.SecurityTokenService;
 using Serilog.Context;
 using System.Net;
+using System.Net.Mime;
 using System.Text.Json;
 using System.Web.Http.Filters;
 
@@ -75,7 +77,7 @@ namespace Interview.API.Middlewares
                     break;
             }
 
-            context.Response.ContentType = "application/json";
+            context.Response.ContentType = MediaTypeNames.Application.Json;
             context.Response.StatusCode = (int)code;
 
 
@@ -93,7 +95,8 @@ namespace Interview.API.Middlewares
                     status = code,
                     title = exception.Message,
                     user = username,
-                    date = localTime
+                    date = localTime,
+                    machine= Environment.MachineName,
                 };
 
 

@@ -53,7 +53,7 @@ namespace Interview.API.Controllers.Operations
 
 
         [HttpPost(Routes.Category)]
-        public async Task<IActionResult> CategoryCreate([FromForm] CategoryDTO_forCreate model)
+        public async Task<IActionResult> CategoryCreate([FromBody] CategoryDTO_forCreate model)
         {
 
             await _categoryService.CategoryCreate(model);
@@ -64,7 +64,7 @@ namespace Interview.API.Controllers.Operations
 
 
         [HttpPut(Routes.Category)]
-        public async Task<IActionResult> CategoryUpdate([FromForm] CategoryDTO_forUpdate model)
+        public async Task<IActionResult> CategoryUpdate([FromBody] CategoryDTO_forUpdate model)
         {
 
 

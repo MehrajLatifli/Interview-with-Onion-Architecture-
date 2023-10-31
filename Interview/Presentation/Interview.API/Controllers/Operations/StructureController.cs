@@ -23,10 +23,6 @@ namespace Interview.API.Controllers.Operations
             _structureService = structureService;
         }
 
-
-
-
-
         #region Structure
 
 
@@ -54,7 +50,7 @@ namespace Interview.API.Controllers.Operations
 
 
         [HttpPost(Routes.Structure)]
-        public async Task<IActionResult> StructureCreate([FromForm] StructureDTO_forCreate model)
+        public async Task<IActionResult> StructureCreate([FromBody] StructureDTO_forCreate model)
         {
 
             await _structureService.StructureCreate(model);
@@ -65,7 +61,7 @@ namespace Interview.API.Controllers.Operations
 
 
         [HttpPut(Routes.Structure)]
-        public async Task<IActionResult> StructureUpdate([FromForm] StructureDTO_forUpdate model)
+        public async Task<IActionResult> StructureUpdate([FromBody] StructureDTO_forUpdate model)
         {
 
 

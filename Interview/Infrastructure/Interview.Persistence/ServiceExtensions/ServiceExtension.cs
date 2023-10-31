@@ -226,10 +226,16 @@ namespace Interview.Persistence.ServiceExtensions
             });
 
 
+            var fileName = "log.txt";
+            var webRootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+            var logDirectory = Path.Combine(webRootPath, "logs");
+            var logFilePath = Path.Combine(logDirectory, fileName);
+
+
 
             Logger log = new LoggerConfiguration()
                 .WriteTo.Console()
-                .WriteTo.File("logs/log.txt")
+                .WriteTo.File(logFilePath)
                 .WriteTo.PostgreSQL(LogConnection, "Logs",
                          needAutoCreateTable: true,
                          columnOptions: new Dictionary<string, ColumnWriterBase>

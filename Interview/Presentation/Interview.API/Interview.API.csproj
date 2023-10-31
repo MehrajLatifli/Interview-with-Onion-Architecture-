@@ -127,4 +127,8 @@
     <ProjectReference Include="..\..\Infrastructure\Interview.Persistence\Interview.Persistence.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
 </Project>

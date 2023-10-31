@@ -11,7 +11,7 @@ namespace Interview.API.Controllers.Operations
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Policy = "AdminOnly")]
+    [Authorize(Policy = "AllRoles")]
     public class SessionController : ControllerBase
     {
 
@@ -53,7 +53,7 @@ namespace Interview.API.Controllers.Operations
 
 
         [HttpPost(Routes.Session)]
-        public async Task<IActionResult> SessionCreate([FromForm] SessionDTO_forCreate model)
+        public async Task<IActionResult> SessionCreate([FromBody] SessionDTO_forCreate model)
         {
 
             await _sessionService.SessionCreate(model);
@@ -64,7 +64,7 @@ namespace Interview.API.Controllers.Operations
 
 
         [HttpPut(Routes.Session)]
-        public async Task<IActionResult> SessionUpdate([FromForm] SessionDTO_forUpdate model)
+        public async Task<IActionResult> SessionUpdate([FromBody] SessionDTO_forUpdate model)
         {
 
 

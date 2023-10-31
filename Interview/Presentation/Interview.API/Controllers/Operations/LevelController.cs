@@ -56,7 +56,7 @@ namespace Interview.API.Controllers.Operations
 
         [HttpPost(Routes.Level)]
 
-        public async Task<IActionResult> LevelCreate([FromForm] LevelDTO_forCreate model)
+        public async Task<IActionResult> LevelCreate([FromBody] LevelDTO_forCreate model)
         {
 
             await _levelService.LevelCreate(model);
@@ -67,7 +67,7 @@ namespace Interview.API.Controllers.Operations
 
 
         [HttpPut(Routes.Level)]
-        public async Task<IActionResult> LevelUpdate([FromForm] LevelDTO_forUpdate model)
+        public async Task<IActionResult> LevelUpdate([FromBody] LevelDTO_forUpdate model)
         {
 
 

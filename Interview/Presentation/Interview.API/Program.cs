@@ -67,14 +67,16 @@ builder.Services.AddControllers(options =>
 
 builder.Services.Configure<FormOptions>(x =>
 {
-    x.MultipartBodyLengthLimit = int.MaxValue;
+    x.MultipartBodyLengthLimit = long.MaxValue;
     x.ValueLengthLimit = int.MaxValue;
     x.MultipartHeadersLengthLimit = int.MaxValue;
 });
 
 builder.Services.Configure<KestrelServerOptions>(options =>
 {
-    options.Limits.MaxRequestBodySize = int.MaxValue;
+    options.Limits.MaxRequestBodySize = long.MaxValue;
+    options.Limits.MaxRequestBufferSize = long.MaxValue;
+    options.Limits.MaxRequestLineSize = int.MaxValue;
 
 });
 

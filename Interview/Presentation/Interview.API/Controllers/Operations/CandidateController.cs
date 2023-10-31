@@ -53,7 +53,7 @@ namespace Interview.API.Controllers.Operations
 
 
         [HttpPost(Routes.Candidate)]
-        public async Task<IActionResult> CandidateCreate([FromForm] CandidateDTO_forCreate model)
+        public async Task<IActionResult> CandidateCreate([FromBody] CandidateDTO_forCreate model)
         {
 
             await _candidateService.CandidateCreate(model);
@@ -65,7 +65,7 @@ namespace Interview.API.Controllers.Operations
 
         [HttpPut(Routes.Candidate)]
 
-        public async Task<IActionResult> CandidateUpdate([FromForm] CandidateDTO_forUpdate model)
+        public async Task<IActionResult> CandidateUpdate([FromBody] CandidateDTO_forUpdate model)
         {
 
 

@@ -23,8 +23,6 @@ namespace Interview.API.Controllers.Operations
         }
 
 
-
-
         #region Position
 
         [HttpGet(Routes.PositionById)]
@@ -51,7 +49,7 @@ namespace Interview.API.Controllers.Operations
 
 
         [HttpPost(Routes.Position)]
-        public async Task<IActionResult> PositionCreate([FromForm] PositionDTO_forCreate model)
+        public async Task<IActionResult> PositionCreate([FromBody] PositionDTO_forCreate model)
         {
 
             await _positionService.PositionCreate(model);
@@ -62,7 +60,7 @@ namespace Interview.API.Controllers.Operations
 
 
         [HttpPut(Routes.Position)]
-        public async Task<IActionResult> PositionUpdate([FromForm] PositionDTO_forUpdate model)
+        public async Task<IActionResult> PositionUpdate([FromBody] PositionDTO_forUpdate model)
         {
 
 
