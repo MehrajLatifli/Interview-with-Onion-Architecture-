@@ -5,7 +5,7 @@ using Interview.Application.Mapper.DTO;
 using Interview.Application.Repositories.Custom;
 using Interview.Application.Services.Abstract;
 using Interview.Domain.Entities.Models;
-using Interview.Domain.Entities.Models.Requests;
+using Interview.Domain.Entities.Requests;
 using Microsoft.CodeAnalysis.Elfie.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;

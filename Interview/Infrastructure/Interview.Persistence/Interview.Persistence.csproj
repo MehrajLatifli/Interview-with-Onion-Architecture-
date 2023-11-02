@@ -96,10 +96,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Core\Interview.Application\Interview.Application.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Migrations\" />
+    <ProjectReference Include="..\..\Core\Interview.Domain\Interview.Domain.csproj" />
   </ItemGroup>
 
 </Project>

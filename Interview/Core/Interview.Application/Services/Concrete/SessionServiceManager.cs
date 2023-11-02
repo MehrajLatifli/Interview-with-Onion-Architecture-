@@ -3,7 +3,10 @@ using Interview.Application.Exception;
 using Interview.Application.Mapper.DTO;
 using Interview.Application.Repositories.Custom;
 using Interview.Application.Services.Abstract;
+using Interview.Domain.Entities.IdentityAuth;
 using Interview.Domain.Entities.Models;
+using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
 
 namespace Interview.Application.Services.Concrete
 {
@@ -12,7 +15,7 @@ namespace Interview.Application.Services.Concrete
 
         public readonly IMapper _mapper;
 
-      
+        private readonly UserManager<CustomUser> _userManager;
 
         private readonly ISessionWriteRepository _sessionWriteRepository;
         private readonly ISessionReadRepository _sessionReadRepository;
@@ -33,7 +36,7 @@ namespace Interview.Application.Services.Concrete
         private readonly ILevelWriteRepository _levelWriteRepository;
         private readonly ILevelReadRepository _levelReadRepository;
 
-        public SessionServiceManager(IMapper mapper, ISessionWriteRepository sessionWriteRepository, ISessionReadRepository sessionReadRepository, IVacancyWriteRepository vacancyWriteRepository, IVacancyReadRepository vacancyReadRepository, ICandidateWriteRepository candidateWriteRepository, ICandidateReadRepository candidateReadRepository, ISessionQuestionWriteRepository sessionQuestionWriteRepository, ISessionQuestionReadRepository sessionQuestionReadRepository, IQuestionWriteRepository questionWriteRepository, IQuestionReadRepository questionReadRepository, ILevelWriteRepository levelWriteRepository, ILevelReadRepository levelReadRepository)
+        public SessionServiceManager(IMapper mapper, ISessionWriteRepository sessionWriteRepository, ISessionReadRepository sessionReadRepository, IVacancyWriteRepository vacancyWriteRepository, IVacancyReadRepository vacancyReadRepository, ICandidateWriteRepository candidateWriteRepository, ICandidateReadRepository candidateReadRepository, ISessionQuestionWriteRepository sessionQuestionWriteRepository, ISessionQuestionReadRepository sessionQuestionReadRepository, IQuestionWriteRepository questionWriteRepository, IQuestionReadRepository questionReadRepository, ILevelWriteRepository levelWriteRepository, ILevelReadRepository levelReadRepository, UserManager<CustomUser> userManager)
         {
             _mapper = mapper;
             _sessionWriteRepository = sessionWriteRepository;
@@ -48,6 +51,7 @@ namespace Interview.Application.Services.Concrete
             _questionReadRepository = questionReadRepository;
             _levelWriteRepository = levelWriteRepository;
             _levelReadRepository = levelReadRepository;
+            _userManager = userManager;
         }
 
 
@@ -58,7 +62,7 @@ namespace Interview.Application.Services.Concrete
 
         #region Session service manager
 
-        public async Task SessionCreate(SessionDTO_forCreate model)
+        public async Task SessionCreate(SessionDTO_forCreate model, ClaimsPrincipal User)
         {
 
 
@@ -81,13 +85,24 @@ namespace Interview.Application.Services.Concrete
 
             }
 
+            var username = User.Identity.Name;
+
+            var currentUser = await _userManager.FindByNameAsync(username);
+
+            if (currentUser is null)
+            {
+                throw new NotFoundException("CurrentUser not found");
+            }
+
             entity = new Session
             {
+
                 EndValue = entity.EndValue,
                 StartDate = entity.StartDate,
                 EndDate = entity.EndDate,
                 VacancyId = model.VacancyId,
                 CandidateId = model.CandidateId,
+                UserAccountId= currentUser.Id,
 
 
             };
@@ -179,7 +194,8 @@ namespace Interview.Application.Services.Concrete
                 StartDate = _mapper.Map<SessionDTO_forGetandGetAll>(await _sessionReadRepository.GetByIdAsync(model.Id.ToString(), false)).StartDate,
                 EndDate = model.EndDate,
                 VacancyId = _sessionReadRepository.GetAll(false).Where(i => i.Id == model.Id).FirstOrDefault().VacancyId,
-                CandidateId = _sessionReadRepository.GetAll(false).Where(i => i.Id == model.Id).FirstOrDefault().VacancyId,
+                CandidateId = _sessionReadRepository.GetAll(false).Where(i => i.Id == model.Id).FirstOrDefault().CandidateId,
+                UserAccountId= _sessionReadRepository.GetAll(false).Where(i => i.Id == model.Id).FirstOrDefault().UserAccountId,
 
 
             };

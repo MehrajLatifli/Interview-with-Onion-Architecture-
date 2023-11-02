@@ -4,26 +4,112 @@ using Interview.Persistence.Contexts.InterviewDbContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Interview.Persistence.Migrations.Interview
+namespace Interview.Persistence.Migrations
 {
     [DbContext(typeof(InterviewContext))]
-    [Migration("20231015220322_InterviewContextMigration")]
-    partial class InterviewContextMigration
+    partial class InterviewContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.11")
+                .HasAnnotation("ProductVersion", "7.0.12")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("Interview.Domain.Entities.IdentityAuth.CustomRole", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NormalizedName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Roles", (string)null);
+                });
+
+            modelBuilder.Entity("Interview.Domain.Entities.IdentityAuth.CustomUser", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("ImagePath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("RefreshToken")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("RefreshTokenExpiryTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Roles")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Users", (string)null);
+                });
 
             modelBuilder.Entity("Interview.Domain.Entities.Models.Candidate", b =>
                 {
@@ -37,7 +123,7 @@ namespace Interview.Persistence.Migrations.Interview
                         .HasColumnType("int");
 
                     b.HasKey("Id")
-                        .HasName("PK__Candidate");
+                        .HasName("PK__Candidat__3214EC07B8C0044F");
 
                     b.HasIndex("CandidateDocumentId");
 
@@ -55,10 +141,9 @@ namespace Interview.Persistence.Migrations.Interview
                     b.Property<string>("Address")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Cv")
+                    b.Property<string>("CV")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("CV");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -78,7 +163,7 @@ namespace Interview.Persistence.Migrations.Interview
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id")
-                        .HasName("PK__CandidateDocument");
+                        .HasName("PK__Candidat__3214EC07C52807D9");
 
                     b.ToTable("CandidateDocuments");
                 });
@@ -96,7 +181,7 @@ namespace Interview.Persistence.Migrations.Interview
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id")
-                        .HasName("PK__Category");
+                        .HasName("PK__Category__3214EC07F6BA04F0");
 
                     b.ToTable("Categories");
                 });
@@ -110,14 +195,14 @@ namespace Interview.Persistence.Migrations.Interview
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("Coefficient")
-                        .HasColumnType("decimal(18, 2)");
+                        .HasColumnType("decimal(18, 0)");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id")
-                        .HasName("PK__Level");
+                        .HasName("PK__Level__3214EC073ED5A21C");
 
                     b.ToTable("Levels");
                 });
@@ -135,7 +220,7 @@ namespace Interview.Persistence.Migrations.Interview
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id")
-                        .HasName("PK__Position");
+                        .HasName("PK__Position__3214EC07393DC7E5");
 
                     b.ToTable("Positions");
                 });
@@ -158,11 +243,11 @@ namespace Interview.Persistence.Migrations.Interview
                         .HasColumnType("int");
 
                     b.Property<string>("Text")
-                        .IsRequired()
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id")
-                        .HasName("PK__Question");
+                        .HasName("PK__Question__3214EC07D008B0D4");
 
                     b.HasIndex("CategoryId");
 
@@ -189,17 +274,20 @@ namespace Interview.Persistence.Migrations.Interview
 
                     b.Property<decimal?>("EndValue")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(18, 2)")
+                        .HasColumnType("decimal(18, 0)")
                         .HasDefaultValueSql("((0.0))");
 
                     b.Property<DateTime?>("StartDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("UserAccountId")
+                        .HasColumnType("int");
+
                     b.Property<int>("VacancyId")
                         .HasColumnType("int");
 
                     b.HasKey("Id")
-                        .HasName("PK__Session");
+                        .HasName("PK__Session__3214EC076DB51246");
 
                     b.HasIndex("CandidateId");
 
@@ -228,7 +316,7 @@ namespace Interview.Persistence.Migrations.Interview
                         .HasDefaultValueSql("((0))");
 
                     b.HasKey("Id")
-                        .HasName("PK__SessionQuestion");
+                        .HasName("PK__SessionQ__3214EC07A6F60AF9");
 
                     b.HasIndex("QuestionId");
 
@@ -257,7 +345,7 @@ namespace Interview.Persistence.Migrations.Interview
                         .HasColumnType("int");
 
                     b.HasKey("Id")
-                        .HasName("PK__Structure");
+                        .HasName("PK__Structur__3214EC07A945D7AE");
 
                     b.HasIndex("StructureTypeId");
 
@@ -277,7 +365,7 @@ namespace Interview.Persistence.Migrations.Interview
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id")
-                        .HasName("PK__StructureType");
+                        .HasName("PK__Structur__3214EC07DC602A70");
 
                     b.ToTable("StructureTypes");
                 });
@@ -311,13 +399,26 @@ namespace Interview.Persistence.Migrations.Interview
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id")
-                        .HasName("PK__Vacancy");
+                        .HasName("PK__Vacancy__3214EC07AC5E9B9D");
 
                     b.HasIndex("PositionId");
 
                     b.HasIndex("StructureId");
 
                     b.ToTable("Vacancies");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<int>", b =>
+                {
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.ToTable("UserRoles", (string)null);
                 });
 
             modelBuilder.Entity("Interview.Domain.Entities.Models.Candidate", b =>

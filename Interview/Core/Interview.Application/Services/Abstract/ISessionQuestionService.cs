@@ -2,7 +2,7 @@
 
 using Azure.Core;
 using Interview.Application.Mapper.DTO;
-using Interview.Domain.Entities.Models.Requests;
+using Interview.Domain.Entities.Requests;
 
 namespace Interview.Application.Services.Abstract
 {

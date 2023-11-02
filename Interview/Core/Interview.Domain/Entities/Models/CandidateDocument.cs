@@ -9,7 +9,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Interview.Domain.Entities.Models;
 
-
 [Table("CandidateDocuments")]
 public class CandidateDocument : BaseEntity
 {
@@ -30,8 +29,7 @@ public class CandidateDocument : BaseEntity
     public string Email { get; set; }
 
     [Required]
-    [Column("CV")]
-    public string Cv { get; set; }
+    public string CV { get; set; }
 
     public string Address { get; set; }
 

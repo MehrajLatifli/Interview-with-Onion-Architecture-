@@ -6,7 +6,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace Interview.Domain.Entities.Models.Requests
+namespace Interview.Domain.Entities.Requests
 {
     public class RandomQuestionRequestModel
     {

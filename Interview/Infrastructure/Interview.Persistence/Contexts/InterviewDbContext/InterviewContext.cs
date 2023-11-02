@@ -2,14 +2,16 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using Interview.Domain.Entities.IdentityAuth;
 using Interview.Domain.Entities.Models;
-using Interview.Domain.EntityFrameworkConfigurations;
 using Interview.Persistence.ServiceExtensions;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Interview.Persistence.Contexts.InterviewDbContext;
 
-public class InterviewContext : DbContext
+public class InterviewContext : IdentityDbContext<CustomUser, CustomRole, int>
 {
     public InterviewContext()
     {
@@ -19,6 +21,9 @@ public class InterviewContext : DbContext
         : base(options)
     {
     }
+
+    public virtual DbSet<CustomUser> Users { get; set; }
+    public virtual DbSet<CustomRole> Roles { get; set; }
 
     public virtual DbSet<Candidate> Candidate { get; set; }
 
@@ -43,139 +48,156 @@ public class InterviewContext : DbContext
     public virtual DbSet<Vacancy> Vacancy { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-
-    => optionsBuilder.UseSqlServer(ServiceExtension.ConnectionString);
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer(ServiceExtension.CustomDbConnectionString);
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        //base.OnModelCreating(modelBuilder);
 
-        modelBuilder.ApplyConfiguration(new CandidateConfiguration());
-
-        modelBuilder.ApplyConfiguration(new CandidateDocumentConfiguration());
-
-        modelBuilder.ApplyConfiguration(new LevelConfiguration());
-
-        modelBuilder.ApplyConfiguration(new PositionConfiguration());
-
-        modelBuilder.ApplyConfiguration(new QuestionConfiguration());
-
-        modelBuilder.ApplyConfiguration(new SessionConfiguration());
-
-        modelBuilder.ApplyConfiguration(new SessionQuestionConfiguration());
-
-        modelBuilder.ApplyConfiguration(new CategoryConfiguration());
-
-        modelBuilder.ApplyConfiguration(new StructureConfiguration());
-
-        modelBuilder.ApplyConfiguration(new StructureTypeConfiguration());
-
-        modelBuilder.ApplyConfiguration(new VacancyConfiguration());
+        modelBuilder.Entity<IdentityUser<int>>().HasNoKey();
+        modelBuilder.Entity<IdentityUserRole<int>>().HasNoKey();
+        modelBuilder.Entity<IdentityRole<int>>().HasNoKey();
+        modelBuilder.Entity<IdentityUserClaim<int>>().HasNoKey();
+        modelBuilder.Entity<IdentityUserLogin<int>>().HasNoKey();
+        modelBuilder.Entity<IdentityUserToken<int>>().HasNoKey();
+        modelBuilder.Entity<IdentityRoleClaim<int>>().HasNoKey();
 
 
-        //modelBuilder.Entity<Candidate>(entity =>
-        //{
-        //    entity.HasKey(e => e.Id).HasName("PK__Candidat__3214EC073F74B4B5");
 
-        //    entity.HasOne(d => d.CandidateDocument).WithMany(p => p.Candidate)
-        //        .OnDelete(DeleteBehavior.ClientSetNull)
-        //        .HasConstraintName("FK_CandidateDocument_forCandidates");
-        //});
+        modelBuilder.Ignore<IdentityUser<int>>();
+        modelBuilder.Ignore<IdentityUserRole<int>>();
+        modelBuilder.Ignore<IdentityRole<int>>();
+        modelBuilder.Ignore<IdentityUserClaim<int>>();
+        modelBuilder.Ignore<IdentityUserLogin<int>>();
+        modelBuilder.Ignore<IdentityUserToken<int>>();
+        modelBuilder.Ignore<IdentityRoleClaim<int>>();
 
-        //modelBuilder.Entity<CandidateDocument>(entity =>
-        //{
-        //    entity.HasKey(e => e.Id).HasName("PK__Candidat__3214EC074806C73F");
-        //});
 
-        //modelBuilder.Entity<Category>(entity =>
-        //{
-        //    entity.HasKey(e => e.Id).HasName("PK__Category__3214EC076EAA47F9");
-        //});
+        modelBuilder.Entity<CustomUser>(b =>
+        {
+            b.HasKey(u => u.Id);
+            b.ToTable("Users");
+        });
 
-        //modelBuilder.Entity<Level>(entity =>
-        //{
-        //    entity.HasKey(e => e.Id).HasName("PK__Level__3214EC07F3B419E1");
-        //});
+        modelBuilder.Entity<CustomRole>(b =>
+        {
+            b.HasKey(r => r.Id);
+            b.ToTable("Roles");
+        });
 
-        //modelBuilder.Entity<Position>(entity =>
-        //{
-        //    entity.HasKey(e => e.Id).HasName("PK__Position__3214EC0781880E1A");
-        //});
+        modelBuilder.Entity<IdentityUserRole<int>>(b =>
+        {
+            b.HasKey(r => new { r.UserId, r.RoleId });
+            b.ToTable("UserRoles"); 
+        });
 
-        //modelBuilder.Entity<Question>(entity =>
-        //{
-        //    entity.HasKey(e => e.Id).HasName("PK__Question__3214EC0716A1AFF0");
+        modelBuilder.Entity<Candidate>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Candidat__3214EC07B8C0044F");
 
-        //    entity.HasOne(d => d.Category).WithMany(p => p.Question)
-        //        .OnDelete(DeleteBehavior.ClientSetNull)
-        //        .HasConstraintName("FK_CategoryId_forQuestion");
+            entity.HasOne(d => d.CandidateDocument).WithMany(p => p.Candidate)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_CandidateDocument_forCandidates");
+        });
 
-        //    entity.HasOne(d => d.Level).WithMany(p => p.Question)
-        //        .OnDelete(DeleteBehavior.ClientSetNull)
-        //        .HasConstraintName("FK_LevelId_forQuestion");
+        modelBuilder.Entity<CandidateDocument>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Candidat__3214EC07C52807D9");
+        });
 
-        //    entity.HasOne(d => d.Structure).WithMany(p => p.Question)
-        //        .OnDelete(DeleteBehavior.ClientSetNull)
-        //        .HasConstraintName("FK_StructureId_forQuestion");
-        //});
+        modelBuilder.Entity<Category>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Category__3214EC07F6BA04F0");
+        });
 
-        //modelBuilder.Entity<Session>(entity =>
-        //{
-        //    entity.HasKey(e => e.Id).HasName("PK__Session__3214EC07709C704D");
+        modelBuilder.Entity<Level>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Level__3214EC073ED5A21C");
+        });
 
-        //    entity.Property(e => e.EndValue).HasDefaultValueSql("((0.0))");
+        modelBuilder.Entity<Position>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Position__3214EC07393DC7E5");
+        });
 
-        //    entity.HasOne(d => d.Candidate).WithMany(p => p.Session)
-        //        .OnDelete(DeleteBehavior.ClientSetNull)
-        //        .HasConstraintName("FK_CandidateId_forSession");
+        modelBuilder.Entity<Question>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Question__3214EC07D008B0D4");
 
-        //    entity.HasOne(d => d.Vacancy).WithMany(p => p.Session)
-        //        .OnDelete(DeleteBehavior.ClientSetNull)
-        //        .HasConstraintName("FK_VacancyId_forSession");
-        //});
+            entity.HasOne(d => d.Category).WithMany(p => p.Question)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_CategoryId_forQuestion");
 
-        //modelBuilder.Entity<SessionQuestion>(entity =>
-        //{
-        //    entity.HasKey(e => e.Id).HasName("PK__SessionQ__3214EC075E4B8B68");
+            entity.HasOne(d => d.Level).WithMany(p => p.Question)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_LevelId_forQuestion");
 
-        //    entity.Property(e => e.Value).HasDefaultValueSql("((0))");
+            entity.HasOne(d => d.Structure).WithMany(p => p.Question)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_StructureId_forQuestion");
+        });
 
-        //    entity.HasOne(d => d.Question).WithMany(p => p.SessionQuestion)
-        //        .OnDelete(DeleteBehavior.ClientSetNull)
-        //        .HasConstraintName("FK_QuestionId_forSessionQuestion");
+        modelBuilder.Entity<Session>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Session__3214EC076DB51246");
 
-        //    entity.HasOne(d => d.Session).WithMany(p => p.SessionQuestion)
-        //        .OnDelete(DeleteBehavior.ClientSetNull)
-        //        .HasConstraintName("FK_SessionId_forSessionQuestion");
-        //});
+            entity.Property(e => e.EndValue).HasDefaultValueSql("((0.0))");
 
-        //modelBuilder.Entity<Structure>(entity =>
-        //{
-        //    entity.HasKey(e => e.Id).HasName("PK__Structur__3214EC07EA11E9AD");
+            entity.HasOne(d => d.Candidate).WithMany(p => p.Session)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_CandidateId_forSession");
 
-        //    entity.HasOne(d => d.StructureType).WithMany(p => p.Structure)
-        //        .OnDelete(DeleteBehavior.ClientSetNull)
-        //        .HasConstraintName("FK_StructureType_forStructure");
-        //});
+            entity.HasOne(d => d.Vacancy).WithMany(p => p.Session)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_VacancyId_forSession");
+        });
 
-        //modelBuilder.Entity<StructureType>(entity =>
-        //{
-        //    entity.HasKey(e => e.Id).HasName("PK__Structur__3214EC07BC311B86");
-        //});
+        modelBuilder.Entity<SessionQuestion>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__SessionQ__3214EC07A6F60AF9");
 
-        //modelBuilder.Entity<Vacancy>(entity =>
-        //{
-        //    entity.HasKey(e => e.Id).HasName("PK__Vacancy__3214EC077B09E63F");
+            entity.Property(e => e.Value).HasDefaultValueSql("((0))");
 
-        //    entity.HasOne(d => d.Position).WithMany(p => p.Vacancy)
-        //        .OnDelete(DeleteBehavior.ClientSetNull)
-        //        .HasConstraintName("FK_PositionId_forVacancy");
+            entity.HasOne(d => d.Question).WithMany(p => p.SessionQuestion)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_QuestionId_forSessionQuestion");
 
-        //    entity.HasOne(d => d.Structure).WithMany(p => p.Vacancy)
-        //        .OnDelete(DeleteBehavior.ClientSetNull)
-        //        .HasConstraintName("FK_StructureId_forVacancy");
-        //});
+            entity.HasOne(d => d.Session).WithMany(p => p.SessionQuestion)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_SessionId_forSessionQuestion");
+        });
+
+        modelBuilder.Entity<Structure>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Structur__3214EC07A945D7AE");
+
+            entity.HasOne(d => d.StructureType).WithMany(p => p.Structure)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_StructureType_forStructure");
+        });
+
+        modelBuilder.Entity<StructureType>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Structur__3214EC07DC602A70");
+        });
+
+        modelBuilder.Entity<Vacancy>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Vacancy__3214EC07AC5E9B9D");
+
+            entity.HasOne(d => d.Position).WithMany(p => p.Vacancy)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_PositionId_forVacancy");
+
+            entity.HasOne(d => d.Structure).WithMany(p => p.Vacancy)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_StructureId_forVacancy");
+        });
+
+
 
     }
 
-
+  
 }

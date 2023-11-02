@@ -2,7 +2,6 @@
 using Interview.Application.Mapper.DTO;
 using Interview.Application.Services.Abstract;
 using Interview.Domain.Entities.AuthModels;
-using Interview.Domain.Entities.IdentityAuth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

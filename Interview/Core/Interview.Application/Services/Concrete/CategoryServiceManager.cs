@@ -141,5 +141,4 @@ namespace Interview.Application.Services.Concrete
 
     }
 
-
 }

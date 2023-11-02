@@ -9,7 +9,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Interview.Domain.Entities.Models;
 
-
 [Table("Structures")]
 public class Structure : BaseEntity
 {

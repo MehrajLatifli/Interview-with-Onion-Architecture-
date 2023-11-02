@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace Interview.Domain.Entities.Models.Requests
+namespace Interview.Domain.Entities.Requests
 {
     public class QuestionByPageRequestModel
     {

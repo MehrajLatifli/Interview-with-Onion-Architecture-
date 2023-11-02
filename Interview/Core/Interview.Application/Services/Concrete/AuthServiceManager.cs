@@ -4,7 +4,6 @@ using Interview.Application.Mapper.AuthDTO;
 using Interview.Application.Mapper.DTO;
 using Interview.Application.Services.Abstract;
 using Interview.Domain.Entities.AuthModels;
-using Interview.Domain.Entities.IdentityAuth;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using System;
@@ -24,19 +23,23 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Build.Framework;
 using Microsoft.Extensions.Logging;
 using System.Net;
+using Interview.Domain.Entities.IdentityAuth;
+using Interview.Application.Repositories.Custom;
+using System.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Interview.Application.Services.Concrete
 {
     public class AuthServiceManager : IAuthService
     {
         private readonly UserManager<CustomUser> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly RoleManager<CustomRole> _roleManager;
         private readonly IConfiguration _configuration;
         private readonly SignInManager<CustomUser> _signInManager;
         public readonly IMapper _mapper;
         readonly ILogger<AuthServiceManager> _logger;
 
-        public AuthServiceManager(UserManager<CustomUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration, SignInManager<CustomUser> signInManager, IMapper mapper, ILogger<AuthServiceManager> logger)
+        public AuthServiceManager(UserManager<CustomUser> userManager, RoleManager<CustomRole> roleManager, IConfiguration configuration, SignInManager<CustomUser> signInManager, IMapper mapper, ILogger<AuthServiceManager> logger)
         {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -46,17 +49,15 @@ namespace Interview.Application.Services.Concrete
             _logger = logger;
         }
 
-
-
         public async Task<List<GetAuthModel>> GetAdmins(ClaimsPrincipal User)
         {
 
             if (!User.Identity.IsAuthenticated)
             {
-     
-            
-                    throw new UnauthorizedException("User not authenticated.");
-           
+
+
+                throw new UnauthorizedException("User not authenticated.");
+
             }
 
             var list = new List<GetAuthModel>();
@@ -83,8 +84,8 @@ namespace Interview.Application.Services.Concrete
                 else
                 {
 
-                        throw new NotFoundException("User not found!");
-              
+                    throw new NotFoundException("User not found!");
+
 
                 }
 
@@ -97,10 +98,10 @@ namespace Interview.Application.Services.Concrete
 
             else
             {
-            
-              
-                    throw new NotFoundException("Nothing found!");
-           
+
+
+                throw new NotFoundException("Nothing found!");
+
             }
         }
 
@@ -110,9 +111,9 @@ namespace Interview.Application.Services.Concrete
             {
 
 
-                    throw new UnauthorizedException("User not authenticated.");
+                throw new UnauthorizedException("User not authenticated.");
 
-            
+
 
             }
 
@@ -142,8 +143,8 @@ namespace Interview.Application.Services.Concrete
 
 
 
-                        throw new NotFoundException("User not found");
-          
+                    throw new NotFoundException("User not found");
+
 
 
                 }
@@ -156,12 +157,12 @@ namespace Interview.Application.Services.Concrete
             }
 
             else
-                 {
+            {
                 throw new NotFoundException("Nothing found!");
 
-        
-                    //throw new NotFoundException("Nothing found!");
-        
+
+                //throw new NotFoundException("Nothing found!");
+
             }
         }
 
@@ -302,14 +303,8 @@ namespace Interview.Application.Services.Concrete
 
             if (userExists != null)
             {
-
- 
-
-                    throw new ConflictException("User already exists!");
-               
+                throw new ConflictException("User already exists!");
             }
-
-
 
             string connectionString = ConnectionStringAzure;
 
@@ -337,47 +332,92 @@ namespace Interview.Application.Services.Concrete
 
             string imageUrl = blobClient.Uri.ToString();
 
-
-
             CustomUser user = new()
             {
+                UserName = entity.Username,
                 Email = entity.Email,
                 SecurityStamp = Guid.NewGuid().ToString(),
-                UserName = entity.Username,
                 PhoneNumber = entity.PhoneNumber,
                 ImagePath = imageUrl,
                 Roles = $"{UserRoles.Admin}",
             };
+
+    
 
             var result = await _userManager.CreateAsync(user, entity.Password);
 
             if (!result.Succeeded)
             {
                 var errors = result.Errors.Select(e => e.Description);
-                var errorMessage = string.Join($" ", errors);
-
-     
-
-                    throw new ConflictException("User creation failed.");
-                
+                var errorMessage = string.Join(" ", errors);
+                throw new ConflictException("User creation failed.");
             }
-            if (!await _roleManager.RoleExistsAsync(UserRoles.Admin))
-                await _roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
 
-            if (await _roleManager.RoleExistsAsync(UserRoles.Admin))
-                await _userManager.AddToRoleAsync(user, UserRoles.Admin);
+            if (user != null)
+            {
+                if (!await _roleManager.RoleExistsAsync(UserRoles.Admin))
+                {
+                    CustomRole customRole = new()
+                    {
+                        Name = $"{UserRoles.Admin}",
+                    };
 
-            if (!await _roleManager.RoleExistsAsync(UserRoles.HR))
-                await _roleManager.CreateAsync(new IdentityRole(UserRoles.HR));
+                    await _roleManager.CreateAsync(customRole);
+                }
 
-            if (await _roleManager.RoleExistsAsync(UserRoles.HR))
-                await _userManager.AddToRoleAsync(user, UserRoles.HR);
+                if (!await _roleManager.RoleExistsAsync(UserRoles.HR))
+                {
+                    CustomRole customRole2 = new()
+                    {
+                        Name = $"{UserRoles.HR}",
+                    };
 
+                    await _roleManager.CreateAsync(customRole2);
+                }
+
+
+                if (!await _userManager.IsInRoleAsync(user, UserRoles.Admin))
+                {
+                    await _userManager.AddToRoleAsync(user, UserRoles.Admin);
+                }
+
+                if (!await _userManager.IsInRoleAsync(user, UserRoles.HR))
+                {
+                    await _userManager.AddToRoleAsync(user, UserRoles.HR);
+                }
+            }
+
+            //var userAccount = new UserAccount()
+            //{
+            //    UserName = entity.Username,
+            //    Email = entity.Email,
+            //    SecurityStamp = Guid.NewGuid().ToString(),
+            //    PhoneNumber = entity.PhoneNumber,
+            //    ImagePath = imageUrl,
+            //};
+
+            //await _userAccountWriteRepository.AddAsync(userAccount);
+
+            //var userAccountRole = new UserAccountRole()
+            //{
+            //    Roles = $"{UserRoles.HR}",
+            //};
+
+            //await _userAccountRoleWriteRepository.AddAsync(userAccountRole);
+
+            //var userAllData = new UserAllData()
+            //{
+            //    UserAccountId = _mapper.Map<UserAccountDTO_forGetandGetAll>(await _userAccountReadRepository.GetByIdAsync(userAccount.Id.ToString(), false)).Id,
+            //    UserAccountRoleId = _mapper.Map<UserAccountRoleDTO_forGetandGetAll>(await _userAccountRoleReadRepository.GetByIdAsync(userAccountRole.Id.ToString(), false)).Id,
+            //};
+
+            //await _userAllDataWriteRepository.AddAsync(userAllData);
 
             System.Globalization.CultureInfo.CurrentCulture.ClearCachedData();
 
             TimeZone localZone = TimeZone.CurrentTimeZone;
             DateTime localTime = localZone.ToLocalTime(DateTime.UtcNow);
+
 
         }
 
@@ -426,13 +466,20 @@ namespace Interview.Application.Services.Concrete
 
             CustomUser user = new()
             {
+                
                 Email = entity.Email,
                 SecurityStamp = Guid.NewGuid().ToString(),
                 UserName = entity.Username,
                 PhoneNumber = entity.PhoneNumber,
                 ImagePath = imageUrl,
-                Roles = $"{UserRoles.HR}",
+                Roles = $"{UserRoles.Admin}",
             };
+
+            CustomRole customRole = new()
+            {
+                Name = $"{UserRoles.HR}",
+            };
+
 
             var result = await _userManager.CreateAsync(user, entity.Password);
 
@@ -450,8 +497,9 @@ namespace Interview.Application.Services.Concrete
             }
 
 
+
             if (!await _roleManager.RoleExistsAsync(UserRoles.HR))
-                await _roleManager.CreateAsync(new IdentityRole(UserRoles.HR));
+                await _roleManager.CreateAsync(customRole);
 
             if (await _roleManager.RoleExistsAsync(UserRoles.HR))
                 await _userManager.AddToRoleAsync(user, UserRoles.HR);

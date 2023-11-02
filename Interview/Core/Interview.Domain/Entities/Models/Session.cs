@@ -16,12 +16,14 @@ public class Session : BaseEntity
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
 
-    [Column(TypeName = "decimal(18, 4)")]
+    [Column(TypeName = "decimal(18, 0)")]
     public decimal? EndValue { get; set; }
 
     public DateTime? StartDate { get; set; }
 
     public DateTime? EndDate { get; set; }
+
+    public int UserAccountId { get; set; }
 
     public int VacancyId { get; set; }
 

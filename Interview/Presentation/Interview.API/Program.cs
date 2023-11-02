@@ -1,6 +1,5 @@
 using Interview.Application.Mapper;
 using Interview.Persistence;
-using Interview.Persistence.Contexts.AuthDbContext.DbContext;
 using Interview.Domain.Entities.IdentityAuth;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http.Features;
@@ -28,6 +27,7 @@ using Org.BouncyCastle.Asn1.IsisMtt.X509;
 using Interview.API.Middlewares;
 using System.Configuration;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Interview.Persistence.Contexts.InterviewDbContext;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,7 +42,7 @@ builder.Services.AddSwaggerGenServiceExtension();
 builder.Services.AddCors();
 
 
-builder.Services.AddPersistenceServices();
+
 
 
 builder.Services.AddCustomAuthorizationPoliciesServiceExtension();
@@ -87,11 +87,9 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddAutoMapper(typeof(MapperProfile).Assembly);
 
 
-builder.Services.AddDbContext<CustomDbContext>(option => option.UseSqlServer(ServiceExtension.CustomDbConnectionString));
 
-builder.Services.AddIdentity<CustomUser, IdentityRole>(options => {
-    options.User.RequireUniqueEmail = false;
-}).AddEntityFrameworkStores<CustomDbContext>().AddDefaultTokenProviders();
+
+builder.Services.AddPersistenceServices();
 
 
 builder.Services.AddAuthentication(options =>

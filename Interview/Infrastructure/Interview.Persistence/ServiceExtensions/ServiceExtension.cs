@@ -2,7 +2,6 @@
 using Interview.Application.Repositories.Custom;
 using Interview.Application.Services.Abstract;
 using Interview.Application.Services.Concrete;
-using Interview.Persistence.Contexts.AuthDbContext.DbContext;
 using Interview.Persistence.Contexts.InterviewDbContext;
 using Interview.Persistence.Repositories.Custom;
 using Microsoft.AspNetCore.Builder;
@@ -31,6 +30,8 @@ using Serilog.Events;
 using Interview.Persistence.LogSettings.ColumnWriters;
 using System.Diagnostics;
 using Microsoft.Extensions.Hosting;
+using Interview.Domain.Entities.IdentityAuth;
+using Microsoft.AspNetCore.Identity;
 
 namespace Interview.Persistence.ServiceExtensions
 {
@@ -76,10 +77,15 @@ namespace Interview.Persistence.ServiceExtensions
 
         public static void AddPersistenceServices(this IServiceCollection services)
         {
-            services.AddDbContext<InterviewContext>(options => options.UseSqlServer(ConnectionString));
 
+            services.AddDbContext<InterviewContext>(options => options.UseSqlServer(CustomDbConnectionString));
 
-
+            services.AddIdentity<CustomUser, CustomRole>(options =>
+            {
+                options.User.RequireUniqueEmail = false;
+            })
+            .AddEntityFrameworkStores<InterviewContext>()
+            .AddDefaultTokenProviders();
 
             services.AddScoped<IAuthService, AuthServiceManager>();
 
@@ -140,6 +146,7 @@ namespace Interview.Persistence.ServiceExtensions
 
             services.AddScoped<ILevelWriteRepository, LevelWriteRepository>();
             services.AddScoped<ILevelReadRepository, LevelReadRepository>();
+
 
 
 

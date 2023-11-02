@@ -84,14 +84,15 @@ CREATE TABLE [Session]
    [EndValue] decimal DEFAULT 0.0,
    [StartDate] datetime2 DEFAULT NULL,
    [EndDate] datetime2 DEFAULT NULL,
+   [UserAccountId] INT NOT NULL,
    
    [VacancyId] INT NOT NULL,
    [CandidateId] INT NOT NULL,
+
   
-   
    CONSTRAINT [FK_VacancyId_forSession] FOREIGN KEY ([VacancyId]) REFERENCES [Vacancy] ([Id]) ON DELETE NO ACTION ON UPDATE NO ACTION,
    CONSTRAINT [FK_CandidateId_forSession] FOREIGN KEY ([CandidateId]) REFERENCES [Candidate] ([Id]) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  
+   
 );
 
 

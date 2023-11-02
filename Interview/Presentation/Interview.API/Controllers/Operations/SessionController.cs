@@ -2,7 +2,6 @@
 using Interview.Application.Mapper.DTO;
 using Interview.Application.Services.Abstract;
 using Interview.Domain.Entities.AuthModels;
-using Interview.Domain.Entities.IdentityAuth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -56,7 +55,7 @@ namespace Interview.API.Controllers.Operations
         public async Task<IActionResult> SessionCreate([FromBody] SessionDTO_forCreate model)
         {
 
-            await _sessionService.SessionCreate(model);
+            await _sessionService.SessionCreate(model,User);
 
             return Ok(new Response { Status = "Success", Message = "The Session created successfully!" });
 

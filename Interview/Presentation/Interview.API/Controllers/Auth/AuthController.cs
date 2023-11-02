@@ -4,7 +4,6 @@ using Azure.Storage.Blobs.Models;
 using Interview.Application.Mapper.AuthDTO;
 using Interview.Domain.Entities.AuthModels;
 using Interview.Domain.Entities.Models;
-using Interview.Domain.Entities.IdentityAuth;
 using Interview.Persistence.ServiceExtensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;

@@ -94,6 +94,9 @@ namespace Interview.Application.Mapper
             CreateMap<Position, PositionDTO_forGetandGetAll>();
             CreateMap<PositionDTO_forGetandGetAll, Position>();
 
+
+
+
             CreateMap<Login, LoginDTO>();
             CreateMap<LoginDTO, Login>();
 

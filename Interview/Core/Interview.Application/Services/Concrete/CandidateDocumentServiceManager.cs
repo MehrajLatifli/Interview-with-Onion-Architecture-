@@ -72,7 +72,7 @@ namespace Interview.Application.Services.Concrete
                 Name = model.Name,
                 Phonenumber = model.Phonenumber,
                 Email = model.Email,
-                Cv = Url,
+                CV = Url,
                 Address = model.Address,
                 Patronymic = model.Patronymic,
 
@@ -172,7 +172,7 @@ namespace Interview.Application.Services.Concrete
                 Name = model.Name,
                 Phonenumber = model.Phonenumber,
                 Email = model.Email,
-                Cv = Url,
+                CV = Url,
                 Address = model.Address,
                 Patronymic = model.Patronymic,
 

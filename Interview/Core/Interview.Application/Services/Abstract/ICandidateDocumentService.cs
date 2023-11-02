@@ -24,5 +24,4 @@ namespace Interview.Application.Services.Abstract
 
     }
 
-
 }
