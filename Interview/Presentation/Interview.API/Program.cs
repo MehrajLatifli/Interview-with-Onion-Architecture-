@@ -173,9 +173,6 @@ app.UseSerilogRequestLogging();
 
 
 
-
-
-
 app.UseRateLimiter();
 
 app.UseRouting();

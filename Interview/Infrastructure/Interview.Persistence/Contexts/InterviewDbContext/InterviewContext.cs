@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using Interview.Domain.Entities.IdentityAuth;
 using Interview.Domain.Entities.Models;
+using Interview.Domain.EntityFrameworkConfigurations;
 using Interview.Persistence.ServiceExtensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -47,9 +48,7 @@ public class InterviewContext : IdentityDbContext<CustomUser, CustomRole, int>
 
     public virtual DbSet<Vacancy> Vacancy { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer(ServiceExtension.CustomDbConnectionString);
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) => optionsBuilder.UseSqlServer(ServiceExtension.CustomDbConnectionString);
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -74,128 +73,21 @@ public class InterviewContext : IdentityDbContext<CustomUser, CustomRole, int>
         modelBuilder.Ignore<IdentityRoleClaim<int>>();
 
 
-        modelBuilder.Entity<CustomUser>(b =>
-        {
-            b.HasKey(u => u.Id);
-            b.ToTable("Users");
-        });
+        modelBuilder.ApplyConfiguration(new CustomUserConfiguration());
+        modelBuilder.ApplyConfiguration(new CustomRoleConfiguration());
+        modelBuilder.ApplyConfiguration(new IdentityUserRoleConfiguration());
 
-        modelBuilder.Entity<CustomRole>(b =>
-        {
-            b.HasKey(r => r.Id);
-            b.ToTable("Roles");
-        });
-
-        modelBuilder.Entity<IdentityUserRole<int>>(b =>
-        {
-            b.HasKey(r => new { r.UserId, r.RoleId });
-            b.ToTable("UserRoles"); 
-        });
-
-        modelBuilder.Entity<Candidate>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Candidat__3214EC07B8C0044F");
-
-            entity.HasOne(d => d.CandidateDocument).WithMany(p => p.Candidate)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_CandidateDocument_forCandidates");
-        });
-
-        modelBuilder.Entity<CandidateDocument>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Candidat__3214EC07C52807D9");
-        });
-
-        modelBuilder.Entity<Category>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Category__3214EC07F6BA04F0");
-        });
-
-        modelBuilder.Entity<Level>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Level__3214EC073ED5A21C");
-        });
-
-        modelBuilder.Entity<Position>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Position__3214EC07393DC7E5");
-        });
-
-        modelBuilder.Entity<Question>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Question__3214EC07D008B0D4");
-
-            entity.HasOne(d => d.Category).WithMany(p => p.Question)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_CategoryId_forQuestion");
-
-            entity.HasOne(d => d.Level).WithMany(p => p.Question)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_LevelId_forQuestion");
-
-            entity.HasOne(d => d.Structure).WithMany(p => p.Question)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_StructureId_forQuestion");
-        });
-
-        modelBuilder.Entity<Session>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Session__3214EC076DB51246");
-
-            entity.Property(e => e.EndValue).HasDefaultValueSql("((0.0))");
-
-            entity.HasOne(d => d.Candidate).WithMany(p => p.Session)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_CandidateId_forSession");
-
-            entity.HasOne(d => d.Vacancy).WithMany(p => p.Session)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_VacancyId_forSession");
-        });
-
-        modelBuilder.Entity<SessionQuestion>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__SessionQ__3214EC07A6F60AF9");
-
-            entity.Property(e => e.Value).HasDefaultValueSql("((0))");
-
-            entity.HasOne(d => d.Question).WithMany(p => p.SessionQuestion)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_QuestionId_forSessionQuestion");
-
-            entity.HasOne(d => d.Session).WithMany(p => p.SessionQuestion)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_SessionId_forSessionQuestion");
-        });
-
-        modelBuilder.Entity<Structure>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Structur__3214EC07A945D7AE");
-
-            entity.HasOne(d => d.StructureType).WithMany(p => p.Structure)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_StructureType_forStructure");
-        });
-
-        modelBuilder.Entity<StructureType>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Structur__3214EC07DC602A70");
-        });
-
-        modelBuilder.Entity<Vacancy>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Vacancy__3214EC07AC5E9B9D");
-
-            entity.HasOne(d => d.Position).WithMany(p => p.Vacancy)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_PositionId_forVacancy");
-
-            entity.HasOne(d => d.Structure).WithMany(p => p.Vacancy)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_StructureId_forVacancy");
-        });
-
-
+        modelBuilder.ApplyConfiguration(new CandidateConfiguration());
+        modelBuilder.ApplyConfiguration(new CandidateDocumentConfiguration());
+        modelBuilder.ApplyConfiguration(new LevelConfiguration());
+        modelBuilder.ApplyConfiguration(new CategoryConfiguration());
+        modelBuilder.ApplyConfiguration(new QuestionConfiguration());
+        modelBuilder.ApplyConfiguration(new SessionQuestionConfiguration());
+        modelBuilder.ApplyConfiguration(new SessionConfiguration());
+        modelBuilder.ApplyConfiguration(new StructureConfiguration());
+        modelBuilder.ApplyConfiguration(new VacancyConfiguration());
+        modelBuilder.ApplyConfiguration(new StructureConfiguration());
+        modelBuilder.ApplyConfiguration(new PositionConfiguration());
 
     }
 

@@ -123,7 +123,7 @@ namespace Interview.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id")
-                        .HasName("PK__Candidat__3214EC07B8C0044F");
+                        .HasName("PK__Candidate");
 
                     b.HasIndex("CandidateDocumentId");
 
@@ -163,7 +163,7 @@ namespace Interview.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id")
-                        .HasName("PK__Candidat__3214EC07C52807D9");
+                        .HasName("PK__CandidateDocument");
 
                     b.ToTable("CandidateDocuments");
                 });
@@ -181,7 +181,7 @@ namespace Interview.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id")
-                        .HasName("PK__Category__3214EC07F6BA04F0");
+                        .HasName("PK__Category");
 
                     b.ToTable("Categories");
                 });
@@ -195,14 +195,14 @@ namespace Interview.Persistence.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("Coefficient")
-                        .HasColumnType("decimal(18, 0)");
+                        .HasColumnType("decimal(18, 2)");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id")
-                        .HasName("PK__Level__3214EC073ED5A21C");
+                        .HasName("PK__Level");
 
                     b.ToTable("Levels");
                 });
@@ -220,7 +220,7 @@ namespace Interview.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id")
-                        .HasName("PK__Position__3214EC07393DC7E5");
+                        .HasName("PK__Position");
 
                     b.ToTable("Positions");
                 });
@@ -247,7 +247,7 @@ namespace Interview.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id")
-                        .HasName("PK__Question__3214EC07D008B0D4");
+                        .HasName("PK__Question");
 
                     b.HasIndex("CategoryId");
 
@@ -274,7 +274,7 @@ namespace Interview.Persistence.Migrations
 
                     b.Property<decimal?>("EndValue")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(18, 0)")
+                        .HasColumnType("decimal(18, 2)")
                         .HasDefaultValueSql("((0.0))");
 
                     b.Property<DateTime?>("StartDate")
@@ -287,7 +287,7 @@ namespace Interview.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id")
-                        .HasName("PK__Session__3214EC076DB51246");
+                        .HasName("PK__Session");
 
                     b.HasIndex("CandidateId");
 
@@ -316,7 +316,7 @@ namespace Interview.Persistence.Migrations
                         .HasDefaultValueSql("((0))");
 
                     b.HasKey("Id")
-                        .HasName("PK__SessionQ__3214EC07A6F60AF9");
+                        .HasName("PK__SessionQuestion");
 
                     b.HasIndex("QuestionId");
 
@@ -345,7 +345,7 @@ namespace Interview.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id")
-                        .HasName("PK__Structur__3214EC07A945D7AE");
+                        .HasName("PK__Structure");
 
                     b.HasIndex("StructureTypeId");
 
@@ -364,8 +364,7 @@ namespace Interview.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id")
-                        .HasName("PK__Structur__3214EC07DC602A70");
+                    b.HasKey("Id");
 
                     b.ToTable("StructureTypes");
                 });
@@ -399,7 +398,7 @@ namespace Interview.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id")
-                        .HasName("PK__Vacancy__3214EC07AC5E9B9D");
+                        .HasName("PK__Vacancy");
 
                     b.HasIndex("PositionId");
 

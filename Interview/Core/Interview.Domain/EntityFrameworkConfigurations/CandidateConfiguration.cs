@@ -14,7 +14,6 @@ namespace Interview.Domain.EntityFrameworkConfigurations
     {
         public void Configure(EntityTypeBuilder<Candidate> builder)
         {
-
             builder.HasKey(e => e.Id).HasName("PK__Candidate");
 
             builder.HasOne(d => d.CandidateDocument).WithMany(p => p.Candidate)

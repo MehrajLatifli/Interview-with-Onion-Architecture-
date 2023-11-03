@@ -44,12 +44,6 @@ ORDER BY Timestamp DESC </p>
 
 
 <h1> Migration </h1>
-add-migration CustomDbContextMigration -Context Interview.Persistence.Contexts.AuthDbContext.DbContext.CustomDbContext 
-</br>
-</br>
-update-database -Context Interview.Persistence.Contexts.AuthDbContext.DbContext.CustomDbContext 
-</br>
-</br>
 add-migration InterviewContextMigration -Context Interview.Persistence.Contexts.InterviewDbContext.InterviewContext
 </br>
 </br>

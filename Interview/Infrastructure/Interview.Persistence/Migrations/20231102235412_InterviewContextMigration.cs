@@ -27,7 +27,7 @@ namespace Interview.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Candidat__3214EC07C52807D9", x => x.Id);
+                    table.PrimaryKey("PK__CandidateDocument", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -40,7 +40,7 @@ namespace Interview.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Category__3214EC07F6BA04F0", x => x.Id);
+                    table.PrimaryKey("PK__Category", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -50,11 +50,11 @@ namespace Interview.Persistence.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Coefficient = table.Column<decimal>(type: "decimal(18,0)", nullable: false)
+                    Coefficient = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Level__3214EC073ED5A21C", x => x.Id);
+                    table.PrimaryKey("PK__Level", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -67,7 +67,7 @@ namespace Interview.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Position__3214EC07393DC7E5", x => x.Id);
+                    table.PrimaryKey("PK__Position", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -95,7 +95,7 @@ namespace Interview.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Structur__3214EC07DC602A70", x => x.Id);
+                    table.PrimaryKey("PK_StructureTypes", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -150,7 +150,7 @@ namespace Interview.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Candidat__3214EC07B8C0044F", x => x.Id);
+                    table.PrimaryKey("PK__Candidate", x => x.Id);
                     table.ForeignKey(
                         name: "FK_CandidateDocument_forCandidates",
                         column: x => x.CandidateDocumentId,
@@ -170,7 +170,7 @@ namespace Interview.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Structur__3214EC07A945D7AE", x => x.Id);
+                    table.PrimaryKey("PK__Structure", x => x.Id);
                     table.ForeignKey(
                         name: "FK_StructureType_forStructure",
                         column: x => x.StructureTypeId,
@@ -191,7 +191,7 @@ namespace Interview.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Question__3214EC07D008B0D4", x => x.Id);
+                    table.PrimaryKey("PK__Question", x => x.Id);
                     table.ForeignKey(
                         name: "FK_CategoryId_forQuestion",
                         column: x => x.CategoryId,
@@ -224,7 +224,7 @@ namespace Interview.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Vacancy__3214EC07AC5E9B9D", x => x.Id);
+                    table.PrimaryKey("PK__Vacancy", x => x.Id);
                     table.ForeignKey(
                         name: "FK_PositionId_forVacancy",
                         column: x => x.PositionId,
@@ -243,7 +243,7 @@ namespace Interview.Persistence.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    EndValue = table.Column<decimal>(type: "decimal(18,0)", nullable: true, defaultValueSql: "((0.0))"),
+                    EndValue = table.Column<decimal>(type: "decimal(18,2)", nullable: true, defaultValueSql: "((0.0))"),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     EndDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     UserAccountId = table.Column<int>(type: "int", nullable: false),
@@ -252,7 +252,7 @@ namespace Interview.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Session__3214EC076DB51246", x => x.Id);
+                    table.PrimaryKey("PK__Session", x => x.Id);
                     table.ForeignKey(
                         name: "FK_CandidateId_forSession",
                         column: x => x.CandidateId,
@@ -277,7 +277,7 @@ namespace Interview.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__SessionQ__3214EC07A6F60AF9", x => x.Id);
+                    table.PrimaryKey("PK__SessionQuestion", x => x.Id);
                     table.ForeignKey(
                         name: "FK_QuestionId_forSessionQuestion",
                         column: x => x.QuestionId,

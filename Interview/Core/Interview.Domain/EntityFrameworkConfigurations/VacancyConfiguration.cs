@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
 using Interview.Domain.Entities.Models;
+using System.Reflection.Emit;
 
 namespace Interview.Domain.EntityFrameworkConfigurations
 {
