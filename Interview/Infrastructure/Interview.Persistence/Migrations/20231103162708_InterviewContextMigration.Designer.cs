@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Interview.Persistence.Migrations
 {
     [DbContext(typeof(InterviewContext))]
-    [Migration("20231103004712_InterviewContextMigration")]
+    [Migration("20231103162708_InterviewContextMigration")]
     partial class InterviewContextMigration
     {
         /// <inheritdoc />

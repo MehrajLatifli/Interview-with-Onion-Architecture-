@@ -25,6 +25,9 @@ public class InterviewContext : IdentityDbContext<CustomUser, CustomRole, int>
     public virtual DbSet<CustomUser> Users { get; set; }
     public virtual DbSet<CustomRole> Roles { get; set; }
 
+
+
+
     public virtual DbSet<Candidate> Candidate { get; set; }
 
     public virtual DbSet<CandidateDocument> CandidateDocument { get; set; }
