@@ -48,7 +48,7 @@ public class InterviewContext : IdentityDbContext<CustomUser, CustomRole, int>
 
     public virtual DbSet<Vacancy> Vacancy { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) => optionsBuilder.UseSqlServer(ServiceExtension.CustomDbConnectionString);
+    //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) => optionsBuilder.UseSqlServer(ServiceExtension.CustomDbConnectionString);
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
