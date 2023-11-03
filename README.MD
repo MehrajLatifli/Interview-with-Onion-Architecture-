@@ -28,6 +28,7 @@ docker run --name some-seq -d --restart unless-stopped -e ACCEPT_EULA=Y -p 5341:
 </br>
 </br>
 
+
 <p> SELECT
     @Id AS Id,
     @MessageTemplate AS Message,
