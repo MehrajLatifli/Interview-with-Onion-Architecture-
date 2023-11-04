@@ -15,6 +15,7 @@ namespace Interview.Application.Services.Abstract
 
         #region Auth service
 
+        public Task CreateAndAssignCustomRole(string userId, string roleName, ClaimsPrincipal User);
         public Task RegisterAdmin(RegisterDTO model, string ConnectionStringAzure);
 
         public Task RegisterHR(RegisterDTO model, string ConnectionStringAzure);

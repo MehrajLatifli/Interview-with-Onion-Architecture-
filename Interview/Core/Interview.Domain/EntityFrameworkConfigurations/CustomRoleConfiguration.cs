@@ -9,7 +9,7 @@ namespace Interview.Domain.EntityFrameworkConfigurations
         public void Configure(EntityTypeBuilder<CustomRole> builder)
         {
             builder.HasKey(u => u.Id);
-            builder.ToTable("Roles");
+            builder.ToTable("CustomRoles");
 
         }
     }

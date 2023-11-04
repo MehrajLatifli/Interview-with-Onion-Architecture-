@@ -20,6 +20,7 @@ using Microsoft.IdentityModel.Claims;
 using Claim = System.Security.Claims.Claim;
 using ClaimsPrincipal = System.Security.Claims.ClaimsPrincipal;
 using Interview.API.API_Routes;
+using Interview.Application.Validations;
 
 namespace Interview.API.Controllers.Auth
 {
@@ -31,11 +32,25 @@ namespace Interview.API.Controllers.Auth
         public readonly IMapper _mapper;
         private readonly IAuthService _authservice;
 
+
         public AuthController(IMapper mapper, IAuthService authservice)
         {
             _mapper = mapper;
             _authservice = authservice;
         }
+
+
+        [Authorize(Policy = "AdminOnly")]
+        [HttpPost]
+        [Route(Routes.createRole)]
+        public async Task<IActionResult> CreateRole(string userId, string roleName)
+        {
+            await _authservice.CreateAndAssignCustomRole( userId, roleName, User);
+
+
+            return Ok(new Response { Status = "Success", Message = "Role successfully created!" });
+        }
+
 
         [HttpPost]
         [Route(Routes.RegisterAdmin)]
@@ -146,7 +161,7 @@ namespace Interview.API.Controllers.Auth
         }
 
 
-        [Authorize(Policy = "AdminOnly")]
+        [CustomAuthorize("AdminOnly", CustomRole = "Admin")]
         [HttpGet(Routes.GetAdmins)]
         public async Task<IActionResult> GetAdmins()
         {

@@ -9,7 +9,7 @@ namespace Interview.Domain.EntityFrameworkConfigurations
         public void Configure(EntityTypeBuilder<CustomUser> builder)
         {
             builder.HasKey(u => u.Id);
-            builder.ToTable("Users");
+            builder.ToTable("CustomUsers");
 
         }
     }

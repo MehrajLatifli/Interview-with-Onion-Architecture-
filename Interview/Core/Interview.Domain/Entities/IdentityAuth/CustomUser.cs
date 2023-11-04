@@ -23,4 +23,23 @@ public class CustomUser:IdentityUser<int>
 
     public string? Roles { get; set; }
 
+
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

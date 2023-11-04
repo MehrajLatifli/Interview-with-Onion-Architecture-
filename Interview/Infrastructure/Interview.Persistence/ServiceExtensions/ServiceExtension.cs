@@ -32,6 +32,8 @@ using System.Diagnostics;
 using Microsoft.Extensions.Hosting;
 using Interview.Domain.Entities.IdentityAuth;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
+using Interview.Application.Validations;
 
 namespace Interview.Persistence.ServiceExtensions
 {
@@ -75,10 +77,16 @@ namespace Interview.Persistence.ServiceExtensions
         }
 
 
+     
+
+
         public static void AddPersistenceServices(this IServiceCollection services)
         {
 
+
+
             services.AddDbContext<InterviewContext>(options => options.UseSqlServer(CustomDbConnectionString));
+
 
             services.AddIdentity<CustomUser, CustomRole>(options =>
             {
@@ -204,12 +212,16 @@ namespace Interview.Persistence.ServiceExtensions
 
                 options.AddPolicy("HROnly", policy =>
                     policy.RequireRole(UserRoles.HR));
+             
 
                 options.AddPolicy("AllRoles", policy =>
                 {
                     policy.RequireRole(UserRoles.Admin);
                     policy.RequireRole(UserRoles.HR);
                 });
+
+       
+
             });
         }
 

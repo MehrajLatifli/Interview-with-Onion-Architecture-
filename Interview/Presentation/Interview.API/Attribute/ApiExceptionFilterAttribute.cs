@@ -3,12 +3,17 @@
 
 using Interview.Application.Exception;
 using Interview.Persistence.Contexts.InterviewDbContext;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Interview.API.Attribute
 {
+   
+
+
+
     public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
     {
         //    private readonly IDictionary<Type, Action<ExceptionContext>> _exceptionHandlers;

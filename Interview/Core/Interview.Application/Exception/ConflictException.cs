@@ -1,4 +1,6 @@
-﻿namespace Interview.Application.Exception
+﻿using System;
+
+namespace Interview.Application.Exception
 {
     public class ConflictException : ApplicationException
     {

@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Interview.Application.Exception;
 using ValidationException = Interview.Application.Exception.ValidationException;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Interview.Application.Validations
 {
@@ -42,4 +43,7 @@ namespace Interview.Application.Validations
             return $"Only {supportedExtensions} extensions are allowed!";
         }
     }
+
+
+
 }

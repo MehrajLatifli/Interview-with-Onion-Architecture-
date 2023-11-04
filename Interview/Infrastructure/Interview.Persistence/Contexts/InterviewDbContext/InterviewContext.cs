@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Interview.Persistence.Contexts.InterviewDbContext;
 
-public class InterviewContext : IdentityDbContext<CustomUser, CustomRole, int>
+public class InterviewContext : IdentityDbContext<CustomUser, CustomRole, int, CustomUserClaim, CustomUserRole, CustomUserLogin, CustomRoleClaim, CustomUserToken>
 {
     public InterviewContext()
     {
@@ -22,8 +22,15 @@ public class InterviewContext : IdentityDbContext<CustomUser, CustomRole, int>
     {
     }
 
-    public virtual DbSet<CustomUser> Users { get; set; }
-    public virtual DbSet<CustomRole> Roles { get; set; }
+    public virtual DbSet<CustomUser>  CustomUsers { get; set; }
+    public virtual DbSet<CustomRole>  CustomRoles { get; set; }
+
+    public virtual DbSet<CustomUserLogin>  CustomUserLogins { get; set; }
+    public virtual DbSet<CustomRoleClaim>  CustomRoleClaims { get; set; }
+
+    public virtual DbSet<CustomUserToken>  CustomUserTokens { get; set; }
+
+    public virtual DbSet<CustomUserRole>  CustomUserRoles { get; set; }
 
 
 
@@ -77,7 +84,10 @@ public class InterviewContext : IdentityDbContext<CustomUser, CustomRole, int>
 
         modelBuilder.ApplyConfiguration(new CustomUserConfiguration());
         modelBuilder.ApplyConfiguration(new CustomRoleConfiguration());
-        modelBuilder.ApplyConfiguration(new IdentityUserRoleConfiguration());
+        modelBuilder.ApplyConfiguration(new CustomUserRoleConfiguration());
+        modelBuilder.ApplyConfiguration(new CustomUserLoginConfiguration());
+        modelBuilder.ApplyConfiguration(new CustomUserTokenConfiguration());
+
 
         modelBuilder.ApplyConfiguration(new CandidateConfiguration());
         modelBuilder.ApplyConfiguration(new CandidateDocumentConfiguration());

@@ -28,6 +28,7 @@ using Interview.API.Middlewares;
 using System.Configuration;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Interview.Persistence.Contexts.InterviewDbContext;
+using Microsoft.AspNetCore.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,10 +43,22 @@ builder.Services.AddSwaggerGenServiceExtension();
 builder.Services.AddCors();
 
 
+builder.Services.AddAuthorization();
 
+builder.Services.AddAuthorization(options =>
+{
+    options.DefaultPolicy = new AuthorizationPolicyBuilder()
+        .RequireAuthenticatedUser()
+        .Build();
+});
+
+//builder.Services.AddSingleton<IAuthorizationPolicyProvider, CustomAuthorizationPolicyProvider>();
+//builder.Services.AddSingleton< DefaultAuthorizationPolicyProvider>();
 
 
 builder.Services.AddCustomAuthorizationPoliciesServiceExtension();
+
+
 
 
 builder.Services.AddControllers(options =>
@@ -88,7 +101,6 @@ builder.Services.AddAutoMapper(typeof(MapperProfile).Assembly);
 
 
 
-
 builder.Services.AddPersistenceServices();
 
 
@@ -115,6 +127,8 @@ builder.Services.AddAuthentication(options =>
 
     };
 });
+
+
 
 
 builder.WebHost.UseUrls("https://localhost:7077");

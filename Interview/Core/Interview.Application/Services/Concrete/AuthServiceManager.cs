@@ -1,5 +1,4 @@
-﻿using Azure.Storage.Blobs.Models;
-using Azure.Storage.Blobs;
+﻿
 using Interview.Application.Mapper.AuthDTO;
 using Interview.Application.Mapper.DTO;
 using Interview.Application.Services.Abstract;
@@ -27,6 +26,9 @@ using Interview.Domain.Entities.IdentityAuth;
 using Interview.Application.Repositories.Custom;
 using System.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
 
 namespace Interview.Application.Services.Concrete
 {
@@ -38,8 +40,11 @@ namespace Interview.Application.Services.Concrete
         private readonly SignInManager<CustomUser> _signInManager;
         public readonly IMapper _mapper;
         readonly ILogger<AuthServiceManager> _logger;
+        private readonly Microsoft.AspNetCore.Authorization.IAuthorizationService _authorizationService;
+        private readonly IAuthorizationPolicyProvider _policyProvider;
 
-        public AuthServiceManager(UserManager<CustomUser> userManager, RoleManager<CustomRole> roleManager, IConfiguration configuration, SignInManager<CustomUser> signInManager, IMapper mapper, ILogger<AuthServiceManager> logger)
+
+        public AuthServiceManager(UserManager<CustomUser> userManager, RoleManager<CustomRole> roleManager, IConfiguration configuration, SignInManager<CustomUser> signInManager, IMapper mapper, ILogger<AuthServiceManager> logger, Microsoft.AspNetCore.Authorization.IAuthorizationService authorizationService, IAuthorizationPolicyProvider policyProvider)
         {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -47,6 +52,8 @@ namespace Interview.Application.Services.Concrete
             _signInManager = signInManager;
             _mapper = mapper;
             _logger = logger;
+            _authorizationService = authorizationService;
+            _policyProvider = policyProvider;
         }
 
         public async Task<List<GetAuthModel>> GetAdmins(ClaimsPrincipal User)
@@ -297,12 +304,12 @@ namespace Interview.Application.Services.Concrete
 
             string blobName = entity.Username + "_" + Guid.NewGuid().ToString() + Path.GetExtension(entity.ImagePath.FileName);
 
-            BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
-            BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
+            Azure.Storage.Blobs.BlobServiceClient blobServiceClient = new Azure.Storage.Blobs.BlobServiceClient(connectionString);
+            Azure.Storage.Blobs.BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
 
-            await containerClient.CreateIfNotExistsAsync(PublicAccessType.Blob);
+            await containerClient.CreateIfNotExistsAsync(Azure.Storage.Blobs.Models.PublicAccessType.Blob);
 
-            BlobClient blobClient = containerClient.GetBlobClient(blobName);
+            Azure.Storage.Blobs.BlobClient blobClient = containerClient.GetBlobClient(blobName);
 
             using (Stream stream = entity.ImagePath.OpenReadStream())
             {
@@ -401,12 +408,12 @@ namespace Interview.Application.Services.Concrete
 
             string blobName = entity.Username + "_" + Guid.NewGuid().ToString() + Path.GetExtension(entity.ImagePath.FileName);
 
-            BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
-            BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
+            Azure.Storage.Blobs.BlobServiceClient blobServiceClient = new Azure.Storage.Blobs.BlobServiceClient(connectionString);
+            Azure.Storage.Blobs.BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
 
-            await containerClient.CreateIfNotExistsAsync(PublicAccessType.Blob);
+            await containerClient.CreateIfNotExistsAsync(Azure.Storage.Blobs.Models.PublicAccessType.Blob);
 
-            BlobClient blobClient = containerClient.GetBlobClient(blobName);
+            Azure.Storage.Blobs.BlobClient blobClient = containerClient.GetBlobClient(blobName);
 
             using (Stream stream = entity.ImagePath.OpenReadStream())
             {
@@ -460,6 +467,78 @@ namespace Interview.Application.Services.Concrete
             TimeZone localZone = TimeZone.CurrentTimeZone;
             DateTime localTime = localZone.ToLocalTime(DateTime.UtcNow);
 
+        }
+
+
+
+        public async Task CreateAndAssignCustomRole(string userId, string roleName, ClaimsPrincipal User)
+        {
+
+
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                throw new NotFoundException("User not found!");
+            }
+
+  
+            var roleExists = await _roleManager.RoleExistsAsync(roleName);
+            if (!roleExists)
+            {
+                var newRole = new CustomRole { Name = roleName };
+                var result = await _roleManager.CreateAsync(newRole);
+                if (!result.Succeeded)
+                {
+                    throw new InvalidOperationException("Failed to create the role.");
+                }
+
+                //var policyName = roleName; // Create a unique policy name based on the role
+                //var policy = new AuthorizationPolicyBuilder().RequireRole(roleName).Build();
+
+                //var options = new AuthorizationOptions();
+
+
+                //options.AddPolicy(policyName,  policy);
+
+
+
+                var allPolicies = new List<string>();
+
+                var roleClaim = new Claim(ClaimTypes.Role, roleName);
+                var customRoleIdentity = new ClaimsIdentity(new[] { roleClaim });
+                var userPrincipal = new ClaimsPrincipal(customRoleIdentity);
+
+                var customPolicy = new AuthorizationPolicyBuilder()
+                    .RequireRole(roleName)
+                    .Build();
+
+                var authResult = await _authorizationService.AuthorizeAsync(userPrincipal, null, customPolicy);
+
+
+
+                if (!authResult.Succeeded)
+                {
+                    throw new ForbiddenException();
+                }
+
+            }
+            if (roleExists)
+            {
+                throw new InvalidOperationException("Role exists");
+
+            }
+
+           
+            var isInRole = await _userManager.IsInRoleAsync(user, roleName);
+            if (!isInRole)
+            {
+                var addToRoleResult = await _userManager.AddToRoleAsync(user, roleName);
+                if (!addToRoleResult.Succeeded)
+                {
+                    throw new InvalidOperationException("Failed to add user to the role.");
+                }
+            }
         }
 
         public async Task Revoke(string username)
@@ -618,12 +697,12 @@ namespace Interview.Application.Services.Concrete
 
                     string containerName = "profile-images";
 
-                    BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
-                    BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
+                    Azure.Storage.Blobs.BlobServiceClient blobServiceClient = new Azure.Storage.Blobs.BlobServiceClient(connectionString);
+                    Azure.Storage.Blobs.BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
 
-                    await containerClient.CreateIfNotExistsAsync(PublicAccessType.Blob);
+                    await containerClient.CreateIfNotExistsAsync(Azure.Storage.Blobs.Models.PublicAccessType.Blob);
 
-                    BlobClient blobClient = containerClient.GetBlobClient(blobName);
+                    Azure.Storage.Blobs.BlobClient blobClient = containerClient.GetBlobClient(blobName);
 
                     using (Stream stream = entity.ImagePath.OpenReadStream())
                     {

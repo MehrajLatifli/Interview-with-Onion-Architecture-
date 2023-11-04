@@ -59,7 +59,9 @@ namespace Interview.API.Middlewares
                     if (validationException.Errors.Any())
                         result = JsonSerializer.Serialize(validationException.Errors);
                     break;
-
+                case ForbiddenException:
+                    code = HttpStatusCode.Forbidden;
+                    break;
                 case NotFoundException:
                     code = HttpStatusCode.NotFound;
                     break;
