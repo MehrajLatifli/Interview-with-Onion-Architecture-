@@ -87,7 +87,8 @@ public class InterviewContext : IdentityDbContext<CustomUser, CustomRole, int, C
         modelBuilder.ApplyConfiguration(new CustomUserRoleConfiguration());
         modelBuilder.ApplyConfiguration(new CustomUserLoginConfiguration());
         modelBuilder.ApplyConfiguration(new CustomUserTokenConfiguration());
-
+        modelBuilder.ApplyConfiguration(new CustomRoleClaimConfiguration());
+        modelBuilder.ApplyConfiguration(new CustomUserClaimConfiguration());
 
         modelBuilder.ApplyConfiguration(new CandidateConfiguration());
         modelBuilder.ApplyConfiguration(new CandidateDocumentConfiguration());

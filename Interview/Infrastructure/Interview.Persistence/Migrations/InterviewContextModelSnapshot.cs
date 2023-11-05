@@ -63,7 +63,9 @@ namespace Interview.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("CustomRoleClaim");
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("CustomRoleClaim", (string)null);
                 });
 
             modelBuilder.Entity("Interview.Domain.Entities.IdentityAuth.CustomUser", b =>
@@ -152,7 +154,9 @@ namespace Interview.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UserClaims");
+                    b.HasIndex("UserId");
+
+                    b.ToTable("CustomUserClaim", (string)null);
                 });
 
             modelBuilder.Entity("Interview.Domain.Entities.IdentityAuth.CustomUserLogin", b =>
@@ -185,6 +189,8 @@ namespace Interview.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("RoleId");
 
                     b.ToTable("CustomUserRoles", (string)null);
                 });
@@ -506,8 +512,41 @@ namespace Interview.Persistence.Migrations
                     b.ToTable("Vacancies");
                 });
 
+            modelBuilder.Entity("Interview.Domain.Entities.IdentityAuth.CustomRoleClaim", b =>
+                {
+                    b.HasOne("Interview.Domain.Entities.IdentityAuth.CustomRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Interview.Domain.Entities.IdentityAuth.CustomUserClaim", b =>
+                {
+                    b.HasOne("Interview.Domain.Entities.IdentityAuth.CustomUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Interview.Domain.Entities.IdentityAuth.CustomUserLogin", b =>
                 {
+                    b.HasOne("Interview.Domain.Entities.IdentityAuth.CustomUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Interview.Domain.Entities.IdentityAuth.CustomUserRole", b =>
+                {
+                    b.HasOne("Interview.Domain.Entities.IdentityAuth.CustomRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Interview.Domain.Entities.IdentityAuth.CustomUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
