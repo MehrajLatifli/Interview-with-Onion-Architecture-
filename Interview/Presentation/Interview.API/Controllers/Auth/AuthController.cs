@@ -21,6 +21,7 @@ using Claim = System.Security.Claims.Claim;
 using ClaimsPrincipal = System.Security.Claims.ClaimsPrincipal;
 using Interview.API.API_Routes;
 using Interview.Application.Validations;
+using Interview.Application.Validations.Interview.Application.Validations;
 
 namespace Interview.API.Controllers.Auth
 {
@@ -161,7 +162,8 @@ namespace Interview.API.Controllers.Auth
         }
 
 
-        [CustomAuthorize("AdminOnly", CustomRole = "Admin")]
+        //[CustomAuthorize("Admin", CustomRole = "Admin")]
+        [CustomAuthorize(CustomRoles = new[] { "Admin" })]
         [HttpGet(Routes.GetAdmins)]
         public async Task<IActionResult> GetAdmins()
         {
@@ -171,7 +173,8 @@ namespace Interview.API.Controllers.Auth
 
         }
 
-        [Authorize(Policy = "AllRoles")]
+
+        [CustomAuthorize(CustomRoles = new[] { "Admin", "HR" })]
         [HttpGet(Routes.GetHR)]
         public async Task<IActionResult> GetHR()
         {

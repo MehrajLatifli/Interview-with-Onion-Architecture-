@@ -432,7 +432,7 @@ namespace Interview.Application.Services.Concrete
                 UserName = entity.Username,
                 PhoneNumber = entity.PhoneNumber,
                 ImagePath = imageUrl,
-                Roles = $"{UserRoles.Admin}",
+                Roles = $"{UserRoles.HR}",
             };
 
             CustomRole customRole = new()
