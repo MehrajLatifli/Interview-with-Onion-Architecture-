@@ -1,4 +1,5 @@
-﻿using Interview.Application.Repositories.Abstract;
+﻿using Interview.Application.Mapper.AuthDTO;
+using Interview.Application.Repositories.Abstract;
 using Interview.Domain.Entities.Models;
 
 namespace Interview.Application.Repositories.Custom
@@ -6,4 +7,8 @@ namespace Interview.Application.Repositories.Custom
     public interface IVacancyReadRepository : IReadRepository<Vacancy>
     {
     }
+
+
+
+  
 }

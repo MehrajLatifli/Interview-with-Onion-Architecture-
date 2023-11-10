@@ -21,7 +21,7 @@ public class CustomUser:IdentityUser<int>
 
     public DateTime? RefreshTokenExpiryTime { get; set; }
 
-    public string? Roles { get; set; }
+ 
 
 
 

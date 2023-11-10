@@ -102,6 +102,7 @@ public class InterviewContext : IdentityDbContext<CustomUser, CustomRole, int, C
         modelBuilder.ApplyConfiguration(new StructureConfiguration());
         modelBuilder.ApplyConfiguration(new PositionConfiguration());
 
+     
     }
 
   

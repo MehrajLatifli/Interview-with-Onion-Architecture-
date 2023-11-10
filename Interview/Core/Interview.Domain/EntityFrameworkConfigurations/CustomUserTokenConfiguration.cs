@@ -11,9 +11,9 @@ namespace Interview.Domain.EntityFrameworkConfigurations
             builder.HasKey(u => u.UserId);
             builder.ToTable("CustomUserTokens");
 
-            
+
             builder.HasOne<CustomUser>()
-                .WithMany()  
+                .WithMany()
                 .HasForeignKey(ut => ut.UserId)
                 .HasPrincipalKey(cu => cu.Id);
 

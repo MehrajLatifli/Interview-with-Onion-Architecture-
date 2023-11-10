@@ -12,6 +12,5 @@ namespace Interview.Application.Mapper.AuthDTO
         public string Password { get; set; }
     }
 
-
 }
 

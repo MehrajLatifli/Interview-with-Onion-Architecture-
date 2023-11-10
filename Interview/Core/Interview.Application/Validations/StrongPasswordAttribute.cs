@@ -4,11 +4,11 @@ using ValidationException = Interview.Application.Exception.ValidationException;
 
 namespace Interview.Application.Validations
 {
-    public class EmailAttribute : ValidationAttribute
+    public class StrongPasswordAttribute : ValidationAttribute
     {
         private readonly string _errorMessage;
 
-        public EmailAttribute(string errorMessage = "Invalid email format.")
+        public StrongPasswordAttribute(string errorMessage = "Minimum eight characters, at least one uppercase letter, one lowercase letter, one special character and one number")
         {
             _errorMessage = errorMessage;
         }
@@ -17,11 +17,11 @@ namespace Interview.Application.Validations
         {
             if (value == null || string.IsNullOrWhiteSpace(value.ToString()))
             {
-                return ValidationResult.Success; 
+                return ValidationResult.Success;
             }
 
-            string email = value.ToString();
-            if (!IsStrongEmail(email))
+            string password = value.ToString();
+            if (!IsStrongPassword(password))
             {
 
 
@@ -31,12 +31,12 @@ namespace Interview.Application.Validations
             return ValidationResult.Success;
         }
 
-        private bool IsStrongEmail(string email)
+        private bool IsStrongPassword(string password)
         {
 
 
-            string pattern = @"^(?=.{8,100}$)([a-zA-Z0-9]+[-._+&])*[a-zA-Z0-9]+@([-a-zA-Z0-9]+\.)+[a-zA-Z]{2,20}$";
-            return Regex.IsMatch(email, pattern);
+            string pattern = @"^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[#?!@$%^&*-_])(?=.*?[0-9]).{8,}$";
+            return Regex.IsMatch(password, pattern);
         }
     }
 }

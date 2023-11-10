@@ -207,20 +207,24 @@ namespace Interview.Persistence.ServiceExtensions
         {
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("AdminOnly", policy =>
-                    policy.RequireRole(UserRoles.Admin));
+                //options.AddPolicy("AdminOnly", policy =>
+                //    policy.RequireRole(UserRoles.Admin));
 
-                options.AddPolicy("HROnly", policy =>
-                    policy.RequireRole(UserRoles.HR));
+                //options.AddPolicy("HROnly", policy =>
+                //    policy.RequireRole(UserRoles.HR));
              
 
-                options.AddPolicy("AllRoles", policy =>
-                {
-                    policy.RequireRole(UserRoles.Admin);
-                    policy.RequireRole(UserRoles.HR);
-                });
+                //options.AddPolicy("AllRoles", policy =>
+                //{
+                //    policy.RequireRole(UserRoles.Admin);
+                //    policy.RequireRole(UserRoles.HR);
+                //});
 
-       
+                ////options.AddPolicy(CustomPolicy.Policy, policy =>
+                ////{
+                ////         policy.RequireRole(CustomPolicyRole.PolicyRole);
+                ////});
+
 
             });
         }

@@ -12,7 +12,7 @@ namespace Interview.Domain.EntityFrameworkConfigurations
             builder.ToTable("CustomUserLogins");
 
             builder.HasOne<CustomUser>()
-           .WithMany()  
+           .WithMany()
           .HasForeignKey(ul => ul.UserId)
           .HasPrincipalKey(cu => cu.Id);
 

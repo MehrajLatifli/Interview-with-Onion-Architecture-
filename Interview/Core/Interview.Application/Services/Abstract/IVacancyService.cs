@@ -1,6 +1,8 @@
 ﻿
 
+using Interview.Application.Mapper.AuthDTO;
 using Interview.Application.Mapper.DTO;
+using Interview.Domain.Entities.AuthModels;
 
 namespace Interview.Application.Services.Abstract
 {
@@ -22,5 +24,16 @@ namespace Interview.Application.Services.Abstract
         #endregion
     }
 
+    public interface IRoleAccessService
+    {
 
+        #region RoleAccess service
+
+
+        public Task<RoleAccessTypeDTO> GetRoleAccess();
+
+
+
+        #endregion
+    }
 }

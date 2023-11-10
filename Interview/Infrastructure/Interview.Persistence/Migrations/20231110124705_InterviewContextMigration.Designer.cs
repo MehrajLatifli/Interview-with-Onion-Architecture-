@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Interview.Persistence.Migrations
 {
     [DbContext(typeof(InterviewContext))]
-    [Migration("20231105101549_InterviewContextMigration")]
+    [Migration("20231110124705_InterviewContextMigration")]
     partial class InterviewContextMigration
     {
         /// <inheritdoc />
@@ -120,9 +120,6 @@ namespace Interview.Persistence.Migrations
 
                     b.Property<DateTime?>("RefreshTokenExpiryTime")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("Roles")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");

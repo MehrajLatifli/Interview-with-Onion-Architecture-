@@ -1,4 +1,6 @@
-﻿namespace Interview.Domain.Entities.AuthModels
+﻿using Interview.Domain.Entities.IdentityAuth;
+
+namespace Interview.Domain.Entities.AuthModels
 {
     public class GetAuthModel
     {
@@ -11,6 +13,7 @@
 
         public string ImagePath { get; set; }
 
-        public string Roles { get; set; }
+        public List <string> Roles { get; set; }
+
     }
 }

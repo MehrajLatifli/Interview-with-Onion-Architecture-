@@ -8,13 +8,18 @@ namespace Interview.Application.Mapper.AuthDTO
     {
         [Required(ErrorMessage = "User Name is required")]
         public string Username { get; set; }
+
         [Required(ErrorMessage = "User Email is required")]
         [Email(ErrorMessage = "Invalid email format.")]
         public string Email { get; set; }
+
         [Required(ErrorMessage = "User Password is required")]
+        [StrongPassword(ErrorMessage = "Minimum eight characters, at least one uppercase letter, one lowercase letter, one special character and one number")]
         public string Password { get; set; }
+
         [Required(ErrorMessage = "Phone Number is required")]
         public string? PhoneNumber { get; set; }
+
         [Required(ErrorMessage = "Image Path is required")]
         [AllowedExtensions(new string[] { ".jpg", ".jpeg", ".png", ".gif" })]
         [FileSize(5, 10)]

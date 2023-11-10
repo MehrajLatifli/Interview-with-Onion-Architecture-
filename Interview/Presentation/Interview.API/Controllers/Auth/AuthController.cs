@@ -22,6 +22,8 @@ using ClaimsPrincipal = System.Security.Claims.ClaimsPrincipal;
 using Interview.API.API_Routes;
 using Interview.Application.Validations;
 using Interview.Application.Validations.Interview.Application.Validations;
+using Interview.Domain.Entities.IdentityAuth;
+using Interview.Domain.Entities.Requests;
 
 namespace Interview.API.Controllers.Auth
 {
@@ -40,13 +42,46 @@ namespace Interview.API.Controllers.Auth
             _authservice = authservice;
         }
 
+        [HttpGet(Routes.GetRoleAccessType)]
+        public async Task<IActionResult> GetRoleAccessType()
+        {
 
-        [Authorize(Policy = "AdminOnly")]
+
+            return Ok(await _authservice.GetRoleAccessType(User));
+
+        }
+
+        //[CustomAuthorize("Admin", CustomRole = "Admin")]
+        //[CustomAuthorize(CustomRoles = new[] { "Admin" })]
+        //[Authorize(Roles = UserRoles.Admin)]
+        [HttpGet(Routes.GetAdmins)]
+        public async Task<IActionResult> GetAdmins()
+        {
+
+
+            return Ok(await _authservice.GetAdmins(User));
+
+        }
+
+
+        //[CustomAuthorize(CustomRoles = new[] { "Admin", "HR" })]
+        //[Authorize(Roles = "HR")]
+        //[Authorize(Roles = UserRoles.HR)]
+        [HttpGet(Routes.GetHR)]
+        public async Task<IActionResult> GetHR()
+        {
+
+            return Ok(await _authservice.GetHR(User));
+
+        }
+
+
+        [Authorize]
         [HttpPost]
         [Route(Routes.createRole)]
-        public async Task<IActionResult> CreateRole(string userId, string roleName)
+        public async Task<IActionResult> CreateRole(string userId, string roleName, int roleAccesstype)
         {
-            await _authservice.CreateAndAssignCustomRole( userId, roleName, User);
+            await _authservice.CreateRoleForUser( userId,  roleName,  roleAccesstype, User);
 
 
             return Ok(new Response { Status = "Success", Message = "Role successfully created!" });
@@ -71,6 +106,17 @@ namespace Interview.API.Controllers.Auth
         {
 
             await _authservice.RegisterHR(model, ServiceExtension.ConnectionStringAzure);
+
+
+            return Ok(new Response { Status = "Success", Message = "User created successfully!" });
+        }
+
+        [HttpPost]
+        [Route(Routes.RegisterUser)]
+        public async Task<IActionResult> RegisterUser([FromQuery] RegisterUserRequestModel registerUserRequestModel, [FromForm] RegisterDTO model)
+        {
+
+            await _authservice.RegisterUser( model, ServiceExtension.ConnectionStringAzure, registerUserRequestModel.customRoles, registerUserRequestModel.roleAccesstype);
 
 
             return Ok(new Response { Status = "Success", Message = "User created successfully!" });
@@ -162,26 +208,7 @@ namespace Interview.API.Controllers.Auth
         }
 
 
-        //[CustomAuthorize("Admin", CustomRole = "Admin")]
-        [CustomAuthorize(CustomRoles = new[] { "Admin" })]
-        [HttpGet(Routes.GetAdmins)]
-        public async Task<IActionResult> GetAdmins()
-        {
-
-
-           return Ok( await _authservice.GetAdmins(User));
-
-        }
-
-
-        [CustomAuthorize(CustomRoles = new[] { "Admin", "HR" })]
-        [HttpGet(Routes.GetHR)]
-        public async Task<IActionResult> GetHR()
-        {
-
-            return Ok(await _authservice.GetHR(User));
-
-        }
+  
 
 
 

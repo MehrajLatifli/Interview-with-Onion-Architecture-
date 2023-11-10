@@ -73,6 +73,7 @@ namespace Interview.API.API_Routes
         public const string createRole = "createRole";
         public const string RegisterAdmin = "registerAdmin";
         public const string RegisterHR = "registerHR";
+        public const string RegisterUser = "RegisterUser";
         public const string Login = "login";
         public const string Logout = "logout";
         public const string RefreshToken = "refresh-token";
@@ -82,5 +83,6 @@ namespace Interview.API.API_Routes
         public const string UpdatePassword = "updatePassword";
         public const string GetAdmins = "getAdmins";
         public const string GetHR = "getHR";
+        public const string GetRoleAccessType = "getRoleAccessType";
     }
 }

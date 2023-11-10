@@ -15,10 +15,14 @@ namespace Interview.Application.Services.Abstract
 
         #region Auth service
 
-        public Task CreateAndAssignCustomRole(string userId, string roleName, ClaimsPrincipal User);
+        public Task<List<RoleAccessTypeDTO>> GetRoleAccessType(ClaimsPrincipal User);
+        public Task CreateRoleForUser(string userId, string roleName, int roleAccesstype, ClaimsPrincipal User);
+
         public Task RegisterAdmin(RegisterDTO model, string ConnectionStringAzure);
 
         public Task RegisterHR(RegisterDTO model, string ConnectionStringAzure);
+
+        public Task RegisterUser(RegisterDTO model, string ConnectionStringAzure, string customRoles, int roleAccesstype);
 
         public Task<LoginResponse> Login(LoginDTO model);
 
