@@ -1,9 +1,11 @@
 ﻿using Interview.Domain.Entities.IdentityAuth;
+using Microsoft.AspNetCore.Http;
 
 namespace Interview.Domain.Entities.AuthModels
 {
     public class GetAuthModel
     {
+        public string Id { get; set; }
 
         public string Username { get; set; }
 
@@ -13,7 +15,14 @@ namespace Interview.Domain.Entities.AuthModels
 
         public string ImagePath { get; set; }
 
-        public List <string> Roles { get; set; }
+        public List <UserClaimModel> UserClaims { get; set; }
+
+    }
+
+    public class GetRoleModel
+    {
+        public string Id { get; set; }
+        public string Rolename { get; set; }
 
     }
 }

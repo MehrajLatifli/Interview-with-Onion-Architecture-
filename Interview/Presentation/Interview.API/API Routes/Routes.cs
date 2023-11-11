@@ -83,6 +83,8 @@ namespace Interview.API.API_Routes
         public const string UpdatePassword = "updatePassword";
         public const string GetAdmins = "getAdmins";
         public const string GetHR = "getHR";
+        public const string GetRoles = "GetRoles";
+        public const string DeleteClaims = "DeleteClaims";
         public const string GetRoleAccessType = "getRoleAccessType";
     }
 }

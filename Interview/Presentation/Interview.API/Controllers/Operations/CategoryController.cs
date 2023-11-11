@@ -57,7 +57,7 @@ namespace Interview.API.Controllers.Operations
 
             await _categoryService.CategoryCreate(model);
 
-            return Ok(new Response { Status = "Success", Message = "The SessionType created successfully!" });
+            return Ok(new Response { Status = "Success", Message = "The Category created successfully!" });
 
         }
 
@@ -70,7 +70,7 @@ namespace Interview.API.Controllers.Operations
             await _categoryService.CategoryUpdate(model);
 
 
-            return Ok(new Response { Status = "Success", Message = "The SessionType updated successfully!" });
+            return Ok(new Response { Status = "Success", Message = "The Category updated successfully!" });
 
 
 
@@ -84,7 +84,7 @@ namespace Interview.API.Controllers.Operations
 
             await _categoryService.DeleteCategoryById(id);
 
-            return Ok(new Response { Status = "Success", Message = "The SessionType deleted successfully!" });
+            return Ok(new Response { Status = "Success", Message = "The Category deleted successfully!" });
         }
 
 

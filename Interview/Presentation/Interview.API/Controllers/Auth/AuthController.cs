@@ -75,6 +75,25 @@ namespace Interview.API.Controllers.Auth
 
         }
 
+        [HttpGet(Routes.GetRoles)]
+        public async Task<IActionResult> GetRoles()
+        {
+
+            return Ok(await _authservice.GetRoles(User));
+
+        }
+
+        [HttpDelete(Routes.DeleteClaims)]
+        public async Task<IActionResult> DeleteClaims(int roleId, int userId)
+        {
+
+           await _authservice.DeleteClaims( roleId,  userId,  User);
+
+
+            return Ok(new Response { Status = "Success", Message = "The Role deleted successfully!" });
+
+        }
+
 
         [Authorize]
         [HttpPost]

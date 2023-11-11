@@ -38,6 +38,9 @@ namespace Interview.Application.Services.Abstract
         public Task<List<GetAuthModel>> GetAdmins(ClaimsPrincipal User);
 
         public Task<List<GetAuthModel>> GetHR(ClaimsPrincipal User);
+        public Task<List<GetRoleModel>> GetRoles(ClaimsPrincipal User);
+
+        public Task DeleteClaims(int roleId, int userId, ClaimsPrincipal User);
 
         public Task UpdateProfile(UpdateProfileDTO model, System.Security.Claims.ClaimsPrincipal claims, string ConnectionStringAzure);
 

@@ -32,6 +32,7 @@ using Microsoft.AspNetCore.Authorization.Infrastructure;
 using System.Runtime.ConstrainedExecution;
 using System.IO;
 using Microsoft.AspNetCore.Http.HttpResults;
+using NuGet.Packaging;
 
 namespace Interview.Application.Services.Concrete
 {
@@ -110,7 +111,46 @@ namespace Interview.Application.Services.Concrete
            
           
         }
+
+        public async Task<List<GetRoleModel>> GetRoles(ClaimsPrincipal User)
+        {
+           
+                //var user_ = User.Identity?.Name;
+                //var customuser = await _userManager.FindByNameAsync(user_);
+
+                //var userClaims = await _userManager.GetClaimsAsync(customuser);
+                //var userRoles = await _userManager.GetRolesAsync(customuser);
+                //var roleClaims = User.FindAll(ClaimTypes.Role);
+                //var roles = roleClaims.Select(c => c.Value).ToList();
+                //bool isAdmin = roles.Contains(UserRoles.Admin);
+
+                //if (customuser == null)
+                //{
+                //    throw new NotFoundException("User not found!");
+                //}
+
+                var allroles = await _roleManager.Roles.ToListAsync();
+
+                var roleModels = allroles.Select(role => new GetRoleModel
+                {   Id=role.Id.ToString(),
+                    Rolename = role.Name,
+                }).ToList();
+
+                if (roleModels.Any())
+                {
+
+                    return roleModels;
+                }
+
+                else
+                {
+
+                    throw new NotFoundException("Nothing found!");
+
+                }
+
         
+        }
 
         public async Task<List<GetAuthModel>> GetAdmins(ClaimsPrincipal User)
         {
@@ -133,19 +173,28 @@ namespace Interview.Application.Services.Concrete
                 if (isAdmin)
                 {
                     var list = new List<GetAuthModel>();
+
                     var usersInHRRole = await _userManager.GetUsersInRoleAsync(UserRoles.Admin);
 
                     foreach (var item in usersInHRRole)
                     {
-                        var roles_ = await _userManager.GetRolesAsync(item);
+                        var claims = await _userManager.GetClaimsAsync(item);
+
+                        var userClaims_ = claims.Select(c => new UserClaimModel
+                        {
+                            Role = c.Type,
+                            Permition = c.Value
+                        }).ToList();
+
 
                         list.Add(new GetAuthModel()
                         {
+                            Id=item.Id.ToString(),
                             Username = item.UserName,
                             PhoneNumber = item.PhoneNumber,
                             Email = item.Email,
                             ImagePath = item.ImagePath,
-                            Roles = roles_.ToList(), // Fix here
+                            UserClaims = userClaims_, // Fix here
                         });
                     }
 
@@ -194,15 +243,23 @@ namespace Interview.Application.Services.Concrete
 
                     foreach (var item in usersInHRRole)
                     {
-                        var roles_ = await _userManager.GetRolesAsync(item);
+                        var claims = await _userManager.GetClaimsAsync(item);
+
+                        var userClaims_ = claims.Select(c => new UserClaimModel
+                        {
+                            Role = c.Type,
+                            Permition = c.Value
+                        }).ToList();
+
 
                         list.Add(new GetAuthModel()
                         {
+                            Id = item.Id.ToString(),
                             Username = item.UserName,
                             PhoneNumber = item.PhoneNumber,
                             Email = item.Email,
                             ImagePath = item.ImagePath,
-                            Roles = roles_.ToList(), // Fix here
+                            UserClaims = userClaims_, // Fix here
                         });
                     }
 
@@ -323,6 +380,62 @@ namespace Interview.Application.Services.Concrete
 
 
         }
+
+        public async Task DeleteClaims(int roleId, int userId, ClaimsPrincipal User)
+        {
+            var role = await _roleManager.FindByIdAsync(roleId.ToString());
+
+            if (role == null)
+            {
+                throw new NotFoundException($"Role '{roleId}' not found!");
+            }
+
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+
+            if (user == null)
+            {
+                throw new NotFoundException($"User '{userId}' not found!");
+            }
+
+            // Delete role claims
+            var roleClaims = await _roleManager.GetClaimsAsync(role);
+            foreach (var claim in roleClaims)
+            {
+                var result = await _roleManager.RemoveClaimAsync(role, claim);
+                if (!result.Succeeded)
+                {
+                    throw new ApplicationException($"Error removing claim '{claim.Type}' from role '{roleId.ToString()}': {string.Join(", ", result.Errors)}");
+                }
+            }
+
+            // Remove role claims from user identity
+            var userClaims = await _userManager.GetClaimsAsync(user);
+
+            var claimToDelete = userClaims.FirstOrDefault(c => c.Type == role.Name);
+
+            if (claimToDelete != null)
+            {
+                // Remove the specific claim
+                var result = await _userManager.RemoveClaimAsync(user, claimToDelete);
+
+                if (!result.Succeeded)
+                {
+                    throw new ApplicationException($"Error removing claim '{role.Name}' from user '{userId.ToString()}': {string.Join(", ", result.Errors)}");
+                }
+            }
+            else
+            {
+                throw new NotFoundException($"Claim with type '{role.Name}' not found for user '{userId}'.");
+            }
+
+            // Delete the role
+            var deleteResult = await _roleManager.DeleteAsync(role);
+            if (!deleteResult.Succeeded)
+            {
+                throw new ApplicationException($"Error deleting role '{roleId.ToString()}': {string.Join(", ", deleteResult.Errors)}");
+            }
+        }
+
 
         public async Task<LoginResponse> Login(LoginDTO model)
         {
