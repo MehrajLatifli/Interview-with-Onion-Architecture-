@@ -3,17 +3,21 @@ using System.Text.Json.Serialization;
 
 namespace Interview.Domain.Entities.Requests
 {
-    public class DeleteRoleRequestModel
+    public class AddUserRoleRequestModel
     {
 
+        [Required]
+        [JsonPropertyName("userId")]
+        public int UserId { get; set; }
 
         [Required]
         [JsonPropertyName("roleId")]
         public int RoleId { get; set; }
 
         [Required]
-        [JsonPropertyName("userId")]
-        public int UserId { get; set; }
+        [JsonPropertyName("roleAccessType")]
+        public int RoleAccessType { get; set; }
+
     }
 
 
