@@ -217,41 +217,46 @@ namespace Interview.Application.Services.Concrete
 
                         if (ClaimValueListIntersect.Any(i => i == "All Access"))
                         {
-                            
-                                var list = new List<GetAuthModel>();
 
-                                var usersInHRRole = await _userManager.GetUsersInRoleAsync(UserRoles.Admin);
+                            var list = new List<GetAuthModel>();
 
-                                foreach (var item in usersInHRRole)
+                            var usersInHRRole = await _userManager.GetUsersInRoleAsync(UserRoles.Admin);
+
+                            foreach (var item in usersInHRRole)
+                            {
+
+
+                                var claims = await _userManager.GetClaimsAsync(item);
+
+
+                                var userClaims_ = claims.Select(c => new UserClaimModel
                                 {
-                                    var claims = await _userManager.GetClaimsAsync(item);
+                                    Role = c.Type,
+                                    Permition = c.Value
+                                }).ToList();
 
-                                    var userClaims_ = claims.Select(c => new UserClaimModel
-                                    {
-                                        Role = c.Type,
-                                        Permition = c.Value
-                                    }).ToList();
 
-                                    list.Add(new GetAuthModel()
-                                    {
-                                        Id = item.Id.ToString(),
-                                        Username = item.UserName,
-                                        PhoneNumber = item.PhoneNumber,
-                                        Email = item.Email,
-                                        ImagePath = item.ImagePath,
-                                        UserClaims = userClaims_,
-                                    });
-                                }
 
-                                if (list.Any())
+                                list.Add(new GetAuthModel()
                                 {
-                                    return list;
-                                }
-                                else
-                                {
-                                    throw new NotFoundException("No users found!");
-                                }
-                         
+                                    Id = item.Id.ToString(),
+                                    Username = item.UserName,
+                                    PhoneNumber = item.PhoneNumber,
+                                    Email = item.Email,
+                                    ImagePath = item.ImagePath,
+                                    UserClaims = userClaims_,
+                                });
+                            }
+
+                            if (list.Any())
+                            {
+                                return list;
+                            }
+                            else
+                            {
+                                throw new NotFoundException("No users found!");
+                            }
+
                         }
                     }
                 }
@@ -304,6 +309,8 @@ namespace Interview.Application.Services.Concrete
 
                             foreach (var item in usersInHRRole)
                             {
+
+
                                 var claims = await _userManager.GetClaimsAsync(item);
 
                                 var userClaims_ = claims.Select(c => new UserClaimModel
@@ -311,6 +318,8 @@ namespace Interview.Application.Services.Concrete
                                     Role = c.Type,
                                     Permition = c.Value
                                 }).ToList();
+
+
 
                                 list.Add(new GetAuthModel()
                                 {
