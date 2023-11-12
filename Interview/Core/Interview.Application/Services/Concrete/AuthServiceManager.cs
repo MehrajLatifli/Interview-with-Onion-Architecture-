@@ -290,6 +290,7 @@ namespace Interview.Application.Services.Concrete
                 {
                     var ClaimTypeIntersect = customUserClaimResult.ClaimTypes.Intersect(ClaimTypeList).ToList();
 
+
                     if (ClaimTypeIntersect.Any(i => i == "Admin" || i=="HR"))
                     {
                         var ClaimValueListIntersect = customUserClaimResult.ClaimValues.Intersect(ClaimValueList).ToList();
@@ -299,7 +300,7 @@ namespace Interview.Application.Services.Concrete
 
                             var list = new List<GetAuthModel>();
 
-                            var usersInHRRole = await _userManager.GetUsersInRoleAsync(UserRoles.Admin);
+                            var usersInHRRole = await _userManager.GetUsersInRoleAsync(UserRoles.HR);
 
                             foreach (var item in usersInHRRole)
                             {
