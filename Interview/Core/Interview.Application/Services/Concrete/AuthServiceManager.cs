@@ -211,11 +211,11 @@ namespace Interview.Application.Services.Concrete
                 {
                     var ClaimTypeIntersect = customUserClaimResult.ClaimTypes.Intersect(ClaimTypeList).ToList();
 
-                    if (ClaimTypeIntersect.Any(i=>i == "Admin"))
+                    if (ClaimTypeIntersect.Any(i => i == "Admin"))
                     {
                         var ClaimValueListIntersect = customUserClaimResult.ClaimValues.Intersect(ClaimValueList).ToList();
 
-                        if (ClaimValueListIntersect.Any(i => i == "All Access"))
+                        if (ClaimValueListIntersect.Any())
                         {
 
                             var list = new List<GetAuthModel>();
@@ -258,10 +258,23 @@ namespace Interview.Application.Services.Concrete
                             }
 
                         }
+                        else
+                        {
+
+                            throw new NotFoundException("ClaimValue no found");
+                        }
+                    }
+                    else
+                    {
+
+                        throw new NotFoundException("ClaimType no found");
                     }
                 }
+                else
+                {
 
-                throw new ForbiddenException("You do not have permission to access users.");
+                    throw new ForbiddenException("You do not have permission to access users.");
+                }
             }
             else
             {
@@ -342,10 +355,23 @@ namespace Interview.Application.Services.Concrete
                             }
 
                         }
+                        else
+                        {
+
+                            throw new NotFoundException("ClaimValue no found");
+                        }
+                    }
+                    else
+                    {
+
+                        throw new NotFoundException("ClaimType no found");
                     }
                 }
+                else
+                {
 
-                throw new ForbiddenException("You do not have permission to access users.");
+                    throw new ForbiddenException("You do not have permission to access users.");
+                }
             }
             else
             {
@@ -512,14 +538,14 @@ namespace Interview.Application.Services.Concrete
 
             if (role == null)
             {
-                throw new NotFoundException($"Role '{roleId}' not found!");
+                throw new NotFoundException($"Role ID '{roleId}' not found!");
             }
 
             var user = await _userManager.FindByIdAsync(userId.ToString());
 
             if (user == null)
             {
-                throw new NotFoundException($"User '{userId}' not found!");
+                throw new NotFoundException($"User ID '{userId}' not found!");
             }
 
             //// Delete role claims

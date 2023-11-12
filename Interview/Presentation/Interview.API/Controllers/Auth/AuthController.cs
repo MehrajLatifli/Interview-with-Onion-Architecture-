@@ -94,10 +94,10 @@ namespace Interview.API.Controllers.Auth
         }
 
         [HttpDelete(Routes.DeleteRole)]
-        public async Task<IActionResult> DeleteRole(int roleId, int userId)
+        public async Task<IActionResult> DeleteRole([FromBody] DeleteRoleRequestModel model)
         {
 
-           await _authservice.DeleteRole( roleId,  userId,  User);
+           await _authservice.DeleteRole(model.RoleId, model.UserId,  User);
 
 
             return Ok(new Response { Status = "Success", Message = "The Role deleted successfully!" });
@@ -108,9 +108,9 @@ namespace Interview.API.Controllers.Auth
         [Authorize]
         [HttpPost]
         [Route(Routes.createRole)]
-        public async Task<IActionResult> CreateRole([FromQuery]string roleName)
+        public async Task<IActionResult> CreateRole([FromBody] CreateRoleRequestModel model)
         {
-            await _authservice.CreateRole( roleName, User);
+            await _authservice.CreateRole(model.RoleName, User);
 
 
             return Ok(new Response { Status = "Success", Message = "Role successfully created!" });
@@ -119,9 +119,9 @@ namespace Interview.API.Controllers.Auth
         [Authorize]
         [HttpPost]
         [Route(Routes.AddUserRole)]
-        public async Task<IActionResult> AddUserRole(int userId, int roleId, int roleAccessType)
+        public async Task<IActionResult> AddUserRole([FromBody] AddUserRoleRequestModel model)
         {
-            await _authservice.AddUserRole( userId,  roleId,  roleAccessType,  User);
+            await _authservice.AddUserRole(model.UserId, model.RoleId, model.RoleAccessType,  User);
 
 
             return Ok(new Response { Status = "Success", Message = "UserRole successfully created!" });
@@ -152,7 +152,7 @@ namespace Interview.API.Controllers.Auth
 
         [HttpPost]
         [Route(Routes.RegisterUser)]
-        public async Task<IActionResult> RegisterUser(/*[FromQuery] RegisterUserRequestModel registerUserRequestModel,*/ [FromForm] RegisterDTO model)
+        public async Task<IActionResult> RegisterUser( [FromForm] RegisterDTO model)
         {
 
             await _authservice.RegisterUser(model, ServiceExtension.ConnectionStringAzure);
