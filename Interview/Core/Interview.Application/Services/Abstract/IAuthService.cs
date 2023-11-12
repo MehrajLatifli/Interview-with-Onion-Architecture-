@@ -42,7 +42,7 @@ namespace Interview.Application.Services.Abstract
 
         public Task<List<GetAuthModel>> GetAdmins(ClaimsPrincipal User, CustomUserClaimResult customUserClaimResult);
 
-        public Task<List<GetAuthModel>> GetHR(ClaimsPrincipal User);
+        public Task<List<GetAuthModel>> GetHR(ClaimsPrincipal User, CustomUserClaimResult customUserClaimResult);
         public Task<List<GetRoleModel>> GetRoles(ClaimsPrincipal User);
 
       

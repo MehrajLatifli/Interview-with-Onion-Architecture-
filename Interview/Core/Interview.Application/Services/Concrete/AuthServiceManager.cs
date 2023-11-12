@@ -264,7 +264,7 @@ namespace Interview.Application.Services.Concrete
             }
         }
 
-        public async Task<List<GetAuthModel>> GetHR(ClaimsPrincipal User)
+        public async Task<List<GetAuthModel>> GetHR(ClaimsPrincipal User, CustomUserClaimResult customUserClaimResult)
         {
             if (User.Identity.IsAuthenticated)
             {
@@ -275,48 +275,67 @@ namespace Interview.Application.Services.Concrete
                 var userRoles = await _userManager.GetRolesAsync(customuser);
                 var roleClaims = User.FindAll(ClaimTypes.Role);
                 var roles = roleClaims.Select(c => c.Value).ToList();
-            
+
+                bool isAdmin = roles.Contains(UserRoles.Admin);
 
                 if (customuser == null)
                 {
                     throw new NotFoundException("User not found!");
                 }
 
-              
-                    var list = new List<GetAuthModel>();
-                    var usersInHRRole = await _userManager.GetUsersInRoleAsync(UserRoles.HR);
+                var ClaimTypeList = userClaims.Select(claim => claim.Type).ToList();
+                var ClaimValueList = userClaims.Select(claim => claim.Value).ToList();
 
-                    foreach (var item in usersInHRRole)
+                if (customUserClaimResult.UserIds.Contains(customuser.Id))
+                {
+                    var ClaimTypeIntersect = customUserClaimResult.ClaimTypes.Intersect(ClaimTypeList).ToList();
+
+                    if (ClaimTypeIntersect.Any(i => i == "Admin" || i=="HR"))
                     {
-                        var claims = await _userManager.GetClaimsAsync(item);
+                        var ClaimValueListIntersect = customUserClaimResult.ClaimValues.Intersect(ClaimValueList).ToList();
 
-                        var userClaims_ = claims.Select(c => new UserClaimModel
+                        if (ClaimValueListIntersect.Any(i => i == "All Access"))
                         {
-                            Role = c.Type,
-                            Permition = c.Value
-                        }).ToList();
 
+                            var list = new List<GetAuthModel>();
 
-                        list.Add(new GetAuthModel()
-                        {
-                            Id = item.Id.ToString(),
-                            Username = item.UserName,
-                            PhoneNumber = item.PhoneNumber,
-                            Email = item.Email,
-                            ImagePath = item.ImagePath,
-                            UserClaims = userClaims_, // Fix here
-                        });
-                    }
+                            var usersInHRRole = await _userManager.GetUsersInRoleAsync(UserRoles.Admin);
 
-                    if (list.Any())
-                    {
-                        return list;
+                            foreach (var item in usersInHRRole)
+                            {
+                                var claims = await _userManager.GetClaimsAsync(item);
+
+                                var userClaims_ = claims.Select(c => new UserClaimModel
+                                {
+                                    Role = c.Type,
+                                    Permition = c.Value
+                                }).ToList();
+
+                                list.Add(new GetAuthModel()
+                                {
+                                    Id = item.Id.ToString(),
+                                    Username = item.UserName,
+                                    PhoneNumber = item.PhoneNumber,
+                                    Email = item.Email,
+                                    ImagePath = item.ImagePath,
+                                    UserClaims = userClaims_,
+                                });
+                            }
+
+                            if (list.Any())
+                            {
+                                return list;
+                            }
+                            else
+                            {
+                                throw new NotFoundException("No users found!");
+                            }
+
+                        }
                     }
-                    else
-                    {
-                        throw new NotFoundException("No  users found!");
-                    }
-             
+                }
+
+                throw new ForbiddenException("You do not have permission to access users.");
             }
             else
             {

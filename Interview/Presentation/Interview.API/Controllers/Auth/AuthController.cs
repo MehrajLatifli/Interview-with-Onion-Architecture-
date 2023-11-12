@@ -81,7 +81,7 @@ namespace Interview.API.Controllers.Auth
         public async Task<IActionResult> GetHR()
         {
 
-            return Ok(await _authservice.GetHR(User));
+            return Ok(await _authservice.GetHR(User, await CustomUserClaimQuery.GetCustomUserClaimsAsync(_interviewContext)));
 
         }
 
