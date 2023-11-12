@@ -24,6 +24,9 @@ using Interview.Application.Validations;
 using Interview.Application.Validations.Interview.Application.Validations;
 using Interview.Domain.Entities.IdentityAuth;
 using Interview.Domain.Entities.Requests;
+using Interview.Persistence.Contexts.InterviewDbContext;
+using Microsoft.EntityFrameworkCore;
+using Interview.Persistence.SqlQueries;
 
 namespace Interview.API.Controllers.Auth
 {
@@ -34,12 +37,14 @@ namespace Interview.API.Controllers.Auth
 
         public readonly IMapper _mapper;
         private readonly IAuthService _authservice;
+        private readonly InterviewContext _interviewContext;
 
 
-        public AuthController(IMapper mapper, IAuthService authservice)
+        public AuthController(IMapper mapper, IAuthService authservice, InterviewContext interviewContext)
         {
             _mapper = mapper;
             _authservice = authservice;
+            _interviewContext = interviewContext;
         }
 
         [HttpGet(Routes.GetRoleAccessType)]
@@ -59,7 +64,12 @@ namespace Interview.API.Controllers.Auth
         {
 
 
-            return Ok(await _authservice.GetAdmins(User));
+           
+
+
+
+
+            return Ok(await _authservice.GetAdmins(User, await CustomUserClaimQuery.GetCustomUserClaimsAsync(_interviewContext)));
 
         }
 
@@ -83,11 +93,11 @@ namespace Interview.API.Controllers.Auth
 
         }
 
-        [HttpDelete(Routes.DeleteClaims)]
-        public async Task<IActionResult> DeleteClaims(int roleId, int userId)
+        [HttpDelete(Routes.DeleteRole)]
+        public async Task<IActionResult> DeleteRole(int roleId, int userId)
         {
 
-           await _authservice.DeleteClaims( roleId,  userId,  User);
+           await _authservice.DeleteRole( roleId,  userId,  User);
 
 
             return Ok(new Response { Status = "Success", Message = "The Role deleted successfully!" });
@@ -98,14 +108,24 @@ namespace Interview.API.Controllers.Auth
         [Authorize]
         [HttpPost]
         [Route(Routes.createRole)]
-        public async Task<IActionResult> CreateRole(string userId, string roleName, int roleAccesstype)
+        public async Task<IActionResult> CreateRole([FromQuery]string roleName)
         {
-            await _authservice.CreateRoleForUser( userId,  roleName,  roleAccesstype, User);
+            await _authservice.CreateRole( roleName, User);
 
 
             return Ok(new Response { Status = "Success", Message = "Role successfully created!" });
         }
 
+        [Authorize]
+        [HttpPost]
+        [Route(Routes.AddUserRole)]
+        public async Task<IActionResult> AddUserRole(int userId, int roleId, int roleAccessType)
+        {
+            await _authservice.AddUserRole( userId,  roleId,  roleAccessType,  User);
+
+
+            return Ok(new Response { Status = "Success", Message = "UserRole successfully created!" });
+        }
 
         [HttpPost]
         [Route(Routes.RegisterAdmin)]
@@ -132,10 +152,10 @@ namespace Interview.API.Controllers.Auth
 
         [HttpPost]
         [Route(Routes.RegisterUser)]
-        public async Task<IActionResult> RegisterUser([FromQuery] RegisterUserRequestModel registerUserRequestModel, [FromForm] RegisterDTO model)
+        public async Task<IActionResult> RegisterUser(/*[FromQuery] RegisterUserRequestModel registerUserRequestModel,*/ [FromForm] RegisterDTO model)
         {
 
-            await _authservice.RegisterUser( model, ServiceExtension.ConnectionStringAzure, registerUserRequestModel.customRoles, registerUserRequestModel.roleAccesstype);
+            await _authservice.RegisterUser(model, ServiceExtension.ConnectionStringAzure);
 
 
             return Ok(new Response { Status = "Success", Message = "User created successfully!" });

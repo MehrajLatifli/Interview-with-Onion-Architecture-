@@ -33,6 +33,7 @@ using System.Runtime.ConstrainedExecution;
 using System.IO;
 using Microsoft.AspNetCore.Http.HttpResults;
 using NuGet.Packaging;
+using System.Collections;
 
 namespace Interview.Application.Services.Concrete
 {
@@ -61,55 +62,87 @@ namespace Interview.Application.Services.Concrete
 
         public async Task<List<RoleAccessTypeDTO>> GetRoleAccessType(ClaimsPrincipal User)
         {
-          
 
 
-                //CustomPolicy.Policy = userRoles.FirstOrDefault();
-                //CustomPolicyRole.PolicyRole = userRoles.FirstOrDefault();
 
-         
-
-                    var roleAccessTypes = new List<RoleAccessTypeDTO>();
-
-                    var roleAccessType = new RoleAccessTypeDTO();
-
-                    // Get all fields of RoleAccessType using reflection
-                    var fields = typeof(RoleAccessType).GetFields(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
-
-                    foreach (var field in fields)
-                    {
-                        var roleName = field.Name;
-                        var roleValue = (string)field.GetValue(null);
-
-                        // Assign the value to the first non-null property
-                        if (roleValue != null)
-                        {
-                            roleAccessType.Add ??= roleName == nameof(RoleAccessType.Add_ClaimValue) ? roleValue : null;
-                            roleAccessType.Edit ??= roleName == nameof(RoleAccessType.Edit_ClaimValue) ? roleValue : null;
-                            roleAccessType.Delete ??= roleName == nameof(RoleAccessType.Delete_ClaimValue) ? roleValue : null;
-                            roleAccessType.Get ??= roleName == nameof(RoleAccessType.Get_ClaimValue) ? roleValue : null;
-                            roleAccessType.AllAccess ??= roleName == nameof(RoleAccessType.AllAccess_ClaimValue) ? roleValue : null;
-                        }
-                    }
+            //CustomPolicy.Policy = userRoles.FirstOrDefault();
+            //CustomPolicyRole.PolicyRole = userRoles.FirstOrDefault();
 
 
-                    roleAccessTypes.Add(roleAccessType);
 
-                    if (roleAccessTypes.Any())
-                    {
+            var roleAccessTypes = new List<RoleAccessTypeDTO>();
 
-                        return roleAccessTypes;
-                    }
+            var roleAccessType = new RoleAccessTypeDTO();
 
-                    else
-                    {
+            // Get all fields of RoleAccessType using reflection
+            //var fields = typeof(RoleAccessType).GetFields(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
 
-                        throw new NotFoundException("Nothing found!");
+            //foreach (var field in fields)
+            //{
+            //    var roleName = field.Name;
+            //    var roleValue = (string)field.GetValue(null);
 
-                    }
+            //    // Assign the value to the first non-null property
+            //    if (roleValue != null)
+            //    {
+            //        roleAccessType.Add ??= roleName == nameof(RoleAccessType.Add_ClaimValue) ? roleValue : null;
+            //        roleAccessType.Edit ??= roleName == nameof(RoleAccessType.Edit_ClaimValue) ? roleValue : null;
+            //        roleAccessType.Delete ??= roleName == nameof(RoleAccessType.Delete_ClaimValue) ? roleValue : null;
+            //        roleAccessType.Get ??= roleName == nameof(RoleAccessType.Get_ClaimValue) ? roleValue : null;
+            //        roleAccessType.AllAccess ??= roleName == nameof(RoleAccessType.AllAccess_ClaimValue) ? roleValue : null;
+            //    }
+            //}
 
-           
-          
+
+
+
+
+            roleAccessTypes.Add(new RoleAccessTypeDTO
+            {
+                Id = 1,
+                RoleAccess = RoleAccessType.Add_ClaimValue,
+            });
+
+            roleAccessTypes.Add(new RoleAccessTypeDTO
+            {
+                Id = 2,
+                RoleAccess = RoleAccessType.Edit_ClaimValue,
+            });
+
+            roleAccessTypes.Add(new RoleAccessTypeDTO
+            {
+                Id = 3,
+                RoleAccess = RoleAccessType.Delete_ClaimValue,
+            });
+
+            roleAccessTypes.Add(new RoleAccessTypeDTO
+            {
+                Id = 4,
+                RoleAccess = RoleAccessType.Get_ClaimValue,
+            });
+
+            roleAccessTypes.Add(new RoleAccessTypeDTO
+            {
+                Id = 5,
+                RoleAccess = RoleAccessType.AllAccess_ClaimValue,
+            });
+
+
+            if (roleAccessTypes.Any())
+            {
+
+                return roleAccessTypes;
+            }
+
+            else
+            {
+
+                throw new NotFoundException("Nothing found!");
+
+            }
+
+
+
         }
 
         public async Task<List<GetRoleModel>> GetRoles(ClaimsPrincipal User)
@@ -152,7 +185,7 @@ namespace Interview.Application.Services.Concrete
         
         }
 
-        public async Task<List<GetAuthModel>> GetAdmins(ClaimsPrincipal User)
+        public async Task<List<GetAuthModel>> GetAdmins(ClaimsPrincipal User, CustomUserClaimResult customUserClaimResult)
         {
             if (User.Identity.IsAuthenticated)
             {
@@ -163,6 +196,7 @@ namespace Interview.Application.Services.Concrete
                 var userRoles = await _userManager.GetRolesAsync(customuser);
                 var roleClaims = User.FindAll(ClaimTypes.Role);
                 var roles = roleClaims.Select(c => c.Value).ToList();
+
                 bool isAdmin = roles.Contains(UserRoles.Admin);
 
                 if (customuser == null)
@@ -170,51 +204,63 @@ namespace Interview.Application.Services.Concrete
                     throw new NotFoundException("User not found!");
                 }
 
-                if (isAdmin)
+                var ClaimTypeList = userClaims.Select(claim => claim.Type).ToList();
+                var ClaimValueList = userClaims.Select(claim => claim.Value).ToList();
+
+                if (customUserClaimResult.UserIds.Contains(customuser.Id))
                 {
-                    var list = new List<GetAuthModel>();
+                    var ClaimTypeIntersect = customUserClaimResult.ClaimTypes.Intersect(ClaimTypeList).ToList();
 
-                    var usersInHRRole = await _userManager.GetUsersInRoleAsync(UserRoles.Admin);
-
-                    foreach (var item in usersInHRRole)
+                    if (ClaimTypeIntersect.Any(i=>i == "Admin"))
                     {
-                        var claims = await _userManager.GetClaimsAsync(item);
+                        var ClaimValueListIntersect = customUserClaimResult.ClaimValues.Intersect(ClaimValueList).ToList();
 
-                        var userClaims_ = claims.Select(c => new UserClaimModel
+                        if (ClaimValueListIntersect.Any(i => i == "All Access"))
                         {
-                            Role = c.Type,
-                            Permition = c.Value
-                        }).ToList();
+                            
+                                var list = new List<GetAuthModel>();
 
+                                var usersInHRRole = await _userManager.GetUsersInRoleAsync(UserRoles.Admin);
 
-                        list.Add(new GetAuthModel()
-                        {
-                            Id=item.Id.ToString(),
-                            Username = item.UserName,
-                            PhoneNumber = item.PhoneNumber,
-                            Email = item.Email,
-                            ImagePath = item.ImagePath,
-                            UserClaims = userClaims_, // Fix here
-                        });
-                    }
+                                foreach (var item in usersInHRRole)
+                                {
+                                    var claims = await _userManager.GetClaimsAsync(item);
 
-                    if (list.Any())
-                    {
-                        return list;
-                    }
-                    else
-                    {
-                        throw new NotFoundException("No HR users found!");
+                                    var userClaims_ = claims.Select(c => new UserClaimModel
+                                    {
+                                        Role = c.Type,
+                                        Permition = c.Value
+                                    }).ToList();
+
+                                    list.Add(new GetAuthModel()
+                                    {
+                                        Id = item.Id.ToString(),
+                                        Username = item.UserName,
+                                        PhoneNumber = item.PhoneNumber,
+                                        Email = item.Email,
+                                        ImagePath = item.ImagePath,
+                                        UserClaims = userClaims_,
+                                    });
+                                }
+
+                                if (list.Any())
+                                {
+                                    return list;
+                                }
+                                else
+                                {
+                                    throw new NotFoundException("No users found!");
+                                }
+                         
+                        }
                     }
                 }
-                else
-                {
-                    throw new ForbiddenException("You do not have permission to access HR users.");
-                }
+
+                throw new ForbiddenException("You do not have permission to access users.");
             }
             else
             {
-                throw new UnauthorizedException("Current user is not authenticated.");
+                throw new UnauthorizedException("User is not authenticated.");
             }
         }
 
@@ -229,15 +275,14 @@ namespace Interview.Application.Services.Concrete
                 var userRoles = await _userManager.GetRolesAsync(customuser);
                 var roleClaims = User.FindAll(ClaimTypes.Role);
                 var roles = roleClaims.Select(c => c.Value).ToList();
-                bool isAdmin = roles.Contains(UserRoles.Admin);
+            
 
                 if (customuser == null)
                 {
                     throw new NotFoundException("User not found!");
                 }
 
-                if (isAdmin)
-                {
+              
                     var list = new List<GetAuthModel>();
                     var usersInHRRole = await _userManager.GetUsersInRoleAsync(UserRoles.HR);
 
@@ -269,46 +314,24 @@ namespace Interview.Application.Services.Concrete
                     }
                     else
                     {
-                        throw new NotFoundException("No HR users found!");
+                        throw new NotFoundException("No  users found!");
                     }
-                }
-                else
-                {
-                    throw new ForbiddenException("You do not have permission to access HR users.");
-                }
+             
             }
             else
             {
-                throw new UnauthorizedException("Current user is not authenticated.");
+                throw new UnauthorizedException("User is not authenticated.");
             }
         }
 
-        public async Task CreateRoleForUser(string userId, string roleName, int roleAccessType, ClaimsPrincipal User)
+        public async Task CreateRole(string roleName, ClaimsPrincipal User)
         {
-            var user = await _userManager.FindByIdAsync(userId);
 
-            if (user == null)
+
+            if (User.Identity.IsAuthenticated)
             {
-                throw new NotFoundException("User not found!");
-            }
 
 
-            if (!(roleAccessType is int))
-            {
-                throw new BadHttpRequestException("RoleAccessType is NOT of type int");
-            }
-
-            if (!(roleAccessType is 1) && !(roleAccessType is 2) && !(roleAccessType is 3) && !(roleAccessType is 4) && !(roleAccessType is 5))
-            {
-                throw new BadHttpRequestException("RoleAccessType does not exist");
-            }
-
-       
-
-            var isInRole = await _userManager.IsInRoleAsync(user, roleName);
-
-            if (!isInRole)
-            {
                 var roleExists = await _roleManager.RoleExistsAsync(roleName);
 
                 if (!roleExists)
@@ -321,16 +344,16 @@ namespace Interview.Application.Services.Concrete
                         throw new InvalidOperationException("Failed to create the role.");
                     }
 
-                    await _userManager.AddToRoleAsync(user, roleName);
+
 
                     var role = await _roleManager.FindByNameAsync(roleName);
 
                     if (role != null)
                     {
                         var roleClaims = new List<Claim>
-                {
-                    new Claim(roleName, roleName.ToUpper())
-                };
+                        {
+                            new Claim(roleName, roleName.ToUpper())
+                        };
 
                         foreach (var claim in roleClaims)
                         {
@@ -338,50 +361,123 @@ namespace Interview.Application.Services.Concrete
                         }
                     }
 
-                    if (User.Identity.IsAuthenticated)
-                    {
-                        var userClaims = new List<Claim>();
-
-                        switch (roleAccessType)
-                        {
-                            case 1:
-                                userClaims.Add(new Claim(role.Name, RoleAccessType.Add_ClaimValue));
-                                break;
-                            case 2:
-                                userClaims.Add(new Claim(role.Name, RoleAccessType.Edit_ClaimValue));
-                                break;
-                            case 3:
-                                userClaims.Add(new Claim(role.Name, RoleAccessType.Delete_ClaimValue));
-                                break;
-                            case 4:
-                                userClaims.Add(new Claim(role.Name, RoleAccessType.Get_ClaimValue));
-                                break;
-                            case 5:
-                                userClaims.Add(new Claim(role.Name, RoleAccessType.AllAccess_ClaimValue));
-                                break;
-                        }
-
-                        foreach (var claim in userClaims)
-                        {
-                            await _userManager.AddClaimAsync(user, claim);
-                        }
-                    }
                 }
                 else
                 {
-                    throw new InvalidOperationException("Role already exists");
+                    throw new ConflictException("Role already exists");
                 }
+
             }
             else
             {
-                throw new InvalidOperationException("User is already in the specified role.");
+                throw new UnauthorizedException("Current user is not authenticated.");
             }
 
 
 
         }
 
-        public async Task DeleteClaims(int roleId, int userId, ClaimsPrincipal User)
+        public async Task AddUserRole(int userId, int roleId, int roleAccessType, ClaimsPrincipal User)
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+
+                var user = await _userManager.FindByIdAsync(userId.ToString());
+
+                if (user == null)
+                {
+                    throw new NotFoundException("User not found!");
+                }
+
+                var customRole = await _roleManager.FindByIdAsync(roleId.ToString());
+
+
+                if (customRole is null)
+                {
+                    throw new NotFoundException($"There is no role with ID {roleId}.");
+                }
+
+
+                if (!(roleAccessType is int))
+                {
+                    throw new BadHttpRequestException("RoleAccessType is NOT of type int");
+                }
+
+                if (!(roleAccessType is 1) && !(roleAccessType is 2) && !(roleAccessType is 3) && !(roleAccessType is 4) && !(roleAccessType is 5))
+                {
+                    throw new NotFoundException("RoleAccessType does not exist");
+                }
+
+
+                var isInRole = await _userManager.IsInRoleAsync(user, customRole.Name);
+
+                if (!isInRole)
+                {
+                    var customUser = await _userManager.FindByIdAsync(userId.ToString());
+
+                    if (customUser != null)
+                    {
+                        if (customRole != null)
+                        {
+                            
+
+
+                            var userClaims = new List<Claim>();
+
+                            switch (roleAccessType)
+                            {
+                                case 1:
+                                    userClaims.Add(new Claim(customRole.Name, RoleAccessType.Add_ClaimValue));
+                                    break;
+                                case 2:
+                                    userClaims.Add(new Claim(customRole.Name, RoleAccessType.Edit_ClaimValue));
+                                    break;
+                                case 3:
+                                    userClaims.Add(new Claim(customRole.Name, RoleAccessType.Delete_ClaimValue));
+                                    break;
+                                case 4:
+                                    userClaims.Add(new Claim(customRole.Name, RoleAccessType.Get_ClaimValue));
+                                    break;
+                                case 5:
+                                    userClaims.Add(new Claim(customRole.Name, RoleAccessType.AllAccess_ClaimValue));
+                                    break;
+                            }
+
+                            foreach (var claim in userClaims)
+                            {
+                                await _userManager.AddClaimAsync(user, claim);
+                            }
+
+
+                            await _userManager.AddToRoleAsync(customUser, customRole.Name);
+                        }
+                    }
+                }
+                else
+                {
+                    throw new ConflictException("Role already exists");
+                }
+
+            }
+            else
+            {
+                throw new ConflictException("User is already in the specified claim.");
+            }
+        }
+
+        public async Task UpdateUserRole(int userId, int roleId, int roleAccessType, ClaimsPrincipal User)
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+
+            }
+            else
+            {
+                throw new ConflictException("User is already in the specified claim.");
+            }
+        }
+
+        public async Task DeleteRole(int roleId, int userId, ClaimsPrincipal User)
         {
             var role = await _roleManager.FindByIdAsync(roleId.ToString());
 
@@ -397,16 +493,16 @@ namespace Interview.Application.Services.Concrete
                 throw new NotFoundException($"User '{userId}' not found!");
             }
 
-            // Delete role claims
-            var roleClaims = await _roleManager.GetClaimsAsync(role);
-            foreach (var claim in roleClaims)
-            {
-                var result = await _roleManager.RemoveClaimAsync(role, claim);
-                if (!result.Succeeded)
-                {
-                    throw new ApplicationException($"Error removing claim '{claim.Type}' from role '{roleId.ToString()}': {string.Join(", ", result.Errors)}");
-                }
-            }
+            //// Delete role claims
+            //var roleClaims = await _roleManager.GetClaimsAsync(role);
+            //foreach (var claim in roleClaims)
+            //{
+            //    var result = await _roleManager.RemoveClaimAsync(role, claim);
+            //    if (!result.Succeeded)
+            //    {
+            //        throw new ApplicationException($"Error removing claim '{claim.Type}' from role '{roleId.ToString()}': {string.Join(", ", result.Errors)}");
+            //    }
+            //}
 
             // Remove role claims from user identity
             var userClaims = await _userManager.GetClaimsAsync(user);
@@ -428,12 +524,20 @@ namespace Interview.Application.Services.Concrete
                 throw new NotFoundException($"Claim with type '{role.Name}' not found for user '{userId}'.");
             }
 
-            // Delete the role
-            var deleteResult = await _roleManager.DeleteAsync(role);
-            if (!deleteResult.Succeeded)
+
+            var userroleResult = await _userManager.RemoveFromRoleAsync(user, role.Name);
+
+            if (!userroleResult.Succeeded)
             {
-                throw new ApplicationException($"Error deleting role '{roleId.ToString()}': {string.Join(", ", deleteResult.Errors)}");
+                throw new ApplicationException($"Error removing user '{userId}' from role '{role.Name}': {string.Join(", ", userroleResult.Errors)}");
             }
+
+            //// Delete the role
+            //var deleteResult = await _roleManager.DeleteAsync(role);
+            //if (!deleteResult.Succeeded)
+            //{
+            //    throw new ApplicationException($"Error deleting role '{roleId.ToString()}': {string.Join(", ", deleteResult.Errors)}");
+            //}
         }
 
 
@@ -744,17 +848,9 @@ namespace Interview.Application.Services.Concrete
 
         }
 
-        public async Task RegisterUser(RegisterDTO model, string ConnectionStringAzure, string customRoles, int roleAccesstype)
+        public async Task RegisterUser(RegisterDTO model, string ConnectionStringAzure)
         {
-            if (!(roleAccesstype is int))
-            {
-                throw new BadHttpRequestException("RoleAccesstype is NOT of type int");
-            }
 
-            if (!(roleAccesstype is 1) && !(roleAccesstype is 2) && !(roleAccesstype is 3) && !(roleAccesstype is 4) && !(roleAccesstype is 5))
-            {
-                throw new NotFoundException("RoleAccesstype does not exist");
-            }
 
             var entity = _mapper.Map<Register>(model);
 
@@ -813,120 +909,7 @@ namespace Interview.Application.Services.Concrete
                 throw new ConflictException("User creation failed.");
             }
 
-            if (user != null)
-            {
-                if (!await _roleManager.RoleExistsAsync(customRoles))
-                {
-                    CustomRole customRole = new()
-                    {
-                        Name = $"{customRoles}",
-                    };
-
-                    await _roleManager.CreateAsync(customRole);
-                }
-
-               
-
-
-                if (!await _userManager.IsInRoleAsync(user, customRoles))
-                {
-                    await _userManager.AddToRoleAsync(user, customRoles);
-                }
-
-
-                var role = await _roleManager.FindByNameAsync(customRoles);
-                if (role != null)
-                {
-                    var roleClaims = new List<Claim>{
-
-                       new Claim(role.Name, role.Name.ToUpper())
-                   
-                    };
-
-                    foreach (var claim in roleClaims)
-                    {
-                        await _roleManager.AddClaimAsync(role, claim);
-                    }
-
-
-
-                }
-
-                if (cuser != null)
-                {
-                    if (roleAccesstype == 1)
-                    {
-
-                        var userClaims = new List<Claim>
-                        {
-                           new Claim(role.Name, RoleAccessType.Add_ClaimValue)
-
-                        };
-
-                        foreach (var claim in userClaims)
-                        {
-                            await _userManager.AddClaimAsync(cuser, claim);
-                        }
-                    };
-                    if (roleAccesstype == 2)
-                    {
-
-                        var userClaims = new List<Claim>
-                        {
-                           new Claim(role.Name, RoleAccessType.Edit_ClaimValue)
-
-                        };
-
-                        foreach (var claim in userClaims)
-                        {
-                            await _userManager.AddClaimAsync(cuser, claim);
-                        }
-                    };
-                    if (roleAccesstype == 3)
-                    {
-
-                        var userClaims = new List<Claim>
-                        {
-                           new Claim(role.Name, RoleAccessType.Delete_ClaimValue)
-
-                        };
-
-                        foreach (var claim in userClaims)
-                        {
-                            await _userManager.AddClaimAsync(cuser, claim);
-                        }
-                    };
-                    if (roleAccesstype == 4)
-                    {
-
-                        var userClaims = new List<Claim>
-                        {
-                           new Claim(role.Name, RoleAccessType.Get_ClaimValue)
-
-                        };
-
-                        foreach (var claim in userClaims)
-                        {
-                            await _userManager.AddClaimAsync(cuser, claim);
-                        }
-                    };
-                    if (roleAccesstype == 5)
-                    {
-
-                        var userClaims = new List<Claim>
-                        {
-                           new Claim(role.Name, RoleAccessType.AllAccess_ClaimValue)
-
-                        };
-
-                        foreach (var claim in userClaims)
-                        {
-                            await _userManager.AddClaimAsync(cuser, claim);
-                        }
-                    };
-                }
-
-            }
+          
 
 
 

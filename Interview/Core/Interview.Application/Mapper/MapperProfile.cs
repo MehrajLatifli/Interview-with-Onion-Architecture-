@@ -112,8 +112,7 @@ namespace Interview.Application.Mapper
             CreateMap<UpdateProfile, UpdateProfileDTO>();
             CreateMap<UpdateProfileDTO, UpdateProfile>();
 
-            CreateMap<RoleAccessType, RoleAccessTypeDTO>();
-            CreateMap<RoleAccessTypeDTO, RoleAccessType>();
+       
         }
     }
 }
