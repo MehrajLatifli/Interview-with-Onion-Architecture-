@@ -40,6 +40,14 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[Role]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[RoleClaim]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[Session]",
          "ObjectType": 0
       },
@@ -56,6 +64,18 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[User]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[UserClaim]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[UserRole]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[Vacancy]",
          "ObjectType": 0
       }
@@ -66,6 +86,7 @@
    "UseDatabaseNames": true,
    "UseDateOnlyTimeOnly": false,
    "UseDbContextSplitting": false,
+   "UseDecimalDataAnnotationForSprocResult": true,
    "UseFluentApiOnly": false,
    "UseHandleBars": false,
    "UseHierarchyId": false,

@@ -22,7 +22,7 @@ namespace Interview.Persistence.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Interview.Domain.Entities.IdentityAuth.CustomRole", b =>
+            modelBuilder.Entity("Interview.Domain.Entities.IdentityAuth.Role", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -36,15 +36,13 @@ namespace Interview.Persistence.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("NormalizedName")
-                        .HasColumnType("nvarchar(max)");
+                    b.HasKey("Id")
+                        .HasName("PK__Role__3214EC07C59F717C");
 
-                    b.HasKey("Id");
-
-                    b.ToTable("CustomRoles", (string)null);
+                    b.ToTable("Roles");
                 });
 
-            modelBuilder.Entity("Interview.Domain.Entities.IdentityAuth.CustomRoleClaim", b =>
+            modelBuilder.Entity("Interview.Domain.Entities.IdentityAuth.RoleClaim", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -61,23 +59,21 @@ namespace Interview.Persistence.Migrations
                     b.Property<int>("RoleId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PK__RoleClai__3214EC0701854A8C");
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("CustomRoleClaim", (string)null);
+                    b.ToTable("RoleClaims");
                 });
 
-            modelBuilder.Entity("Interview.Domain.Entities.IdentityAuth.CustomUser", b =>
+            modelBuilder.Entity("Interview.Domain.Entities.IdentityAuth.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AccessFailedCount")
-                        .HasColumnType("int");
 
                     b.Property<string>("ConcurrencyStamp")
                         .HasColumnType("nvarchar(max)");
@@ -85,32 +81,14 @@ namespace Interview.Persistence.Migrations
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("bit");
-
                     b.Property<string>("ImagePath")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("NormalizedEmail")
+                    b.Property<string>("Password")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("NormalizedUserName")
+                    b.Property<string>("Phonenumber")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PasswordHash")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("bit");
 
                     b.Property<string>("RefreshToken")
                         .HasColumnType("nvarchar(max)");
@@ -118,21 +96,16 @@ namespace Interview.Persistence.Migrations
                     b.Property<DateTime?>("RefreshTokenExpiryTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("SecurityStamp")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("bit");
-
                     b.Property<string>("UserName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PK__User__3214EC07FA4259EB");
 
-                    b.ToTable("CustomUsers", (string)null);
+                    b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Interview.Domain.Entities.IdentityAuth.CustomUserClaim", b =>
+            modelBuilder.Entity("Interview.Domain.Entities.IdentityAuth.UserClaim", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -149,68 +122,36 @@ namespace Interview.Persistence.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PK__UserClai__3214EC076DCED94E");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("CustomUserClaim", (string)null);
+                    b.ToTable("UserClaims");
                 });
 
-            modelBuilder.Entity("Interview.Domain.Entities.IdentityAuth.CustomUserLogin", b =>
+            modelBuilder.Entity("Interview.Domain.Entities.IdentityAuth.UserRole", b =>
                 {
-                    b.Property<int>("UserId")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<string>("LoginProvider")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ProviderDisplayName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ProviderKey")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("UserId");
-
-                    b.ToTable("CustomUserLogins", (string)null);
-                });
-
-            modelBuilder.Entity("Interview.Domain.Entities.IdentityAuth.CustomUserRole", b =>
-                {
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("RoleId")
                         .HasColumnType("int");
 
-                    b.HasKey("UserId", "RoleId");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("CustomUserRoles", (string)null);
-                });
-
-            modelBuilder.Entity("Interview.Domain.Entities.IdentityAuth.CustomUserToken", b =>
-                {
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    b.Property<string>("LoginProvider")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.HasKey("Id")
+                        .HasName("PK__UserRole__3214EC079524A0B8");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.HasIndex("RoleId");
 
-                    b.Property<string>("Value")
-                        .HasColumnType("nvarchar(max)");
+                    b.HasIndex("UserId");
 
-                    b.HasKey("UserId");
-
-                    b.ToTable("CustomUserTokens", (string)null);
+                    b.ToTable("UserRoles");
                 });
 
             modelBuilder.Entity("Interview.Domain.Entities.Models.Candidate", b =>
@@ -225,7 +166,7 @@ namespace Interview.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id")
-                        .HasName("PK__Candidate");
+                        .HasName("PK__Candidat__3214EC07469F46D4");
 
                     b.HasIndex("CandidateDocumentId");
 
@@ -265,7 +206,7 @@ namespace Interview.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id")
-                        .HasName("PK__CandidateDocument");
+                        .HasName("PK__Candidat__3214EC07412C1956");
 
                     b.ToTable("CandidateDocuments");
                 });
@@ -283,7 +224,7 @@ namespace Interview.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id")
-                        .HasName("PK__Category");
+                        .HasName("PK__Category__3214EC072D3EC4B7");
 
                     b.ToTable("Categories");
                 });
@@ -297,14 +238,14 @@ namespace Interview.Persistence.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("Coefficient")
-                        .HasColumnType("decimal(18, 2)");
+                        .HasColumnType("decimal(18, 0)");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id")
-                        .HasName("PK__Level");
+                        .HasName("PK__Level__3214EC0735A80859");
 
                     b.ToTable("Levels");
                 });
@@ -322,7 +263,7 @@ namespace Interview.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id")
-                        .HasName("PK__Position");
+                        .HasName("PK__Position__3214EC0730660A0E");
 
                     b.ToTable("Positions");
                 });
@@ -345,11 +286,11 @@ namespace Interview.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Text")
-                        .ValueGeneratedOnAdd()
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id")
-                        .HasName("PK__Question");
+                        .HasName("PK__Question__3214EC07C839599E");
 
                     b.HasIndex("CategoryId");
 
@@ -376,22 +317,24 @@ namespace Interview.Persistence.Migrations
 
                     b.Property<decimal?>("EndValue")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(18, 2)")
+                        .HasColumnType("decimal(18, 0)")
                         .HasDefaultValueSql("((0.0))");
 
                     b.Property<DateTime?>("StartDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("UserAccountId")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.Property<int>("VacancyId")
                         .HasColumnType("int");
 
                     b.HasKey("Id")
-                        .HasName("PK__Session");
+                        .HasName("PK__Session__3214EC07289FC67F");
 
                     b.HasIndex("CandidateId");
+
+                    b.HasIndex("UserId");
 
                     b.HasIndex("VacancyId");
 
@@ -418,7 +361,7 @@ namespace Interview.Persistence.Migrations
                         .HasDefaultValueSql("((0))");
 
                     b.HasKey("Id")
-                        .HasName("PK__SessionQuestion");
+                        .HasName("PK__SessionQ__3214EC07DABC968F");
 
                     b.HasIndex("QuestionId");
 
@@ -447,7 +390,7 @@ namespace Interview.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id")
-                        .HasName("PK__Structure");
+                        .HasName("PK__Structur__3214EC077D1F08DF");
 
                     b.HasIndex("StructureTypeId");
 
@@ -466,7 +409,8 @@ namespace Interview.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PK__Structur__3214EC0720B22513");
 
                     b.ToTable("StructureTypes");
                 });
@@ -500,7 +444,7 @@ namespace Interview.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id")
-                        .HasName("PK__Vacancy");
+                        .HasName("PK__Vacancy__3214EC07C2961250");
 
                     b.HasIndex("PositionId");
 
@@ -509,55 +453,45 @@ namespace Interview.Persistence.Migrations
                     b.ToTable("Vacancies");
                 });
 
-            modelBuilder.Entity("Interview.Domain.Entities.IdentityAuth.CustomRoleClaim", b =>
+            modelBuilder.Entity("Interview.Domain.Entities.IdentityAuth.RoleClaim", b =>
                 {
-                    b.HasOne("Interview.Domain.Entities.IdentityAuth.CustomRole", null)
-                        .WithMany()
+                    b.HasOne("Interview.Domain.Entities.IdentityAuth.Role", "Role")
+                        .WithMany("RoleClaim")
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("FK_RoleId_forRoleClaim");
+
+                    b.Navigation("Role");
                 });
 
-            modelBuilder.Entity("Interview.Domain.Entities.IdentityAuth.CustomUserClaim", b =>
+            modelBuilder.Entity("Interview.Domain.Entities.IdentityAuth.UserClaim", b =>
                 {
-                    b.HasOne("Interview.Domain.Entities.IdentityAuth.CustomUser", null)
-                        .WithMany()
+                    b.HasOne("Interview.Domain.Entities.IdentityAuth.User", "User")
+                        .WithMany("UserClaim")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("FK_UserId_forUserClaim");
+
+                    b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Interview.Domain.Entities.IdentityAuth.CustomUserLogin", b =>
+            modelBuilder.Entity("Interview.Domain.Entities.IdentityAuth.UserRole", b =>
                 {
-                    b.HasOne("Interview.Domain.Entities.IdentityAuth.CustomUser", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Interview.Domain.Entities.IdentityAuth.CustomUserRole", b =>
-                {
-                    b.HasOne("Interview.Domain.Entities.IdentityAuth.CustomRole", null)
-                        .WithMany()
+                    b.HasOne("Interview.Domain.Entities.IdentityAuth.Role", "Role")
+                        .WithMany("UserRole")
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("FK_RoleId_forUserRole");
 
-                    b.HasOne("Interview.Domain.Entities.IdentityAuth.CustomUser", null)
-                        .WithMany()
+                    b.HasOne("Interview.Domain.Entities.IdentityAuth.User", "User")
+                        .WithMany("UserRole")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
+                        .IsRequired()
+                        .HasConstraintName("FK_UserId_forUserRole");
 
-            modelBuilder.Entity("Interview.Domain.Entities.IdentityAuth.CustomUserToken", b =>
-                {
-                    b.HasOne("Interview.Domain.Entities.IdentityAuth.CustomUser", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Role");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Interview.Domain.Entities.Models.Candidate", b =>
@@ -606,6 +540,12 @@ namespace Interview.Persistence.Migrations
                         .IsRequired()
                         .HasConstraintName("FK_CandidateId_forSession");
 
+                    b.HasOne("Interview.Domain.Entities.IdentityAuth.User", "User")
+                        .WithMany("Session")
+                        .HasForeignKey("UserId")
+                        .IsRequired()
+                        .HasConstraintName("FK_UserId_forSession");
+
                     b.HasOne("Interview.Domain.Entities.Models.Vacancy", "Vacancy")
                         .WithMany("Session")
                         .HasForeignKey("VacancyId")
@@ -613,6 +553,8 @@ namespace Interview.Persistence.Migrations
                         .HasConstraintName("FK_VacancyId_forSession");
 
                     b.Navigation("Candidate");
+
+                    b.Navigation("User");
 
                     b.Navigation("Vacancy");
                 });
@@ -664,6 +606,22 @@ namespace Interview.Persistence.Migrations
                     b.Navigation("Position");
 
                     b.Navigation("Structure");
+                });
+
+            modelBuilder.Entity("Interview.Domain.Entities.IdentityAuth.Role", b =>
+                {
+                    b.Navigation("RoleClaim");
+
+                    b.Navigation("UserRole");
+                });
+
+            modelBuilder.Entity("Interview.Domain.Entities.IdentityAuth.User", b =>
+                {
+                    b.Navigation("Session");
+
+                    b.Navigation("UserClaim");
+
+                    b.Navigation("UserRole");
                 });
 
             modelBuilder.Entity("Interview.Domain.Entities.Models.Candidate", b =>

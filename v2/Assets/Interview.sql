@@ -3,6 +3,72 @@ CREATE DATABASE Interview;
 USE Interview;
 
 
+-- İstifadəçi
+CREATE TABLE [User]
+(
+   [Id] INT PRIMARY KEY IDENTITY (1,1) NOT NULL,
+   [UserName] NVARCHAR(max) DEFAULT NULL,
+   [Email] NVARCHAR(max) DEFAULT NULL ,
+   [Password] NVARCHAR(max) DEFAULT NULL ,
+   [Phonenumber] NVARCHAR(max)  DEFAULT NULL,
+   [ConcurrencyStamp] NVARCHAR(max) DEFAULT NULL,
+   [ImagePath] NVARCHAR(max) DEFAULT NULL,
+   [RefreshToken] NVARCHAR(max) DEFAULT NULL,
+   [RefreshTokenExpiryTime] datetime2 DEFAULT NULL,
+);
+
+
+-- Rol
+CREATE TABLE [Role]
+(
+   [Id] INT PRIMARY KEY IDENTITY (1,1) NOT NULL,
+   [Name] NVARCHAR(max) DEFAULT NULL,
+   [ConcurrencyStamp] NVARCHAR(max) DEFAULT NULL,
+);
+
+
+-- İstifadçi və Rol
+CREATE TABLE [UserRole]
+(
+   [Id] INT PRIMARY KEY IDENTITY (1,1) NOT NULL,
+   
+   [UserId] INT NOT NULL,
+   [RoleId] INT NOT NULL,
+
+   CONSTRAINT [FK_UserId_forUserRole] FOREIGN KEY ([UserId]) REFERENCES [User] ([Id]) ON DELETE NO ACTION ON UPDATE NO ACTION,
+   CONSTRAINT [FK_RoleId_forUserRole] FOREIGN KEY ([RoleId]) REFERENCES [Role] ([Id]) ON DELETE NO ACTION ON UPDATE NO ACTION,
+
+);
+
+
+-- İstifadçi səlahiyyətləri
+CREATE TABLE [UserClaim]
+(
+   [Id] INT PRIMARY KEY IDENTITY (1,1) NOT NULL,
+   [ClaimType] NVARCHAR(max) DEFAULT NULL,
+   [ClaimValue] NVARCHAR(max) DEFAULT NULL,
+   
+   [UserId] INT NOT NULL,
+
+   
+   CONSTRAINT [FK_UserId_forUserClaim] FOREIGN KEY ([UserId]) REFERENCES [User] ([Id]) ON DELETE NO ACTION ON UPDATE NO ACTION,
+);
+
+
+-- Rol səlahiyyətləri
+CREATE TABLE [RoleClaim]
+(
+   [Id] INT PRIMARY KEY IDENTITY (1,1) NOT NULL,
+   [ClaimType] NVARCHAR(max) DEFAULT NULL,
+   [ClaimValue] NVARCHAR(max) DEFAULT NULL,
+   
+   [RoleId] INT NOT NULL,
+
+   
+   CONSTRAINT [FK_RoleId_forRoleClaim] FOREIGN KEY ([RoleId]) REFERENCES [Role] ([Id]) ON DELETE NO ACTION ON UPDATE NO ACTION,
+);
+
+
 -- Namizədlə bağlı fayl
 CREATE TABLE [CandidateDocument]
 (
@@ -84,12 +150,12 @@ CREATE TABLE [Session]
    [EndValue] decimal DEFAULT 0.0,
    [StartDate] datetime2 DEFAULT NULL,
    [EndDate] datetime2 DEFAULT NULL,
-   [UserAccountId] INT NOT NULL,
    
+   [UserId] INT NOT NULL,
    [VacancyId] INT NOT NULL,
    [CandidateId] INT NOT NULL,
 
-  
+   CONSTRAINT [FK_UserId_forSession] FOREIGN KEY ([UserId]) REFERENCES [User] ([Id]) ON DELETE NO ACTION ON UPDATE NO ACTION,
    CONSTRAINT [FK_VacancyId_forSession] FOREIGN KEY ([VacancyId]) REFERENCES [Vacancy] ([Id]) ON DELETE NO ACTION ON UPDATE NO ACTION,
    CONSTRAINT [FK_CandidateId_forSession] FOREIGN KEY ([CandidateId]) REFERENCES [Candidate] ([Id]) ON DELETE NO ACTION ON UPDATE NO ACTION,
    

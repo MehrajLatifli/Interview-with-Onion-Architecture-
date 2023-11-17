@@ -9,8 +9,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Interview.Domain.Entities.Models;
 
+
 [Table("SessionQuestions")]
-public class SessionQuestion : BaseEntity
+public  class SessionQuestion : BaseEntity
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

@@ -22,7 +22,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Build.Framework;
 using Microsoft.Extensions.Logging;
 using System.Net;
-using Interview.Domain.Entities.IdentityAuth;
 using Interview.Application.Repositories.Custom;
 using System.Data;
 using Microsoft.EntityFrameworkCore;
@@ -39,1182 +38,1176 @@ namespace Interview.Application.Services.Concrete
 {
     public class AuthServiceManager : IAuthService
     {
-        private readonly UserManager<CustomUser> _userManager;
-        private readonly RoleManager<CustomRole> _roleManager;
+
         private readonly IConfiguration _configuration;
-        private readonly SignInManager<CustomUser> _signInManager;
         public readonly IMapper _mapper;
         readonly ILogger<AuthServiceManager> _logger;
         private readonly Microsoft.AspNetCore.Authorization.IAuthorizationService _authorizationService;
-        private readonly IAuthorizationPolicyProvider _policyProvider;
 
-        public AuthServiceManager(UserManager<CustomUser> userManager, RoleManager<CustomRole> roleManager, IConfiguration configuration, SignInManager<CustomUser> signInManager, IMapper mapper, ILogger<AuthServiceManager> logger, IAuthorizationService authorizationService, IAuthorizationPolicyProvider policyProvider)
+        public AuthServiceManager(IConfiguration configuration, IMapper mapper, ILogger<AuthServiceManager> logger, IAuthorizationService authorizationService)
         {
-            _userManager = userManager;
-            _roleManager = roleManager;
             _configuration = configuration;
-            _signInManager = signInManager;
             _mapper = mapper;
             _logger = logger;
             _authorizationService = authorizationService;
-            _policyProvider = policyProvider;
-        }
-
-        public async Task<List<RoleAccessTypeDTO>> GetRoleAccessType(ClaimsPrincipal User)
-        {
-
-
-
-            //CustomPolicy.Policy = userRoles.FirstOrDefault();
-            //CustomPolicyRole.PolicyRole = userRoles.FirstOrDefault();
-
-
-
-            var roleAccessTypes = new List<RoleAccessTypeDTO>();
-
-            var roleAccessType = new RoleAccessTypeDTO();
-
-            // Get all fields of RoleAccessType using reflection
-            //var fields = typeof(RoleAccessType).GetFields(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
-
-            //foreach (var field in fields)
-            //{
-            //    var roleName = field.Name;
-            //    var roleValue = (string)field.GetValue(null);
-
-            //    // Assign the value to the first non-null property
-            //    if (roleValue != null)
-            //    {
-            //        roleAccessType.Add ??= roleName == nameof(RoleAccessType.Add_ClaimValue) ? roleValue : null;
-            //        roleAccessType.Edit ??= roleName == nameof(RoleAccessType.Edit_ClaimValue) ? roleValue : null;
-            //        roleAccessType.Delete ??= roleName == nameof(RoleAccessType.Delete_ClaimValue) ? roleValue : null;
-            //        roleAccessType.Get ??= roleName == nameof(RoleAccessType.Get_ClaimValue) ? roleValue : null;
-            //        roleAccessType.AllAccess ??= roleName == nameof(RoleAccessType.AllAccess_ClaimValue) ? roleValue : null;
-            //    }
-            //}
-
-
-
-
-
-            roleAccessTypes.Add(new RoleAccessTypeDTO
-            {
-                Id = 1,
-                RoleAccess = RoleAccessType.Add_ClaimValue,
-            });
-
-            roleAccessTypes.Add(new RoleAccessTypeDTO
-            {
-                Id = 2,
-                RoleAccess = RoleAccessType.Edit_ClaimValue,
-            });
-
-            roleAccessTypes.Add(new RoleAccessTypeDTO
-            {
-                Id = 3,
-                RoleAccess = RoleAccessType.Delete_ClaimValue,
-            });
-
-            roleAccessTypes.Add(new RoleAccessTypeDTO
-            {
-                Id = 4,
-                RoleAccess = RoleAccessType.Get_ClaimValue,
-            });
-
-            roleAccessTypes.Add(new RoleAccessTypeDTO
-            {
-                Id = 5,
-                RoleAccess = RoleAccessType.AllAccess_ClaimValue,
-            });
-
-
-            if (roleAccessTypes.Any())
-            {
-
-                return roleAccessTypes;
-            }
-
-            else
-            {
-
-                throw new NotFoundException("Nothing found!");
-
-            }
-
-
-
-        }
-
-        public async Task<List<GetRoleModel>> GetRoles(ClaimsPrincipal User)
-        {
-           
-                //var user_ = User.Identity?.Name;
-                //var customuser = await _userManager.FindByNameAsync(user_);
-
-                //var userClaims = await _userManager.GetClaimsAsync(customuser);
-                //var userRoles = await _userManager.GetRolesAsync(customuser);
-                //var roleClaims = User.FindAll(ClaimTypes.Role);
-                //var roles = roleClaims.Select(c => c.Value).ToList();
-                //bool isAdmin = roles.Contains(UserRoles.Admin);
-
-                //if (customuser == null)
-                //{
-                //    throw new NotFoundException("User not found!");
-                //}
-
-                var allroles = await _roleManager.Roles.ToListAsync();
-
-                var roleModels = allroles.Select(role => new GetRoleModel
-                {   Id=role.Id.ToString(),
-                    Rolename = role.Name,
-                }).ToList();
-
-                if (roleModels.Any())
-                {
-
-                    return roleModels;
-                }
-
-                else
-                {
-
-                    throw new NotFoundException("Nothing found!");
-
-                }
-
-        
-        }
-
-        public async Task<List<GetAuthModel>> GetAdmins(ClaimsPrincipal User, CustomUserClaimResult customUserClaimResult)
-        {
-            if (User.Identity.IsAuthenticated)
-            {
-                var user_ = User.Identity?.Name;
-                var customuser = await _userManager.FindByNameAsync(user_);
-
-                var userClaims = await _userManager.GetClaimsAsync(customuser);
-                var userRoles = await _userManager.GetRolesAsync(customuser);
-                var roleClaims = User.FindAll(ClaimTypes.Role);
-                var roles = roleClaims.Select(c => c.Value).ToList();
-
-                bool isAdmin = roles.Contains(UserRoles.Admin);
-
-                if (customuser == null)
-                {
-                    throw new NotFoundException("User not found!");
-                }
-
-                var ClaimTypeList = userClaims.Select(claim => claim.Type).ToList();
-                var ClaimValueList = userClaims.Select(claim => claim.Value).ToList();
-
-                if (customUserClaimResult.UserIds.Contains(customuser.Id))
-                {
-                    var ClaimTypeIntersect = customUserClaimResult.ClaimTypes.Intersect(ClaimTypeList).ToList();
-
-                    if (ClaimTypeIntersect.Any(i => i == "Admin"))
-                    {
-                        var ClaimValueListIntersect = customUserClaimResult.ClaimValues.Intersect(ClaimValueList).ToList();
-
-                        if (ClaimValueListIntersect.Any())
-                        {
-
-                            var list = new List<GetAuthModel>();
-
-                            var usersInHRRole = await _userManager.GetUsersInRoleAsync(UserRoles.Admin);
-
-                            foreach (var item in usersInHRRole)
-                            {
-
-
-                                var claims = await _userManager.GetClaimsAsync(item);
-
-
-                                var userClaims_ = claims.Select(c => new UserClaimModel
-                                {
-                                    Role = c.Type,
-                                    Permition = c.Value
-                                }).ToList();
-
-
-
-                                list.Add(new GetAuthModel()
-                                {
-                                    Id = item.Id.ToString(),
-                                    Username = item.UserName,
-                                    PhoneNumber = item.PhoneNumber,
-                                    Email = item.Email,
-                                    ImagePath = item.ImagePath,
-                                    UserClaims = userClaims_,
-                                });
-                            }
-
-                            if (list.Any())
-                            {
-                                return list;
-                            }
-                            else
-                            {
-                                throw new NotFoundException("No users found!");
-                            }
-
-                        }
-                        else
-                        {
-
-                            throw new NotFoundException("ClaimValue no found");
-                        }
-                    }
-                    else
-                    {
-
-                        throw new NotFoundException("ClaimType no found");
-                    }
-                }
-                else
-                {
-
-                    throw new ForbiddenException("You do not have permission to access users.");
-                }
-            }
-            else
-            {
-                throw new UnauthorizedException("User is not authenticated.");
-            }
-        }
-
-        public async Task<List<GetAuthModel>> GetHR(ClaimsPrincipal User, CustomUserClaimResult customUserClaimResult)
-        {
-            if (User.Identity.IsAuthenticated)
-            {
-                var user_ = User.Identity?.Name;
-                var customuser = await _userManager.FindByNameAsync(user_);
-
-                var userClaims = await _userManager.GetClaimsAsync(customuser);
-                var userRoles = await _userManager.GetRolesAsync(customuser);
-                var roleClaims = User.FindAll(ClaimTypes.Role);
-                var roles = roleClaims.Select(c => c.Value).ToList();
-
-                bool isAdmin = roles.Contains(UserRoles.Admin);
-
-                if (customuser == null)
-                {
-                    throw new NotFoundException("User not found!");
-                }
-
-                var ClaimTypeList = userClaims.Select(claim => claim.Type).ToList();
-                var ClaimValueList = userClaims.Select(claim => claim.Value).ToList();
-
-                if (customUserClaimResult.UserIds.Contains(customuser.Id))
-                {
-                    var ClaimTypeIntersect = customUserClaimResult.ClaimTypes.Intersect(ClaimTypeList).ToList();
-
-
-                    if (ClaimTypeIntersect.Any(i => i == "Admin" || i=="HR"))
-                    {
-                        var ClaimValueListIntersect = customUserClaimResult.ClaimValues.Intersect(ClaimValueList).ToList();
-
-                        if (ClaimValueListIntersect.Any(i => i == "All Access"))
-                        {
-
-                            var list = new List<GetAuthModel>();
-
-                            var usersInHRRole = await _userManager.GetUsersInRoleAsync(UserRoles.HR);
-
-                            foreach (var item in usersInHRRole)
-                            {
-
-
-                                var claims = await _userManager.GetClaimsAsync(item);
-
-                                var userClaims_ = claims.Select(c => new UserClaimModel
-                                {
-                                    Role = c.Type,
-                                    Permition = c.Value
-                                }).ToList();
-
-
-
-                                list.Add(new GetAuthModel()
-                                {
-                                    Id = item.Id.ToString(),
-                                    Username = item.UserName,
-                                    PhoneNumber = item.PhoneNumber,
-                                    Email = item.Email,
-                                    ImagePath = item.ImagePath,
-                                    UserClaims = userClaims_,
-                                });
-                            }
-
-                            if (list.Any())
-                            {
-                                return list;
-                            }
-                            else
-                            {
-                                throw new NotFoundException("No users found!");
-                            }
-
-                        }
-                        else
-                        {
-
-                            throw new NotFoundException("ClaimValue no found");
-                        }
-                    }
-                    else
-                    {
-
-                        throw new NotFoundException("ClaimType no found");
-                    }
-                }
-                else
-                {
-
-                    throw new ForbiddenException("You do not have permission to access users.");
-                }
-            }
-            else
-            {
-                throw new UnauthorizedException("User is not authenticated.");
-            }
-        }
-
-        public async Task CreateRole(string roleName, ClaimsPrincipal User)
-        {
-
-
-            if (User.Identity.IsAuthenticated)
-            {
-
-
-                var roleExists = await _roleManager.RoleExistsAsync(roleName);
-
-                if (!roleExists)
-                {
-                    var newRole = new CustomRole { Name = roleName };
-                    var result = await _roleManager.CreateAsync(newRole);
-
-                    if (!result.Succeeded)
-                    {
-                        throw new InvalidOperationException("Failed to create the role.");
-                    }
-
-
-
-                    var role = await _roleManager.FindByNameAsync(roleName);
-
-                    if (role != null)
-                    {
-                        var roleClaims = new List<Claim>
-                        {
-                            new Claim(roleName, roleName.ToUpper())
-                        };
-
-                        foreach (var claim in roleClaims)
-                        {
-                            await _roleManager.AddClaimAsync(role, claim);
-                        }
-                    }
-
-                }
-                else
-                {
-                    throw new ConflictException("Role already exists");
-                }
-
-            }
-            else
-            {
-                throw new UnauthorizedException("Current user is not authenticated.");
-            }
-
-
-
-        }
-
-        public async Task AddUserRole(int userId, int roleId, int roleAccessType, ClaimsPrincipal User)
-        {
-            if (User.Identity.IsAuthenticated)
-            {
-
-                var user = await _userManager.FindByIdAsync(userId.ToString());
-
-                if (user == null)
-                {
-                    throw new NotFoundException("User not found!");
-                }
-
-                var customRole = await _roleManager.FindByIdAsync(roleId.ToString());
-
-
-                if (customRole is null)
-                {
-                    throw new NotFoundException($"There is no role with ID {roleId}.");
-                }
-
-
-                if (!(roleAccessType is int))
-                {
-                    throw new BadHttpRequestException("RoleAccessType is NOT of type int");
-                }
-
-                if (!(roleAccessType is 1) && !(roleAccessType is 2) && !(roleAccessType is 3) && !(roleAccessType is 4) && !(roleAccessType is 5))
-                {
-                    throw new NotFoundException("RoleAccessType does not exist");
-                }
-
-
-                var isInRole = await _userManager.IsInRoleAsync(user, customRole.Name);
-
-                if (!isInRole)
-                {
-                    var customUser = await _userManager.FindByIdAsync(userId.ToString());
-
-                    if (customUser != null)
-                    {
-                        if (customRole != null)
-                        {
-                            
-
-
-                            var userClaims = new List<Claim>();
-
-                            switch (roleAccessType)
-                            {
-                                case 1:
-                                    userClaims.Add(new Claim(customRole.Name, RoleAccessType.Add_ClaimValue));
-                                    break;
-                                case 2:
-                                    userClaims.Add(new Claim(customRole.Name, RoleAccessType.Edit_ClaimValue));
-                                    break;
-                                case 3:
-                                    userClaims.Add(new Claim(customRole.Name, RoleAccessType.Delete_ClaimValue));
-                                    break;
-                                case 4:
-                                    userClaims.Add(new Claim(customRole.Name, RoleAccessType.Get_ClaimValue));
-                                    break;
-                                case 5:
-                                    userClaims.Add(new Claim(customRole.Name, RoleAccessType.AllAccess_ClaimValue));
-                                    break;
-                            }
-
-                            foreach (var claim in userClaims)
-                            {
-                                await _userManager.AddClaimAsync(user, claim);
-                            }
-
-
-                            await _userManager.AddToRoleAsync(customUser, customRole.Name);
-                        }
-                    }
-                }
-                else
-                {
-                    throw new ConflictException("Role already exists");
-                }
-
-            }
-            else
-            {
-                throw new ConflictException("User is already in the specified claim.");
-            }
-        }
-
-        public async Task UpdateUserRole(int userId, int roleId, int roleAccessType, ClaimsPrincipal User)
-        {
-            if (User.Identity.IsAuthenticated)
-            {
-
-            }
-            else
-            {
-                throw new ConflictException("User is already in the specified claim.");
-            }
-        }
-
-        public async Task DeleteRole(int roleId, int userId, ClaimsPrincipal User)
-        {
-            var role = await _roleManager.FindByIdAsync(roleId.ToString());
-
-            if (role == null)
-            {
-                throw new NotFoundException($"Role ID '{roleId}' not found!");
-            }
-
-            var user = await _userManager.FindByIdAsync(userId.ToString());
-
-            if (user == null)
-            {
-                throw new NotFoundException($"User ID '{userId}' not found!");
-            }
-
-            //// Delete role claims
-            //var roleClaims = await _roleManager.GetClaimsAsync(role);
-            //foreach (var claim in roleClaims)
-            //{
-            //    var result = await _roleManager.RemoveClaimAsync(role, claim);
-            //    if (!result.Succeeded)
-            //    {
-            //        throw new ApplicationException($"Error removing claim '{claim.Type}' from role '{roleId.ToString()}': {string.Join(", ", result.Errors)}");
-            //    }
-            //}
-
-            // Remove role claims from user identity
-            var userClaims = await _userManager.GetClaimsAsync(user);
-
-            var claimToDelete = userClaims.FirstOrDefault(c => c.Type == role.Name);
-
-            if (claimToDelete != null)
-            {
-                // Remove the specific claim
-                var result = await _userManager.RemoveClaimAsync(user, claimToDelete);
-
-                if (!result.Succeeded)
-                {
-                    throw new ApplicationException($"Error removing claim '{role.Name}' from user '{userId.ToString()}': {string.Join(", ", result.Errors)}");
-                }
-            }
-            else
-            {
-                throw new NotFoundException($"Claim with type '{role.Name}' not found for user '{userId}'.");
-            }
-
-
-            var userroleResult = await _userManager.RemoveFromRoleAsync(user, role.Name);
-
-            if (!userroleResult.Succeeded)
-            {
-                throw new ApplicationException($"Error removing user '{userId}' from role '{role.Name}': {string.Join(", ", userroleResult.Errors)}");
-            }
-
-            //// Delete the role
-            //var deleteResult = await _roleManager.DeleteAsync(role);
-            //if (!deleteResult.Succeeded)
-            //{
-            //    throw new ApplicationException($"Error deleting role '{roleId.ToString()}': {string.Join(", ", deleteResult.Errors)}");
-            //}
         }
 
 
-        public async Task<LoginResponse> Login(LoginDTO model)
-        {
-            var entity = _mapper.Map<Login>(model);
+        //public async Task<List<RoleAccessTypeDTO>> GetRoleAccessType(ClaimsPrincipal User)
+        //{
 
-            var user = await _userManager.FindByNameAsync(entity.Username);
-            if (user != null && await _userManager.CheckPasswordAsync(user, entity.Password))
-            {
-                var userRoles = await _userManager.GetRolesAsync(user);
 
-                var authClaims = new List<Claim>
-                {
-                    new Claim(ClaimTypes.Name, user.UserName),
-                    new Claim(Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                };
 
-                foreach (var userRole in userRoles)
-                {
-                    authClaims.Add(new Claim(ClaimTypes.Role, userRole));
-                }
+        //    //CustomPolicy.Policy = userRoles.FirstOrDefault();
+        //    //CustomPolicyRole.PolicyRole = userRoles.FirstOrDefault();
 
-                var token = CreateToken(authClaims);
-                var refreshToken = GenerateRefreshToken();
 
-                _ = int.TryParse(_configuration["JWT:RefreshTokenValidityInDays"], out int refreshTokenValidityInDays);
 
-                user.RefreshToken = refreshToken;
-                user.RefreshTokenExpiryTime = DateTime.Now.AddDays(refreshTokenValidityInDays);
+        //    var roleAccessTypes = new List<RoleAccessTypeDTO>();
 
-                await _userManager.UpdateAsync(user);
+        //    var roleAccessType = new RoleAccessTypeDTO();
 
+        //    // Get all fields of RoleAccessType using reflection
+        //    //var fields = typeof(RoleAccessType).GetFields(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
 
-                System.Globalization.CultureInfo.CurrentCulture.ClearCachedData();
+        //    //foreach (var field in fields)
+        //    //{
+        //    //    var roleName = field.Name;
+        //    //    var roleValue = (string)field.GetValue(null);
 
-                TimeZone localZone = TimeZone.CurrentTimeZone;
-                DateTime localTime = localZone.ToLocalTime(DateTime.UtcNow);
+        //    //    // Assign the value to the first non-null property
+        //    //    if (roleValue != null)
+        //    //    {
+        //    //        roleAccessType.Add ??= roleName == nameof(RoleAccessType.Add_ClaimValue) ? roleValue : null;
+        //    //        roleAccessType.Edit ??= roleName == nameof(RoleAccessType.Edit_ClaimValue) ? roleValue : null;
+        //    //        roleAccessType.Delete ??= roleName == nameof(RoleAccessType.Delete_ClaimValue) ? roleValue : null;
+        //    //        roleAccessType.Get ??= roleName == nameof(RoleAccessType.Get_ClaimValue) ? roleValue : null;
+        //    //        roleAccessType.AllAccess ??= roleName == nameof(RoleAccessType.AllAccess_ClaimValue) ? roleValue : null;
+        //    //    }
+        //    //}
 
 
 
 
-                LoginResponseDTO loginResponse = new LoginResponseDTO
-                {
 
-                    Token = new JwtSecurityTokenHandler().WriteToken(token),
-                    RefreshToken = refreshToken,
-                    Expiration = token.ValidTo.ToString(),
+        //    roleAccessTypes.Add(new RoleAccessTypeDTO
+        //    {
+        //        Id = 1,
+        //        RoleAccess = RoleAccessType.Add_ClaimValue,
+        //    });
 
-                };
+        //    roleAccessTypes.Add(new RoleAccessTypeDTO
+        //    {
+        //        Id = 2,
+        //        RoleAccess = RoleAccessType.Edit_ClaimValue,
+        //    });
 
+        //    roleAccessTypes.Add(new RoleAccessTypeDTO
+        //    {
+        //        Id = 3,
+        //        RoleAccess = RoleAccessType.Delete_ClaimValue,
+        //    });
 
-                var loginresult = _mapper.Map<LoginResponse>(loginResponse);
+        //    roleAccessTypes.Add(new RoleAccessTypeDTO
+        //    {
+        //        Id = 4,
+        //        RoleAccess = RoleAccessType.Get_ClaimValue,
+        //    });
 
+        //    roleAccessTypes.Add(new RoleAccessTypeDTO
+        //    {
+        //        Id = 5,
+        //        RoleAccess = RoleAccessType.AllAccess_ClaimValue,
+        //    });
 
-                return loginresult;
 
+        //    if (roleAccessTypes.Any())
+        //    {
 
-            }
+        //        return roleAccessTypes;
+        //    }
 
-            else
-            {
-                throw new UnauthorizedException("Username or password is incorrect.");
+        //    else
+        //    {
 
-            }
-        }
+        //        throw new NotFoundException("Nothing found!");
 
-        public async Task Logout()
-        {
-            await _signInManager.SignOutAsync();
+        //    }
 
 
 
+        //}
 
-        }
+        //public async Task<List<GetRoleModel>> GetRoles(ClaimsPrincipal User)
+        //{
 
-        public async Task<TokenModel> RefreshToken(TokenModel tokenModel)
-        {
-            if (tokenModel is null)
-            {
+        //        //var user_ = User.Identity?.Name;
+        //        //var CurrentUser = await _userManager.FindByNameAsync(user_);
 
-                throw new BadHttpRequestException("Invalid client request");
+        //        //var userClaims = await _userManager.GetClaimsAsync(CurrentUser);
+        //        //var userRoles = await _userManager.GetRolesAsync(CurrentUser);
+        //        //var roleClaims = User.FindAll(ClaimTypes.Role);
+        //        //var roles = roleClaims.Select(c => c.Value).ToList();
+        //        //bool isAdmin = roles.Contains(UserRoles.Admin);
 
-            }
+        //        //if (CurrentUser == null)
+        //        //{
+        //        //    throw new NotFoundException("User not found!");
+        //        //}
 
-            string? accessToken = tokenModel.AccessToken;
-            string? refreshToken = tokenModel.RefreshToken;
+        //        var allroles = await _roleManager.Roles.ToListAsync();
 
-            var principal = GetPrincipalFromExpiredToken(accessToken);
-            if (principal == null)
-            {
+        //        var roleModels = allroles.Select(role => new GetRoleModel
+        //        {   Id=role.Id.ToString(),
+        //            Rolename = role.Name,
+        //        }).ToList();
 
-                throw new BadHttpRequestException("Invalid access token or refresh token");
+        //        if (roleModels.Any())
+        //        {
 
-            }
+        //            return roleModels;
+        //        }
 
-            string username = principal.Identity.Name;
+        //        else
+        //        {
 
+        //            throw new NotFoundException("Nothing found!");
 
-            var user = await _userManager.FindByNameAsync(username);
+        //        }
 
-            if (user == null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
-            {
 
-                throw new BadHttpRequestException("Invalid access token or refresh token");
+        //}
 
-            }
+        ////public async Task<List<GetAuthModel>> GetAdmins(ClaimsPrincipal User, CurrentUserClaimResult CurrentUserClaimResult)
+        ////{
+        ////    if (User.Identity.IsAuthenticated)
+        ////    {
+        ////        var user_ = User.Identity?.Name;
+        ////        var CurrentUser = await _userManager.FindByNameAsync(user_);
 
-            var newAccessToken = CreateToken(principal.Claims.ToList());
-            var newRefreshToken = GenerateRefreshToken();
+        ////        var userClaims = await _userManager.GetClaimsAsync(CurrentUser);
+        ////        var userRoles = await _userManager.GetRolesAsync(CurrentUser);
+        ////        var roleClaims = User.FindAll(ClaimTypes.Role);
+        ////        var roles = roleClaims.Select(c => c.Value).ToList();
 
-            user.RefreshToken = newRefreshToken;
-            await _userManager.UpdateAsync(user);
+        ////        bool isAdmin = roles.Contains(UserRoles.Admin);
 
-            TokenModel model = new TokenModel
-            {
-                AccessToken = new JwtSecurityTokenHandler().WriteToken(newAccessToken),
-                RefreshToken = newRefreshToken
-            };
+        ////        if (CurrentUser == null)
+        ////        {
+        ////            throw new NotFoundException("User not found!");
+        ////        }
 
-            return model;
-        }
+        ////        var ClaimTypeList = userClaims.Select(claim => claim.Type).ToList();
+        ////        var ClaimValueList = userClaims.Select(claim => claim.Value).ToList();
 
-        public async Task RegisterAdmin(RegisterDTO model, string ConnectionStringAzure)
-        {
+        ////        if (CurrentUserClaimResult.UserIds.Contains(CurrentUser.Id))
+        ////        {
+        ////            var ClaimTypeIntersect = CurrentUserClaimResult.ClaimTypes.Intersect(ClaimTypeList).ToList();
 
-            var entity = _mapper.Map<Register>(model);
+        ////            if (ClaimTypeIntersect.Any(i => i == "Admin"))
+        ////            {
+        ////                var ClaimValueListIntersect = CurrentUserClaimResult.ClaimValues.Intersect(ClaimValueList).ToList();
 
-            var userExists = await _userManager.FindByNameAsync(entity.Username);
+        ////                if (ClaimValueListIntersect.Any())
+        ////                {
 
-            if (userExists != null)
-            {
-                throw new ConflictException("User already exists!");
-            }
+        ////                    var list = new List<GetAuthModel>();
 
-            string connectionString = ConnectionStringAzure;
+        ////                    var usersInHRRole = await _userManager.GetUsersInRoleAsync(UserRoles.Admin);
 
-            string azuriteConnectionString = Environment.GetEnvironmentVariable("CUSTOMCONNSTR_AZURE_STORAGE_CONNECTION_STRING");
-            if (!string.IsNullOrEmpty(azuriteConnectionString))
-            {
-                connectionString = azuriteConnectionString;
-            }
+        ////                    foreach (var item in usersInHRRole)
+        ////                    {
 
-            string containerName = "profile-images";
 
-            string blobName = entity.Username + "_" + Guid.NewGuid().ToString() + Path.GetExtension(entity.ImagePath.FileName);
+        ////                        var claims = await _userManager.GetClaimsAsync(item);
 
-            Azure.Storage.Blobs.BlobServiceClient blobServiceClient = new Azure.Storage.Blobs.BlobServiceClient(connectionString);
-            Azure.Storage.Blobs.BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
 
-            await containerClient.CreateIfNotExistsAsync(Azure.Storage.Blobs.Models.PublicAccessType.Blob);
+        ////                        var userClaims_ = claims.Select(c => new UserClaimModel
+        ////                        {
+        ////                            Role = c.Type,
+        ////                            Permition = c.Value
+        ////                        }).ToList();
 
-            Azure.Storage.Blobs.BlobClient blobClient = containerClient.GetBlobClient(blobName);
 
-            using (Stream stream = entity.ImagePath.OpenReadStream())
-            {
-                await blobClient.UploadAsync(stream, true);
-            }
 
-            string imageUrl = blobClient.Uri.ToString();
+        ////                        list.Add(new GetAuthModel()
+        ////                        {
+        ////                            Id = item.Id.ToString(),
+        ////                            Username = item.UserName,
+        ////                            PhoneNumber = item.PhoneNumber,
+        ////                            Email = item.Email,
+        ////                            ImagePath = item.ImagePath,
+        ////                            UserClaims = userClaims_,
+        ////                        });
+        ////                    }
 
-            CustomUser user = new()
-            {
-                UserName = entity.Username,
-                Email = entity.Email,
-                SecurityStamp = Guid.NewGuid().ToString(),
-                PhoneNumber = entity.PhoneNumber,
-                ImagePath = imageUrl,
-            };
+        ////                    if (list.Any())
+        ////                    {
+        ////                        return list;
+        ////                    }
+        ////                    else
+        ////                    {
+        ////                        throw new NotFoundException("No users found!");
+        ////                    }
 
+        ////                }
+        ////                else
+        ////                {
 
+        ////                    throw new NotFoundException("ClaimValue no found");
+        ////                }
+        ////            }
+        ////            else
+        ////            {
 
-            var result = await _userManager.CreateAsync(user, entity.Password);
+        ////                throw new NotFoundException("ClaimType no found");
+        ////            }
+        ////        }
+        ////        else
+        ////        {
 
-            if (!result.Succeeded)
-            {
-                var errors = result.Errors.Select(e => e.Description);
-                var errorMessage = string.Join(" ", errors);
-                throw new ConflictException("User creation failed.");
-            }
+        ////            throw new ForbiddenException("You do not have permission to access users.");
+        ////        }
+        ////    }
+        ////    else
+        ////    {
+        ////        throw new UnauthorizedException("User is not authenticated.");
+        ////    }
+        ////}
 
-            if (user != null)
-            {
-                if (!await _roleManager.RoleExistsAsync(UserRoles.Admin))
-                {
-                    CustomRole customRole = new()
-                    {
-                        Name = $"{UserRoles.Admin}",
-                    };
+        ////public async Task<List<GetAuthModel>> GetHR(ClaimsPrincipal User, CurrentUserClaimResult CurrentUserClaimResult)
+        ////{
+        ////    if (User.Identity.IsAuthenticated)
+        ////    {
+        ////        var user_ = User.Identity?.Name;
+        ////        var CurrentUser = await _userManager.FindByNameAsync(user_);
 
-                    await _roleManager.CreateAsync(customRole);
-                }
+        ////        var userClaims = await _userManager.GetClaimsAsync(CurrentUser);
+        ////        var userRoles = await _userManager.GetRolesAsync(CurrentUser);
+        ////        var roleClaims = User.FindAll(ClaimTypes.Role);
+        ////        var roles = roleClaims.Select(c => c.Value).ToList();
 
-                if (!await _roleManager.RoleExistsAsync(UserRoles.HR))
-                {
-                    CustomRole customRole2 = new()
-                    {
-                        Name = $"{UserRoles.HR}",
-                    };
+        ////        bool isAdmin = roles.Contains(UserRoles.Admin);
 
-                    await _roleManager.CreateAsync(customRole2);
-                }
+        ////        if (CurrentUser == null)
+        ////        {
+        ////            throw new NotFoundException("User not found!");
+        ////        }
 
+        ////        var ClaimTypeList = userClaims.Select(claim => claim.Type).ToList();
+        ////        var ClaimValueList = userClaims.Select(claim => claim.Value).ToList();
 
-                if (!await _userManager.IsInRoleAsync(user, UserRoles.Admin))
-                {
-                    await _userManager.AddToRoleAsync(user, UserRoles.Admin);
-                }
+        ////        if (CurrentUserClaimResult.UserIds.Contains(CurrentUser.Id))
+        ////        {
+        ////            var ClaimTypeIntersect = CurrentUserClaimResult.ClaimTypes.Intersect(ClaimTypeList).ToList();
 
-                if (!await _userManager.IsInRoleAsync(user, UserRoles.HR))
-                {
-                    await _userManager.AddToRoleAsync(user, UserRoles.HR);
-                }
-            }
 
+        ////            if (ClaimTypeIntersect.Any(i => i == "Admin" || i=="HR"))
+        ////            {
+        ////                var ClaimValueListIntersect = CurrentUserClaimResult.ClaimValues.Intersect(ClaimValueList).ToList();
 
+        ////                if (ClaimValueListIntersect.Any(i => i == "All Access"))
+        ////                {
 
-            System.Globalization.CultureInfo.CurrentCulture.ClearCachedData();
+        ////                    var list = new List<GetAuthModel>();
 
-            TimeZone localZone = TimeZone.CurrentTimeZone;
-            DateTime localTime = localZone.ToLocalTime(DateTime.UtcNow);
+        ////                    var usersInHRRole = await _userManager.GetUsersInRoleAsync(UserRoles.HR);
 
+        ////                    foreach (var item in usersInHRRole)
+        ////                    {
 
-        }
 
-        public async Task RegisterHR(RegisterDTO model, string ConnectionStringAzure)
-        {
-            var entity = _mapper.Map<Register>(model);
+        ////                        var claims = await _userManager.GetClaimsAsync(item);
 
-            var userExists = await _userManager.FindByNameAsync(entity.Username);
+        ////                        var userClaims_ = claims.Select(c => new UserClaimModel
+        ////                        {
+        ////                            Role = c.Type,
+        ////                            Permition = c.Value
+        ////                        }).ToList();
 
-            if (userExists != null)
-            {
 
-                throw new ConflictException("User already exists!");
 
-            }
+        ////                        list.Add(new GetAuthModel()
+        ////                        {
+        ////                            Id = item.Id.ToString(),
+        ////                            Username = item.UserName,
+        ////                            PhoneNumber = item.PhoneNumber,
+        ////                            Email = item.Email,
+        ////                            ImagePath = item.ImagePath,
+        ////                            UserClaims = userClaims_,
+        ////                        });
+        ////                    }
 
-            string connectionString = ConnectionStringAzure;
+        ////                    if (list.Any())
+        ////                    {
+        ////                        return list;
+        ////                    }
+        ////                    else
+        ////                    {
+        ////                        throw new NotFoundException("No users found!");
+        ////                    }
 
-            string azuriteConnectionString = Environment.GetEnvironmentVariable("CUSTOMCONNSTR_AZURE_STORAGE_CONNECTION_STRING");
-            if (!string.IsNullOrEmpty(azuriteConnectionString))
-            {
-                connectionString = azuriteConnectionString;
-            }
+        ////                }
+        ////                else
+        ////                {
 
-            string containerName = "profile-images";
+        ////                    throw new NotFoundException("ClaimValue no found");
+        ////                }
+        ////            }
+        ////            else
+        ////            {
 
-            string blobName = entity.Username + "_" + Guid.NewGuid().ToString() + Path.GetExtension(entity.ImagePath.FileName);
+        ////                throw new NotFoundException("ClaimType no found");
+        ////            }
+        ////        }
+        ////        else
+        ////        {
 
-            Azure.Storage.Blobs.BlobServiceClient blobServiceClient = new Azure.Storage.Blobs.BlobServiceClient(connectionString);
-            Azure.Storage.Blobs.BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
+        ////            throw new ForbiddenException("You do not have permission to access users.");
+        ////        }
+        ////    }
+        ////    else
+        ////    {
+        ////        throw new UnauthorizedException("User is not authenticated.");
+        ////    }
+        ////}
 
-            await containerClient.CreateIfNotExistsAsync(Azure.Storage.Blobs.Models.PublicAccessType.Blob);
+        //public async Task CreateRole(string roleName, ClaimsPrincipal User)
+        //{
 
-            Azure.Storage.Blobs.BlobClient blobClient = containerClient.GetBlobClient(blobName);
 
-            using (Stream stream = entity.ImagePath.OpenReadStream())
-            {
-                await blobClient.UploadAsync(stream, true);
-            }
+        //    if (User.Identity.IsAuthenticated)
+        //    {
 
-            string imageUrl = blobClient.Uri.ToString();
 
+        //        var roleExists = await _roleManager.RoleExistsAsync(roleName);
 
+        //        if (!roleExists)
+        //        {
+        //            var newRole = new CurrentRole { Name = roleName };
+        //            var result = await _roleManager.CreateAsync(newRole);
 
-            CustomUser user = new()
-            {
+        //            if (!result.Succeeded)
+        //            {
+        //                throw new InvalidOperationException("Failed to create the role.");
+        //            }
 
-                Email = entity.Email,
-                SecurityStamp = Guid.NewGuid().ToString(),
-                UserName = entity.Username,
-                PhoneNumber = entity.PhoneNumber,
-                ImagePath = imageUrl,
-            };
 
-            CustomRole customRole = new()
-            {
-                Name = $"{UserRoles.HR}",
-            };
 
+        //            var role = await _roleManager.FindByNameAsync(roleName);
 
-            var result = await _userManager.CreateAsync(user, entity.Password);
+        //            if (role != null)
+        //            {
+        //                var roleClaims = new List<Claim>
+        //                {
+        //                    new Claim(roleName, roleName.ToUpper())
+        //                };
 
-            if (!result.Succeeded)
-            {
-                var errors = result.Errors.Select(e => e.Description);
-                var errorMessage = string.Join($" ", errors);
+        //                foreach (var claim in roleClaims)
+        //                {
+        //                    await _roleManager.AddClaimAsync(role, claim);
+        //                }
+        //            }
 
+        //        }
+        //        else
+        //        {
+        //            throw new ConflictException("Role already exists");
+        //        }
 
-                throw new ConflictException("User creation failed!");
+        //    }
+        //    else
+        //    {
+        //        throw new UnauthorizedException("Current user is not authenticated.");
+        //    }
 
-            }
 
 
+        //}
 
-            if (!await _roleManager.RoleExistsAsync(UserRoles.HR))
-                await _roleManager.CreateAsync(customRole);
+        //public async Task AddUserRole(int userId, int roleId, int roleAccessType, ClaimsPrincipal User)
+        //{
+        //    if (User.Identity.IsAuthenticated)
+        //    {
 
-            if (await _roleManager.RoleExistsAsync(UserRoles.HR))
-                await _userManager.AddToRoleAsync(user, UserRoles.HR);
+        //        var user = await _userManager.FindByIdAsync(userId.ToString());
 
+        //        if (user == null)
+        //        {
+        //            throw new NotFoundException("User not found!");
+        //        }
 
-            System.Globalization.CultureInfo.CurrentCulture.ClearCachedData();
+        //        var CurrentRole = await _roleManager.FindByIdAsync(roleId.ToString());
 
-            TimeZone localZone = TimeZone.CurrentTimeZone;
-            DateTime localTime = localZone.ToLocalTime(DateTime.UtcNow);
 
-        }
+        //        if (CurrentRole is null)
+        //        {
+        //            throw new NotFoundException($"There is no role with ID {roleId}.");
+        //        }
 
-        public async Task RegisterUser(RegisterDTO model, string ConnectionStringAzure)
-        {
 
+        //        if (!(roleAccessType is int))
+        //        {
+        //            throw new BadHttpRequestException("RoleAccessType is NOT of type int");
+        //        }
 
-            var entity = _mapper.Map<Register>(model);
+        //        if (!(roleAccessType is 1) && !(roleAccessType is 2) && !(roleAccessType is 3) && !(roleAccessType is 4) && !(roleAccessType is 5))
+        //        {
+        //            throw new NotFoundException("RoleAccessType does not exist");
+        //        }
 
-            var userExists = await _userManager.FindByNameAsync(entity.Username);
 
-            if (userExists != null)
-            {
-                throw new ConflictException("User already exists!");
-            }
+        //        var isInRole = await _userManager.IsInRoleAsync(user, CurrentRole.Name);
 
-            string connectionString = ConnectionStringAzure;
+        //        if (!isInRole)
+        //        {
+        //            var CurrentUser = await _userManager.FindByIdAsync(userId.ToString());
 
-            string azuriteConnectionString = Environment.GetEnvironmentVariable("CUSTOMCONNSTR_AZURE_STORAGE_CONNECTION_STRING");
-            if (!string.IsNullOrEmpty(azuriteConnectionString))
-            {
-                connectionString = azuriteConnectionString;
-            }
+        //            if (CurrentUser != null)
+        //            {
+        //                if (CurrentRole != null)
+        //                {
 
-            string containerName = "profile-images";
 
-            string blobName = entity.Username + "_" + Guid.NewGuid().ToString() + Path.GetExtension(entity.ImagePath.FileName);
 
-            Azure.Storage.Blobs.BlobServiceClient blobServiceClient = new Azure.Storage.Blobs.BlobServiceClient(connectionString);
-            Azure.Storage.Blobs.BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
+        //                    var userClaims = new List<Claim>();
+
+        //                    switch (roleAccessType)
+        //                    {
+        //                        case 1:
+        //                            userClaims.Add(new Claim(CurrentRole.Name, RoleAccessType.Add_ClaimValue));
+        //                            break;
+        //                        case 2:
+        //                            userClaims.Add(new Claim(CurrentRole.Name, RoleAccessType.Edit_ClaimValue));
+        //                            break;
+        //                        case 3:
+        //                            userClaims.Add(new Claim(CurrentRole.Name, RoleAccessType.Delete_ClaimValue));
+        //                            break;
+        //                        case 4:
+        //                            userClaims.Add(new Claim(CurrentRole.Name, RoleAccessType.Get_ClaimValue));
+        //                            break;
+        //                        case 5:
+        //                            userClaims.Add(new Claim(CurrentRole.Name, RoleAccessType.AllAccess_ClaimValue));
+        //                            break;
+        //                    }
 
-            await containerClient.CreateIfNotExistsAsync(Azure.Storage.Blobs.Models.PublicAccessType.Blob);
+        //                    foreach (var claim in userClaims)
+        //                    {
+        //                        await _userManager.AddClaimAsync(user, claim);
+        //                    }
 
-            Azure.Storage.Blobs.BlobClient blobClient = containerClient.GetBlobClient(blobName);
 
-            using (Stream stream = entity.ImagePath.OpenReadStream())
-            {
-                await blobClient.UploadAsync(stream, true);
-            }
+        //                    await _userManager.AddToRoleAsync(CurrentUser, CurrentRole.Name);
+        //                }
+        //            }
+        //        }
+        //        else
+        //        {
+        //            throw new ConflictException("Role already exists");
+        //        }
 
-            string imageUrl = blobClient.Uri.ToString();
+        //    }
+        //    else
+        //    {
+        //        throw new ConflictException("User is already in the specified claim.");
+        //    }
+        //}
 
-            CustomUser user = new()
-            {
-                UserName = entity.Username,
-                Email = entity.Email,
-                SecurityStamp = Guid.NewGuid().ToString(),
-                PhoneNumber = entity.PhoneNumber,
-                ImagePath = imageUrl,
-            };
+        //public async Task UpdateUserRole(int userId, int roleId, int roleAccessType, ClaimsPrincipal User)
+        //{
+        //    if (User.Identity.IsAuthenticated)
+        //    {
 
+        //    }
+        //    else
+        //    {
+        //        throw new ConflictException("User is already in the specified claim.");
+        //    }
+        //}
 
-            var result = await _userManager.CreateAsync(user, entity.Password);
+        //public async Task DeleteRole(int roleId, int userId, ClaimsPrincipal User)
+        //{
+        //    var role = await _roleManager.FindByIdAsync(roleId.ToString());
 
-            var cuser = await _userManager.FindByNameAsync(entity.Username);
+        //    if (role == null)
+        //    {
+        //        throw new NotFoundException($"Role ID '{roleId}' not found!");
+        //    }
 
+        //    var user = await _userManager.FindByIdAsync(userId.ToString());
 
-            if (!result.Succeeded)
-            {
-                var errors = result.Errors.Select(e => e.Description);
-                var errorMessage = string.Join(" ", errors);
-                throw new ConflictException("User creation failed.");
-            }
+        //    if (user == null)
+        //    {
+        //        throw new NotFoundException($"User ID '{userId}' not found!");
+        //    }
 
-          
+        //    //// Delete role claims
+        //    //var roleClaims = await _roleManager.GetClaimsAsync(role);
+        //    //foreach (var claim in roleClaims)
+        //    //{
+        //    //    var result = await _roleManager.RemoveClaimAsync(role, claim);
+        //    //    if (!result.Succeeded)
+        //    //    {
+        //    //        throw new ApplicationException($"Error removing claim '{claim.Type}' from role '{roleId.ToString()}': {string.Join(", ", result.Errors)}");
+        //    //    }
+        //    //}
 
+        //    // Remove role claims from user identity
+        //    var userClaims = await _userManager.GetClaimsAsync(user);
 
+        //    var claimToDelete = userClaims.FirstOrDefault(c => c.Type == role.Name);
 
-            System.Globalization.CultureInfo.CurrentCulture.ClearCachedData();
+        //    if (claimToDelete != null)
+        //    {
+        //        // Remove the specific claim
+        //        var result = await _userManager.RemoveClaimAsync(user, claimToDelete);
 
-            TimeZone localZone = TimeZone.CurrentTimeZone;
-            DateTime localTime = localZone.ToLocalTime(DateTime.UtcNow);
+        //        if (!result.Succeeded)
+        //        {
+        //            throw new ApplicationException($"Error removing claim '{role.Name}' from user '{userId.ToString()}': {string.Join(", ", result.Errors)}");
+        //        }
+        //    }
+        //    else
+        //    {
+        //        throw new NotFoundException($"Claim with type '{role.Name}' not found for user '{userId}'.");
+        //    }
 
 
-        }
+        //    var userroleResult = await _userManager.RemoveFromRoleAsync(user, role.Name);
 
+        //    if (!userroleResult.Succeeded)
+        //    {
+        //        throw new ApplicationException($"Error removing user '{userId}' from role '{role.Name}': {string.Join(", ", userroleResult.Errors)}");
+        //    }
 
-        
+        //    //// Delete the role
+        //    //var deleteResult = await _roleManager.DeleteAsync(role);
+        //    //if (!deleteResult.Succeeded)
+        //    //{
+        //    //    throw new ApplicationException($"Error deleting role '{roleId.ToString()}': {string.Join(", ", deleteResult.Errors)}");
+        //    //}
+        //}
 
-        public async Task Revoke(string username)
-        {
-            var user = await _userManager.FindByNameAsync(username);
 
-            if (user == null)
-            {
+        //public async Task<LoginResponse> Login(LoginDTO model)
+        //{
+        //    var entity = _mapper.Map<Login>(model);
 
-                throw new BadHttpRequestException("Invalid user name");
+        //    var user = await _userManager.FindByNameAsync(entity.Username);
+        //    if (user != null && await _userManager.CheckPasswordAsync(user, entity.Password))
+        //    {
+        //        var userRoles = await _userManager.GetRolesAsync(user);
 
-            }
+        //        var authClaims = new List<Claim>
+        //        {
+        //            new Claim(ClaimTypes.Name, user.UserName),
+        //            new Claim(Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+        //        };
 
+        //        foreach (var userRole in userRoles)
+        //        {
+        //            authClaims.Add(new Claim(ClaimTypes.Role, userRole));
+        //        }
 
+        //        var token = CreateToken(authClaims);
+        //        var refreshToken = GenerateRefreshToken();
 
-            user.RefreshToken = null;
-            await _userManager.UpdateAsync(user);
-        }
+        //        _ = int.TryParse(_configuration["JWT:RefreshTokenValidityInDays"], out int refreshTokenValidityInDays);
 
-        public async Task RevokeAll()
-        {
-            var users = _userManager.Users.ToList();
-            foreach (var user in users)
-            {
-                user.RefreshToken = null;
-                await _userManager.UpdateAsync(user);
-            }
-        }
+        //        user.RefreshToken = refreshToken;
+        //        user.RefreshTokenExpiryTime = DateTime.Now.AddDays(refreshTokenValidityInDays);
 
-        public async Task UpdatePassword(UpdatePasswordDTO model, ClaimsPrincipal User)
-        {
-            var entity = _mapper.Map<UpdatePassword>(model);
+        //        await _userManager.UpdateAsync(user);
 
 
-            if (!User.Identity.IsAuthenticated)
-            {
+        //        System.Globalization.CultureInfo.CurrentCulture.ClearCachedData();
 
-                throw new UnauthorizedException("User not authenticated.");
+        //        TimeZone localZone = TimeZone.CurrentTimeZone;
+        //        DateTime localTime = localZone.ToLocalTime(DateTime.UtcNow);
 
-            }
 
 
 
-            var username = User.Identity.Name;
+        //        LoginResponseDTO loginResponse = new LoginResponseDTO
+        //        {
 
-            var currentUser = await _userManager.FindByNameAsync(username);
+        //            Token = new JwtSecurityTokenHandler().WriteToken(token),
+        //            RefreshToken = refreshToken,
+        //            Expiration = token.ValidTo.ToString(),
 
-            var adminUsers = await _userManager.GetUsersInRoleAsync(UserRoles.Admin);
+        //        };
 
-            if (currentUser != null)
-            {
-                adminUsers.Any(i => i.UserName == currentUser.UserName);
 
-                if (currentUser.UserName == null)
-                {
+        //        var loginresult = _mapper.Map<LoginResponse>(loginResponse);
 
-                    throw new NotFoundException("User not found!");
 
-                }
+        //        return loginresult;
 
 
+        //    }
 
-                if (!string.IsNullOrEmpty(entity.OldPassword))
-                {
-                    var changePasswordResult = await _userManager.ChangePasswordAsync(currentUser, entity.OldPassword, entity.NewPassword);
-                    if (!changePasswordResult.Succeeded)
-                    {
+        //    else
+        //    {
+        //        throw new UnauthorizedException("Username or password is incorrect.");
 
-                        var errors = changePasswordResult.Errors.Select(e => e.Description);
-                        var errorMessage = string.Join($" ", errors);
+        //    }
+        //}
 
-                        throw new InvalidOperationException($"Failed to update password! \n {errorMessage}");
+        //public async Task Logout()
+        //{
+        //    await _signInManager.SignOutAsync();
 
-                    }
-                }
 
 
 
+        //}
 
-                var identityResult = await _userManager.UpdateAsync(currentUser);
-                if (!identityResult.Succeeded)
-                {
+        //public async Task<TokenModel> RefreshToken(TokenModel tokenModel)
+        //{
+        //    if (tokenModel is null)
+        //    {
 
-                    throw new InvalidOperationException($"Failed to update user!");
+        //        throw new BadHttpRequestException("Invalid client request");
 
-                }
+        //    }
 
-            }
-        }
+        //    string? accessToken = tokenModel.AccessToken;
+        //    string? refreshToken = tokenModel.RefreshToken;
 
-        public async Task UpdateProfile(UpdateProfileDTO model, ClaimsPrincipal User, string ConnectionStringAzure)
-        {
-            var entity = _mapper.Map<UpdateProfile>(model);
+        //    var principal = GetPrincipalFromExpiredToken(accessToken);
+        //    if (principal == null)
+        //    {
 
+        //        throw new BadHttpRequestException("Invalid access token or refresh token");
 
+        //    }
 
-            if (!User.Identity.IsAuthenticated)
-            {
+        //    string username = principal.Identity.Name;
 
-                throw new UnauthorizedException($"User not authenticated.");
 
-            }
+        //    var user = await _userManager.FindByNameAsync(username);
 
+        //    if (user == null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
+        //    {
 
+        //        throw new BadHttpRequestException("Invalid access token or refresh token");
 
-            var username = User.Identity.Name;
+        //    }
 
-            var currentUser = await _userManager.FindByNameAsync(username);
+        //    var newAccessToken = CreateToken(principal.Claims.ToList());
+        //    var newRefreshToken = GenerateRefreshToken();
 
-            var adminUsers = await _userManager.GetUsersInRoleAsync(UserRoles.Admin);
+        //    user.RefreshToken = newRefreshToken;
+        //    await _userManager.UpdateAsync(user);
 
-            if (currentUser != null)
-            {
-                adminUsers.Any(i => i.UserName == currentUser.UserName);
+        //    TokenModel model = new TokenModel
+        //    {
+        //        AccessToken = new JwtSecurityTokenHandler().WriteToken(newAccessToken),
+        //        RefreshToken = newRefreshToken
+        //    };
 
-                if (currentUser.UserName == null)
-                {
+        //    return model;
+        //}
 
-                    throw new NotFoundException($"User not found!");
+        //public async Task RegisterAdmin(RegisterDTO model, string ConnectionStringAzure)
+        //{
 
-                }
+        //    var entity = _mapper.Map<Register>(model);
 
+        //    var userExists = await _userManager.FindByNameAsync(entity.Username);
 
-                currentUser.UserName = entity.Username;
-                currentUser.Email = entity.Email;
-                currentUser.PhoneNumber = entity.PhoneNumber;
+        //    if (userExists != null)
+        //    {
+        //        throw new ConflictException("User already exists!");
+        //    }
 
+        //    string connectionString = ConnectionStringAzure;
 
+        //    string azuriteConnectionString = Environment.GetEnvironmentVariable("CUSTOMCONNSTR_AZURE_STORAGE_CONNECTION_STRING");
+        //    if (!string.IsNullOrEmpty(azuriteConnectionString))
+        //    {
+        //        connectionString = azuriteConnectionString;
+        //    }
 
-                if (!string.IsNullOrEmpty(entity.OldPassword))
-                {
-                    var changePasswordResult = await _userManager.ChangePasswordAsync(currentUser, entity.OldPassword, entity.NewPassword);
-                    if (!changePasswordResult.Succeeded)
-                    {
+        //    string containerName = "profile-images";
 
-                        var errors = changePasswordResult.Errors.Select(e => e.Description);
-                        var errorMessage = string.Join($" ", errors);
+        //    string blobName = entity.Username + "_" + Guid.NewGuid().ToString() + Path.GetExtension(entity.ImagePath.FileName);
 
+        //    Azure.Storage.Blobs.BlobServiceClient blobServiceClient = new Azure.Storage.Blobs.BlobServiceClient(connectionString);
+        //    Azure.Storage.Blobs.BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
 
-                        throw new InvalidOperationException($"Failed to update password! \n {errorMessage}");
+        //    await containerClient.CreateIfNotExistsAsync(Azure.Storage.Blobs.Models.PublicAccessType.Blob);
 
-                    }
-                }
+        //    Azure.Storage.Blobs.BlobClient blobClient = containerClient.GetBlobClient(blobName);
 
-                if (entity.ImagePath != null)
-                {
-                    string blobName = currentUser.UserName + "_" + Guid.NewGuid().ToString() + Path.GetExtension(entity.ImagePath.FileName);
+        //    using (Stream stream = entity.ImagePath.OpenReadStream())
+        //    {
+        //        await blobClient.UploadAsync(stream, true);
+        //    }
 
-                    string connectionString = ConnectionStringAzure;
+        //    string imageUrl = blobClient.Uri.ToString();
 
-                    string azuriteConnectionString = Environment.GetEnvironmentVariable("CUSTOMCONNSTR_AZURE_STORAGE_CONNECTION_STRING");
-                    if (!string.IsNullOrEmpty(azuriteConnectionString))
-                    {
-                        connectionString = azuriteConnectionString;
-                    }
+        //    CurrentUser user = new()
+        //    {
+        //        UserName = entity.Username,
+        //        Email = entity.Email,
+        //        //SecurityStamp = Guid.NewGuid().ToString(),
+        //        //PhoneNumber = entity.PhoneNumber,
+        //        ImagePath = imageUrl,
+        //    };
 
-                    string containerName = "profile-images";
 
-                    Azure.Storage.Blobs.BlobServiceClient blobServiceClient = new Azure.Storage.Blobs.BlobServiceClient(connectionString);
-                    Azure.Storage.Blobs.BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
 
-                    await containerClient.CreateIfNotExistsAsync(Azure.Storage.Blobs.Models.PublicAccessType.Blob);
+        //    var result = await _userManager.CreateAsync(user, entity.Password);
 
-                    Azure.Storage.Blobs.BlobClient blobClient = containerClient.GetBlobClient(blobName);
+        //    if (!result.Succeeded)
+        //    {
+        //        var errors = result.Errors.Select(e => e.Description);
+        //        var errorMessage = string.Join(" ", errors);
+        //        throw new ConflictException("User creation failed.");
+        //    }
 
-                    using (Stream stream = entity.ImagePath.OpenReadStream())
-                    {
-                        await blobClient.UploadAsync(stream, true);
-                    }
+        //    if (user != null)
+        //    {
+        //        if (!await _roleManager.RoleExistsAsync(UserRoles.Admin))
+        //        {
+        //            CurrentRole CurrentRole = new()
+        //            {
+        //                Name = $"{UserRoles.Admin}",
+        //            };
 
-                    string imageUrl = blobClient.Uri.ToString();
-                    currentUser.ImagePath = imageUrl;
-                }
+        //            await _roleManager.CreateAsync(CurrentRole);
+        //        }
 
-                var existingUserWithUserName = await _userManager.FindByNameAsync(entity.Username);
-                if (existingUserWithUserName != null && existingUserWithUserName.Id != currentUser.Id)
-                {
+        //        if (!await _roleManager.RoleExistsAsync(UserRoles.HR))
+        //        {
+        //            CurrentRole CurrentRole2 = new()
+        //            {
+        //                Name = $"{UserRoles.HR}",
+        //            };
 
-                    throw new BadHttpRequestException("User name is already associated with another user!");
+        //            await _roleManager.CreateAsync(CurrentRole2);
+        //        }
 
-                }
 
-                var identityResult = await _userManager.UpdateAsync(currentUser);
-                if (!identityResult.Succeeded)
-                {
+        //        if (!await _userManager.IsInRoleAsync(user, UserRoles.Admin))
+        //        {
+        //            await _userManager.AddToRoleAsync(user, UserRoles.Admin);
+        //        }
 
-                    throw new InvalidOperationException("Failed to update user!");
+        //        if (!await _userManager.IsInRoleAsync(user, UserRoles.HR))
+        //        {
+        //            await _userManager.AddToRoleAsync(user, UserRoles.HR);
+        //        }
+        //    }
 
-                }
 
-            }
-        }
 
-        private JwtSecurityToken CreateToken(List<Claim> authClaims)
-        {
-            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
-            _ = int.TryParse(_configuration["JWT:TokenValidityInMinutes"], out int tokenValidityInMinutes);
+        //    System.Globalization.CultureInfo.CurrentCulture.ClearCachedData();
 
-            var token = new JwtSecurityToken(
-                issuer: _configuration["JWT:ValidateIssuer"],
-                audience: _configuration["JWT:ValidateAudience"],
-                expires: DateTime.Now.AddHours(tokenValidityInMinutes),
-                claims: authClaims,
-                signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
-                );
+        //    TimeZone localZone = TimeZone.CurrentTimeZone;
+        //    DateTime localTime = localZone.ToLocalTime(DateTime.UtcNow);
 
-            return token;
-        }
 
-        private static string GenerateRefreshToken()
-        {
-            var randomNumber = new byte[64];
-            using var rng = RandomNumberGenerator.Create();
-            rng.GetBytes(randomNumber);
-            return Convert.ToBase64String(randomNumber);
-        }
+        //}
 
-        private ClaimsPrincipal? GetPrincipalFromExpiredToken(string? token)
-        {
-            var tokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateAudience = false,
-                ValidateIssuer = false,
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"])),
-                ValidateLifetime = false
-            };
+        //public async Task RegisterHR(RegisterDTO model, string ConnectionStringAzure)
+        //{
+        //    var entity = _mapper.Map<Register>(model);
 
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out SecurityToken securityToken);
-            if (securityToken is not JwtSecurityToken jwtSecurityToken || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
-            {
+        //    var userExists = await _userManager.FindByNameAsync(entity.Username);
 
-                throw new SecurityTokenException("Invalid token");
-            }
+        //    if (userExists != null)
+        //    {
 
-            return principal;
+        //        throw new ConflictException("User already exists!");
 
-        }
+        //    }
+
+        //    string connectionString = ConnectionStringAzure;
+
+        //    string azuriteConnectionString = Environment.GetEnvironmentVariable("CUSTOMCONNSTR_AZURE_STORAGE_CONNECTION_STRING");
+        //    if (!string.IsNullOrEmpty(azuriteConnectionString))
+        //    {
+        //        connectionString = azuriteConnectionString;
+        //    }
+
+        //    string containerName = "profile-images";
+
+        //    string blobName = entity.Username + "_" + Guid.NewGuid().ToString() + Path.GetExtension(entity.ImagePath.FileName);
+
+        //    Azure.Storage.Blobs.BlobServiceClient blobServiceClient = new Azure.Storage.Blobs.BlobServiceClient(connectionString);
+        //    Azure.Storage.Blobs.BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
+
+        //    await containerClient.CreateIfNotExistsAsync(Azure.Storage.Blobs.Models.PublicAccessType.Blob);
+
+        //    Azure.Storage.Blobs.BlobClient blobClient = containerClient.GetBlobClient(blobName);
+
+        //    using (Stream stream = entity.ImagePath.OpenReadStream())
+        //    {
+        //        await blobClient.UploadAsync(stream, true);
+        //    }
+
+        //    string imageUrl = blobClient.Uri.ToString();
+
+
+
+        //    CurrentUser user = new()
+        //    {
+
+        //        Email = entity.Email,
+        //        //SecurityStamp = Guid.NewGuid().ToString(),
+        //        //UserName = entity.Username,
+        //        //PhoneNumber = entity.PhoneNumber,
+        //        ImagePath = imageUrl,
+        //    };
+
+        //    CurrentRole CurrentRole = new()
+        //    {
+        //        Name = $"{UserRoles.HR}",
+        //    };
+
+
+        //    var result = await _userManager.CreateAsync(user, entity.Password);
+
+        //    if (!result.Succeeded)
+        //    {
+        //        var errors = result.Errors.Select(e => e.Description);
+        //        var errorMessage = string.Join($" ", errors);
+
+
+        //        throw new ConflictException("User creation failed!");
+
+        //    }
+
+
+
+        //    if (!await _roleManager.RoleExistsAsync(UserRoles.HR))
+        //        await _roleManager.CreateAsync(CurrentRole);
+
+        //    if (await _roleManager.RoleExistsAsync(UserRoles.HR))
+        //        await _userManager.AddToRoleAsync(user, UserRoles.HR);
+
+
+        //    System.Globalization.CultureInfo.CurrentCulture.ClearCachedData();
+
+        //    TimeZone localZone = TimeZone.CurrentTimeZone;
+        //    DateTime localTime = localZone.ToLocalTime(DateTime.UtcNow);
+
+        //}
+
+        //public async Task RegisterUser(RegisterDTO model, string ConnectionStringAzure)
+        //{
+
+
+        //    var entity = _mapper.Map<Register>(model);
+
+        //    var userExists = await _userManager.FindByNameAsync(entity.Username);
+
+        //    if (userExists != null)
+        //    {
+        //        throw new ConflictException("User already exists!");
+        //    }
+
+        //    string connectionString = ConnectionStringAzure;
+
+        //    string azuriteConnectionString = Environment.GetEnvironmentVariable("CUSTOMCONNSTR_AZURE_STORAGE_CONNECTION_STRING");
+        //    if (!string.IsNullOrEmpty(azuriteConnectionString))
+        //    {
+        //        connectionString = azuriteConnectionString;
+        //    }
+
+        //    string containerName = "profile-images";
+
+        //    string blobName = entity.Username + "_" + Guid.NewGuid().ToString() + Path.GetExtension(entity.ImagePath.FileName);
+
+        //    Azure.Storage.Blobs.BlobServiceClient blobServiceClient = new Azure.Storage.Blobs.BlobServiceClient(connectionString);
+        //    Azure.Storage.Blobs.BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
+
+        //    await containerClient.CreateIfNotExistsAsync(Azure.Storage.Blobs.Models.PublicAccessType.Blob);
+
+        //    Azure.Storage.Blobs.BlobClient blobClient = containerClient.GetBlobClient(blobName);
+
+        //    using (Stream stream = entity.ImagePath.OpenReadStream())
+        //    {
+        //        await blobClient.UploadAsync(stream, true);
+        //    }
+
+        //    string imageUrl = blobClient.Uri.ToString();
+
+        //    CurrentUser user = new()
+        //    {
+        //        UserName = entity.Username,
+        //        Email = entity.Email,
+        //        //SecurityStamp = Guid.NewGuid().ToString(),
+        //        //PhoneNumber = entity.PhoneNumber,
+        //        ImagePath = imageUrl,
+        //    };
+
+
+        //    var result = await _userManager.CreateAsync(user, entity.Password);
+
+        //    var cuser = await _userManager.FindByNameAsync(entity.Username);
+
+
+        //    if (!result.Succeeded)
+        //    {
+        //        var errors = result.Errors.Select(e => e.Description);
+        //        var errorMessage = string.Join(" ", errors);
+        //        throw new ConflictException("User creation failed.");
+        //    }
+
+
+
+
+
+        //    System.Globalization.CultureInfo.CurrentCulture.ClearCachedData();
+
+        //    TimeZone localZone = TimeZone.CurrentTimeZone;
+        //    DateTime localTime = localZone.ToLocalTime(DateTime.UtcNow);
+
+
+        //}
+
+
+
+
+        //public async Task Revoke(string username)
+        //{
+        //    var user = await _userManager.FindByNameAsync(username);
+
+        //    if (user == null)
+        //    {
+
+        //        throw new BadHttpRequestException("Invalid user name");
+
+        //    }
+
+
+
+        //    user.RefreshToken = null;
+        //    await _userManager.UpdateAsync(user);
+        //}
+
+        //public async Task RevokeAll()
+        //{
+        //    var users = _userManager.Users.ToList();
+        //    foreach (var user in users)
+        //    {
+        //        user.RefreshToken = null;
+        //        await _userManager.UpdateAsync(user);
+        //    }
+        //}
+
+        //public async Task UpdatePassword(UpdatePasswordDTO model, ClaimsPrincipal User)
+        //{
+        //    var entity = _mapper.Map<UpdatePassword>(model);
+
+
+        //    if (!User.Identity.IsAuthenticated)
+        //    {
+
+        //        throw new UnauthorizedException("User not authenticated.");
+
+        //    }
+
+
+
+        //    var username = User.Identity.Name;
+
+        //    var currentUser = await _userManager.FindByNameAsync(username);
+
+        //    var adminUsers = await _userManager.GetUsersInRoleAsync(UserRoles.Admin);
+
+        //    if (currentUser != null)
+        //    {
+        //        adminUsers.Any(i => i.UserName == currentUser.UserName);
+
+        //        if (currentUser.UserName == null)
+        //        {
+
+        //            throw new NotFoundException("User not found!");
+
+        //        }
+
+
+
+        //        if (!string.IsNullOrEmpty(entity.OldPassword))
+        //        {
+        //            var changePasswordResult = await _userManager.ChangePasswordAsync(currentUser, entity.OldPassword, entity.NewPassword);
+        //            if (!changePasswordResult.Succeeded)
+        //            {
+
+        //                var errors = changePasswordResult.Errors.Select(e => e.Description);
+        //                var errorMessage = string.Join($" ", errors);
+
+        //                throw new InvalidOperationException($"Failed to update password! \n {errorMessage}");
+
+        //            }
+        //        }
+
+
+
+
+        //        var identityResult = await _userManager.UpdateAsync(currentUser);
+        //        if (!identityResult.Succeeded)
+        //        {
+
+        //            throw new InvalidOperationException($"Failed to update user!");
+
+        //        }
+
+        //    }
+        //}
+
+        //public async Task UpdateProfile(UpdateProfileDTO model, ClaimsPrincipal User, string ConnectionStringAzure)
+        //{
+        //    var entity = _mapper.Map<UpdateProfile>(model);
+
+
+
+        //    if (!User.Identity.IsAuthenticated)
+        //    {
+
+        //        throw new UnauthorizedException($"User not authenticated.");
+
+        //    }
+
+
+
+        //    var username = User.Identity.Name;
+
+        //    var currentUser = await _userManager.FindByNameAsync(username);
+
+        //    var adminUsers = await _userManager.GetUsersInRoleAsync(UserRoles.Admin);
+
+        //    if (currentUser != null)
+        //    {
+        //        adminUsers.Any(i => i.UserName == currentUser.UserName);
+
+        //        if (currentUser.UserName == null)
+        //        {
+
+        //            throw new NotFoundException($"User not found!");
+
+        //        }
+
+
+        //        currentUser.UserName = entity.Username;
+        //        currentUser.Email = entity.Email;
+        //        //currentUser.PhoneNumber = entity.PhoneNumber;
+
+
+
+        //        if (!string.IsNullOrEmpty(entity.OldPassword))
+        //        {
+        //            var changePasswordResult = await _userManager.ChangePasswordAsync(currentUser, entity.OldPassword, entity.NewPassword);
+        //            if (!changePasswordResult.Succeeded)
+        //            {
+
+        //                var errors = changePasswordResult.Errors.Select(e => e.Description);
+        //                var errorMessage = string.Join($" ", errors);
+
+
+        //                throw new InvalidOperationException($"Failed to update password! \n {errorMessage}");
+
+        //            }
+        //        }
+
+        //        if (entity.ImagePath != null)
+        //        {
+        //            string blobName = currentUser.UserName + "_" + Guid.NewGuid().ToString() + Path.GetExtension(entity.ImagePath.FileName);
+
+        //            string connectionString = ConnectionStringAzure;
+
+        //            string azuriteConnectionString = Environment.GetEnvironmentVariable("CUSTOMCONNSTR_AZURE_STORAGE_CONNECTION_STRING");
+        //            if (!string.IsNullOrEmpty(azuriteConnectionString))
+        //            {
+        //                connectionString = azuriteConnectionString;
+        //            }
+
+        //            string containerName = "profile-images";
+
+        //            Azure.Storage.Blobs.BlobServiceClient blobServiceClient = new Azure.Storage.Blobs.BlobServiceClient(connectionString);
+        //            Azure.Storage.Blobs.BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
+
+        //            await containerClient.CreateIfNotExistsAsync(Azure.Storage.Blobs.Models.PublicAccessType.Blob);
+
+        //            Azure.Storage.Blobs.BlobClient blobClient = containerClient.GetBlobClient(blobName);
+
+        //            using (Stream stream = entity.ImagePath.OpenReadStream())
+        //            {
+        //                await blobClient.UploadAsync(stream, true);
+        //            }
+
+        //            string imageUrl = blobClient.Uri.ToString();
+        //            currentUser.ImagePath = imageUrl;
+        //        }
+
+        //        var existingUserWithUserName = await _userManager.FindByNameAsync(entity.Username);
+        //        if (existingUserWithUserName != null && existingUserWithUserName.Id != currentUser.Id)
+        //        {
+
+        //            throw new BadHttpRequestException("User name is already associated with another user!");
+
+        //        }
+
+        //        var identityResult = await _userManager.UpdateAsync(currentUser);
+        //        if (!identityResult.Succeeded)
+        //        {
+
+        //            throw new InvalidOperationException("Failed to update user!");
+
+        //        }
+
+        //    }
+        //}
+
+        //private JwtSecurityToken CreateToken(List<Claim> authClaims)
+        //{
+        //    var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
+        //    _ = int.TryParse(_configuration["JWT:TokenValidityInMinutes"], out int tokenValidityInMinutes);
+
+        //    var token = new JwtSecurityToken(
+        //        issuer: _configuration["JWT:ValidateIssuer"],
+        //        audience: _configuration["JWT:ValidateAudience"],
+        //        expires: DateTime.Now.AddHours(tokenValidityInMinutes),
+        //        claims: authClaims,
+        //        signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
+        //        );
+
+        //    return token;
+        //}
+
+        //private static string GenerateRefreshToken()
+        //{
+        //    var randomNumber = new byte[64];
+        //    using var rng = RandomNumberGenerator.Create();
+        //    rng.GetBytes(randomNumber);
+        //    return Convert.ToBase64String(randomNumber);
+        //}
+
+        //private ClaimsPrincipal? GetPrincipalFromExpiredToken(string? token)
+        //{
+        //    var tokenValidationParameters = new TokenValidationParameters
+        //    {
+        //        ValidateAudience = false,
+        //        ValidateIssuer = false,
+        //        ValidateIssuerSigningKey = true,
+        //        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"])),
+        //        ValidateLifetime = false
+        //    };
+
+        //    var tokenHandler = new JwtSecurityTokenHandler();
+        //    var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out SecurityToken securityToken);
+        //    if (securityToken is not JwtSecurityToken jwtSecurityToken || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+        //    {
+
+        //        throw new SecurityTokenException("Invalid token");
+        //    }
+
+        //    return principal;
+
+        //}
     }
 }

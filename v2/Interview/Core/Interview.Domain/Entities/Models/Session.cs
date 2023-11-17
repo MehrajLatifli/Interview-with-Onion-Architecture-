@@ -5,25 +5,27 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Interview.Domain.Entities.Base;
+using Interview.Domain.Entities.IdentityAuth;
 using Microsoft.EntityFrameworkCore;
 
 namespace Interview.Domain.Entities.Models;
 
+
 [Table("Sessions")]
-public class Session : BaseEntity
+public  class Session : BaseEntity
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
 
-    [Column(TypeName = "decimal(18, 2)")]
+    [Column(TypeName = "decimal(18, 0)")]
     public decimal? EndValue { get; set; }
 
     public DateTime? StartDate { get; set; }
 
     public DateTime? EndDate { get; set; }
 
-    public int UserAccountId { get; set; }
+    public int UserId { get; set; }
 
     public int VacancyId { get; set; }
 
@@ -35,6 +37,10 @@ public class Session : BaseEntity
 
     [InverseProperty("Session")]
     public virtual ICollection<SessionQuestion> SessionQuestion { get; set; } = new List<SessionQuestion>();
+
+    [ForeignKey("UserId")]
+    [InverseProperty("Session")]
+    public virtual User User { get; set; }
 
     [ForeignKey("VacancyId")]
     [InverseProperty("Session")]

@@ -1,4 +1,4 @@
-﻿using Interview.Domain.Entities.IdentityAuth;
+﻿
 using Microsoft.AspNetCore.Http;
 
 namespace Interview.Domain.Entities.AuthModels

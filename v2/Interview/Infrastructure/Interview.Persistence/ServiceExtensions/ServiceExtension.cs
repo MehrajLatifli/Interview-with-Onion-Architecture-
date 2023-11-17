@@ -30,7 +30,6 @@ using Serilog.Events;
 using Interview.Persistence.LogSettings.ColumnWriters;
 using System.Diagnostics;
 using Microsoft.Extensions.Hosting;
-using Interview.Domain.Entities.IdentityAuth;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Interview.Application.Validations;
@@ -88,12 +87,12 @@ namespace Interview.Persistence.ServiceExtensions
             services.AddDbContext<InterviewContext>(options => options.UseSqlServer(CustomDbConnectionString));
 
 
-            services.AddIdentity<CustomUser, CustomRole>(options =>
-            {
-                options.User.RequireUniqueEmail = false;
-            })
-            .AddEntityFrameworkStores<InterviewContext>()
-            .AddDefaultTokenProviders();
+            //services.AddIdentity<CurrentUser, CurrentRole>(options =>
+            //{
+            //    options.User.RequireUniqueEmail = false;
+            //})
+            //.AddEntityFrameworkStores<InterviewContext>()
+            //.AddDefaultTokenProviders();
 
             services.AddScoped<IAuthService, AuthServiceManager>();
 

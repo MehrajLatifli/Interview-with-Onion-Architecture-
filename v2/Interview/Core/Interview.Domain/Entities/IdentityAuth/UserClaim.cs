@@ -7,18 +7,22 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Interview.Domain.Entities.Base;
 using Microsoft.EntityFrameworkCore;
 
-namespace Interview.Domain.Entities.Models;
+namespace Interview.Domain.Entities.IdentityAuth;
 
-[Table("StructureTypes")]
-public  class StructureType : BaseEntity
+[Table("UserClaims")]
+public  class UserClaim : BaseEntity
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
 
-    [Required]
-    public string Name { get; set; }
+    public string ClaimType { get; set; }
 
-    [InverseProperty("StructureType")]
-    public virtual ICollection<Structure> Structure { get; set; } = new List<Structure>();
+    public string ClaimValue { get; set; }
+
+    public int UserId { get; set; }
+
+    [ForeignKey("UserId")]
+    [InverseProperty("UserClaim")]
+    public virtual User User { get; set; }
 }

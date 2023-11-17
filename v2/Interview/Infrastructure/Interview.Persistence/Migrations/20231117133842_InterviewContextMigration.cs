@@ -27,7 +27,7 @@ namespace Interview.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__CandidateDocument", x => x.Id);
+                    table.PrimaryKey("PK__Candidat__3214EC07412C1956", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -40,51 +40,7 @@ namespace Interview.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Category", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "CustomRoles",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    NormalizedName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CustomRoles", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "CustomUsers",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ImagePath = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    RefreshToken = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    RefreshTokenExpiryTime = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    NormalizedUserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    NormalizedEmail = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
-                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
-                    LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
-                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CustomUsers", x => x.Id);
+                    table.PrimaryKey("PK__Category__3214EC072D3EC4B7", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -94,11 +50,11 @@ namespace Interview.Persistence.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Coefficient = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                    Coefficient = table.Column<decimal>(type: "decimal(18,0)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Level", x => x.Id);
+                    table.PrimaryKey("PK__Level__3214EC0735A80859", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -111,7 +67,21 @@ namespace Interview.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Position", x => x.Id);
+                    table.PrimaryKey("PK__Position__3214EC0730660A0E", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Roles",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK__Role__3214EC07C59F717C", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -124,7 +94,27 @@ namespace Interview.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_StructureTypes", x => x.Id);
+                    table.PrimaryKey("PK__Structur__3214EC0720B22513", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Phonenumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ImagePath = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RefreshToken = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RefreshTokenExpiryTime = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK__User__3214EC07FA4259EB", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -137,7 +127,7 @@ namespace Interview.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Candidate", x => x.Id);
+                    table.PrimaryKey("PK__Candidat__3214EC07469F46D4", x => x.Id);
                     table.ForeignKey(
                         name: "FK_CandidateDocument_forCandidates",
                         column: x => x.CandidateDocumentId,
@@ -146,109 +136,23 @@ namespace Interview.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CustomRoleClaim",
+                name: "RoleClaims",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    RoleId = table.Column<int>(type: "int", nullable: false),
                     ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CustomRoleClaim", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_CustomRoleClaim_CustomRoles_RoleId",
-                        column: x => x.RoleId,
-                        principalTable: "CustomRoles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "CustomUserClaim",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CustomUserClaim", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_CustomUserClaim_CustomUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "CustomUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "CustomUserLogins",
-                columns: table => new
-                {
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    LoginProvider = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ProviderKey = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ProviderDisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CustomUserLogins", x => x.UserId);
-                    table.ForeignKey(
-                        name: "FK_CustomUserLogins_CustomUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "CustomUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "CustomUserRoles",
-                columns: table => new
-                {
-                    UserId = table.Column<int>(type: "int", nullable: false),
+                    ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RoleId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CustomUserRoles", x => new { x.UserId, x.RoleId });
+                    table.PrimaryKey("PK__RoleClai__3214EC0701854A8C", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_CustomUserRoles_CustomRoles_RoleId",
+                        name: "FK_RoleId_forRoleClaim",
                         column: x => x.RoleId,
-                        principalTable: "CustomRoles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_CustomUserRoles_CustomUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "CustomUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "CustomUserTokens",
-                columns: table => new
-                {
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    LoginProvider = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Value = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CustomUserTokens", x => x.UserId);
-                    table.ForeignKey(
-                        name: "FK_CustomUserTokens_CustomUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "CustomUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalTable: "Roles",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -263,11 +167,55 @@ namespace Interview.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Structure", x => x.Id);
+                    table.PrimaryKey("PK__Structur__3214EC077D1F08DF", x => x.Id);
                     table.ForeignKey(
                         name: "FK_StructureType_forStructure",
                         column: x => x.StructureTypeId,
                         principalTable: "StructureTypes",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserClaims",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK__UserClai__3214EC076DCED94E", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserId_forUserClaim",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserRoles",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    RoleId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK__UserRole__3214EC079524A0B8", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RoleId_forUserRole",
+                        column: x => x.RoleId,
+                        principalTable: "Roles",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_UserId_forUserRole",
+                        column: x => x.UserId,
+                        principalTable: "Users",
                         principalColumn: "Id");
                 });
 
@@ -277,14 +225,14 @@ namespace Interview.Persistence.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Text = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LevelId = table.Column<int>(type: "int", nullable: false),
                     CategoryId = table.Column<int>(type: "int", nullable: false),
                     StructureId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Question", x => x.Id);
+                    table.PrimaryKey("PK__Question__3214EC07C839599E", x => x.Id);
                     table.ForeignKey(
                         name: "FK_CategoryId_forQuestion",
                         column: x => x.CategoryId,
@@ -317,7 +265,7 @@ namespace Interview.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Vacancy", x => x.Id);
+                    table.PrimaryKey("PK__Vacancy__3214EC07C2961250", x => x.Id);
                     table.ForeignKey(
                         name: "FK_PositionId_forVacancy",
                         column: x => x.PositionId,
@@ -336,20 +284,25 @@ namespace Interview.Persistence.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    EndValue = table.Column<decimal>(type: "decimal(18,2)", nullable: true, defaultValueSql: "((0.0))"),
+                    EndValue = table.Column<decimal>(type: "decimal(18,0)", nullable: true, defaultValueSql: "((0.0))"),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     EndDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    UserAccountId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false),
                     VacancyId = table.Column<int>(type: "int", nullable: false),
                     CandidateId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Session", x => x.Id);
+                    table.PrimaryKey("PK__Session__3214EC07289FC67F", x => x.Id);
                     table.ForeignKey(
                         name: "FK_CandidateId_forSession",
                         column: x => x.CandidateId,
                         principalTable: "Candidates",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_UserId_forSession",
+                        column: x => x.UserId,
+                        principalTable: "Users",
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_VacancyId_forSession",
@@ -370,7 +323,7 @@ namespace Interview.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__SessionQuestion", x => x.Id);
+                    table.PrimaryKey("PK__SessionQ__3214EC07DABC968F", x => x.Id);
                     table.ForeignKey(
                         name: "FK_QuestionId_forSessionQuestion",
                         column: x => x.QuestionId,
@@ -389,21 +342,6 @@ namespace Interview.Persistence.Migrations
                 column: "CandidateDocumentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CustomRoleClaim_RoleId",
-                table: "CustomRoleClaim",
-                column: "RoleId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_CustomUserClaim_UserId",
-                table: "CustomUserClaim",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_CustomUserRoles_RoleId",
-                table: "CustomUserRoles",
-                column: "RoleId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Questions_CategoryId",
                 table: "Questions",
                 column: "CategoryId");
@@ -417,6 +355,11 @@ namespace Interview.Persistence.Migrations
                 name: "IX_Questions_StructureId",
                 table: "Questions",
                 column: "StructureId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RoleClaims_RoleId",
+                table: "RoleClaims",
+                column: "RoleId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_SessionQuestions_QuestionId",
@@ -434,6 +377,11 @@ namespace Interview.Persistence.Migrations
                 column: "CandidateId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Sessions_UserId",
+                table: "Sessions",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Sessions_VacancyId",
                 table: "Sessions",
                 column: "VacancyId");
@@ -442,6 +390,21 @@ namespace Interview.Persistence.Migrations
                 name: "IX_Structures_StructureTypeId",
                 table: "Structures",
                 column: "StructureTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserClaims_UserId",
+                table: "UserClaims",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserRoles_RoleId",
+                table: "UserRoles",
+                column: "RoleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserRoles_UserId",
+                table: "UserRoles",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Vacancies_PositionId",
@@ -458,34 +421,25 @@ namespace Interview.Persistence.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "CustomRoleClaim");
-
-            migrationBuilder.DropTable(
-                name: "CustomUserClaim");
-
-            migrationBuilder.DropTable(
-                name: "CustomUserLogins");
-
-            migrationBuilder.DropTable(
-                name: "CustomUserRoles");
-
-            migrationBuilder.DropTable(
-                name: "CustomUserTokens");
+                name: "RoleClaims");
 
             migrationBuilder.DropTable(
                 name: "SessionQuestions");
 
             migrationBuilder.DropTable(
-                name: "CustomRoles");
+                name: "UserClaims");
 
             migrationBuilder.DropTable(
-                name: "CustomUsers");
+                name: "UserRoles");
 
             migrationBuilder.DropTable(
                 name: "Questions");
 
             migrationBuilder.DropTable(
                 name: "Sessions");
+
+            migrationBuilder.DropTable(
+                name: "Roles");
 
             migrationBuilder.DropTable(
                 name: "Categories");
@@ -495,6 +449,9 @@ namespace Interview.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "Candidates");
+
+            migrationBuilder.DropTable(
+                name: "Users");
 
             migrationBuilder.DropTable(
                 name: "Vacancies");
