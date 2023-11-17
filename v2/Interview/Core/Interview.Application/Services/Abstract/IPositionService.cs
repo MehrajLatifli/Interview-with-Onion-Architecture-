@@ -21,7 +21,7 @@ namespace Interview.Application.Services.Abstract
         public Task<PositionDTO_forGetandGetAll> DeletePositionById(int id);
 
         #endregion
-    }
 
+    }
 
 }

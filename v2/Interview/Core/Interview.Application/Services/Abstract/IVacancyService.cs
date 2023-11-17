@@ -24,16 +24,5 @@ namespace Interview.Application.Services.Abstract
         #endregion
     }
 
-    public interface IRoleAccessService
-    {
 
-        #region RoleAccess service
-
-
-        public Task<RoleAccessTypeDTO> GetRoleAccess();
-
-
-
-        #endregion
-    }
 }

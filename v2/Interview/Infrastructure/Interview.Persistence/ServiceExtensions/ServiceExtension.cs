@@ -33,6 +33,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Interview.Application.Validations;
+using Interview.Domain.Entities.IdentityAuth;
+using Interview.Application.Repositories.Abstract;
 
 namespace Interview.Persistence.ServiceExtensions
 {
@@ -95,6 +97,10 @@ namespace Interview.Persistence.ServiceExtensions
             //.AddDefaultTokenProviders();
 
             services.AddScoped<IAuthService, AuthServiceManager>();
+
+            services.AddScoped<IUserReadRepository, UserReadRepository>();
+            services.AddScoped<IUserWriteRepository, UserWriteRepository>();
+
 
             services.AddScoped<ICandidateDocumentService, CandidateDocumentServiceManager>();
 

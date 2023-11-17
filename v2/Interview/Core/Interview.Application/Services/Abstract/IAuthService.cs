@@ -22,14 +22,14 @@ namespace Interview.Application.Services.Abstract
 
         //public Task RegisterHR(RegisterDTO model, string ConnectionStringAzure);
 
-        //public Task RegisterUser(RegisterDTO model, string ConnectionStringAzure);
+        public Task RegisterUser(RegisterDTO model, string ConnectionStringAzure);
         //public Task AddUserRole(int userId, int roleId, int roleAccessType, ClaimsPrincipal User);
 
         //public Task UpdateUserRole(int userId, int roleId, int roleAccessType, ClaimsPrincipal User);
 
         //public Task DeleteRole(int roleId, int userId, ClaimsPrincipal User);
 
-        //public Task<LoginResponse> Login(LoginDTO model);
+        public Task<LoginResponse> Login(LoginDTO model);
 
         //public Task Logout();
 
@@ -45,7 +45,7 @@ namespace Interview.Application.Services.Abstract
         ////public Task<List<GetAuthModel>> GetHR(ClaimsPrincipal User, CustomUserClaimResult customUserClaimResult);
         //public Task<List<GetRoleModel>> GetRoles(ClaimsPrincipal User);
 
-      
+
 
         //public Task UpdateProfile(UpdateProfileDTO model, System.Security.Claims.ClaimsPrincipal claims, string ConnectionStringAzure);
 

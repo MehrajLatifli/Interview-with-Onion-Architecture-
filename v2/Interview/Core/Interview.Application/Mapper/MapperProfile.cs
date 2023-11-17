@@ -2,6 +2,7 @@
 using Interview.Application.Mapper.AuthDTO;
 using Interview.Application.Mapper.DTO;
 using Interview.Domain.Entities.AuthModels;
+using Interview.Domain.Entities.IdentityAuth;
 using Interview.Domain.Entities.Models;
 using NuGet.ContentModel;
 using System;
@@ -94,6 +95,12 @@ namespace Interview.Application.Mapper
             CreateMap<Position, PositionDTO_forGetandGetAll>();
             CreateMap<PositionDTO_forGetandGetAll, Position>();
 
+            CreateMap<User, UserDTO_forCreate>();
+            CreateMap<UserDTO_forCreate, User>();
+            CreateMap<User, UserDTO_forUpdate>();
+            CreateMap<UserDTO_forUpdate, User>();
+            CreateMap<User, UserDTO_forGetandGetAll>();
+            CreateMap<UserDTO_forGetandGetAll, User>();
 
 
 
