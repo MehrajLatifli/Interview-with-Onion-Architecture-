@@ -1,6 +1,21 @@
 ﻿using AutoMapper;
-using Interview.Application.Mapper.AuthDTO;
-using Interview.Application.Mapper.DTO;
+using Interview.Application.Mapper.DTO.AuthDTO;
+using Interview.Application.Mapper.DTO.CandidateDocumentDTO;
+using Interview.Application.Mapper.DTO.CandidateDTO;
+using Interview.Application.Mapper.DTO.CategoryDTO;
+using Interview.Application.Mapper.DTO.LevelDTO;
+using Interview.Application.Mapper.DTO.PositionDTO;
+using Interview.Application.Mapper.DTO.QuestionDTO;
+using Interview.Application.Mapper.DTO.RoleClaimDTO;
+using Interview.Application.Mapper.DTO.RoleDTO;
+using Interview.Application.Mapper.DTO.SessionDTO;
+using Interview.Application.Mapper.DTO.SessionQuestionDTO;
+using Interview.Application.Mapper.DTO.StructureDTO;
+using Interview.Application.Mapper.DTO.StructureTypeDTO;
+using Interview.Application.Mapper.DTO.UserClaimDTO;
+using Interview.Application.Mapper.DTO.UserDTO;
+using Interview.Application.Mapper.DTO.UserRoleDTO;
+using Interview.Application.Mapper.DTO.VacancyDTO;
 using Interview.Domain.Entities.AuthModels;
 using Interview.Domain.Entities.IdentityAuth;
 using Interview.Domain.Entities.Models;
@@ -18,90 +33,117 @@ namespace Interview.Application.Mapper
         public MapperProfile()
         {
 
-            CreateMap<CandidateDocument, CandidateDocumentDTO_forCreate>();
-            CreateMap<CandidateDocumentDTO_forCreate, CandidateDocument>();
-            CreateMap<CandidateDocument, CandidateDocumentDTO_forUpdate>();
-            CreateMap<CandidateDocumentDTO_forUpdate, CandidateDocument>();
-            CreateMap<CandidateDocument, CandidateDocumentDTO_forGetandGetAll>();
-            CreateMap<CandidateDocumentDTO_forGetandGetAll, CandidateDocument>();
+            CreateMap<CandidateDocument, CandidateDocumentDTOforCreate>();
+            CreateMap<CandidateDocumentDTOforCreate, CandidateDocument>();
+            CreateMap<CandidateDocument, CandidateDocumentDTOforUpdate>();
+            CreateMap<CandidateDocumentDTOforUpdate, CandidateDocument>();
+            CreateMap<CandidateDocument, CandidateDocumentDTOforGetandGetAll>();
+            CreateMap<CandidateDocumentDTOforGetandGetAll, CandidateDocument>();
 
-            CreateMap<Candidate, CandidateDTO_forCreate>();
-            CreateMap<CandidateDTO_forCreate, Candidate>();
-            CreateMap<Candidate, CandidateDTO_forUpdate>();
-            CreateMap<CandidateDTO_forUpdate, Candidate>();
-            CreateMap<Candidate, CandidateDTO_forGetandGetAll>();
-            CreateMap<CandidateDTO_forGetandGetAll, Candidate>();
+            CreateMap<Candidate, CandidateDTOforCreate>();
+            CreateMap<CandidateDTOforCreate, Candidate>();
+            CreateMap<Candidate, CandidateDTOforUpdate>();
+            CreateMap<CandidateDTOforUpdate, Candidate>();
+            CreateMap<Candidate, CandidateDTOforGetandGetAll>();
+            CreateMap<CandidateDTOforGetandGetAll, Candidate>();
 
-            CreateMap<Level, LevelDTO_forCreate>();
-            CreateMap<LevelDTO_forCreate, Level>();
-            CreateMap<Level, LevelDTO_forUpdate>();
-            CreateMap<LevelDTO_forUpdate, Level>();
-            CreateMap<Level, LevelDTO_forGetandGetAll>();
-            CreateMap<LevelDTO_forGetandGetAll, Level>();
+            CreateMap<Level, LevelDTOforCreate>();
+            CreateMap<LevelDTOforCreate, Level>();
+            CreateMap<Level, LevelDTOforUpdate>();
+            CreateMap<LevelDTOforUpdate, Level>();
+            CreateMap<Level, LevelDTOforGetandGetAll>();
+            CreateMap<LevelDTOforGetandGetAll, Level>();
 
-            CreateMap<Category, CategoryDTO_forCreate>();
-            CreateMap<CategoryDTO_forCreate, Category>();
-            CreateMap<Category, CategoryDTO_forUpdate>();
-            CreateMap<CategoryDTO_forUpdate, Category>();
-            CreateMap<Category, CategoryDTO_forGetandGetAll>();
-            CreateMap<CategoryDTO_forGetandGetAll, Category>();
+            CreateMap<Category, CategoryDTOforCreate>();
+            CreateMap<CategoryDTOforCreate, Category>();
+            CreateMap<Category, CategoryDTOforUpdate>();
+            CreateMap<CategoryDTOforUpdate, Category>();
+            CreateMap<Category, CategoryDTOforGetandGetAll>();
+            CreateMap<CategoryDTOforGetandGetAll, Category>();
 
-            CreateMap<Question, QuestionDTO_forCreate>();
-            CreateMap<QuestionDTO_forCreate, Question>();
-            CreateMap<Question, QuestionDTO_forUpdate>();
-            CreateMap<QuestionDTO_forUpdate, Question>();
-            CreateMap<Question, QuestionDTO_forGetandGetAll>();
-            CreateMap<QuestionDTO_forGetandGetAll, Question>();
+            CreateMap<Question, QuestionDTOforCreate>();
+            CreateMap<QuestionDTOforCreate, Question>();
+            CreateMap<Question, QuestionDTOforUpdate>();
+            CreateMap<QuestionDTOforUpdate, Question>();
+            CreateMap<Question, QuestionDTOforGetandGetAll>();
+            CreateMap<QuestionDTOforGetandGetAll, Question>();
 
-            CreateMap<SessionQuestion, SessionQuestionDTO_forCreate>();
-            CreateMap<SessionQuestionDTO_forCreate, SessionQuestion>();
-            CreateMap<SessionQuestion, SessionQuestionDTO_forUpdate>();
-            CreateMap<SessionQuestionDTO_forUpdate, SessionQuestion>();
-            CreateMap<SessionQuestion, SessionQuestionDTO_forGetandGetAll>();
-            CreateMap<SessionQuestionDTO_forGetandGetAll, SessionQuestion>();
+            CreateMap<SessionQuestion, SessionQuestionDTOforCreate>();
+            CreateMap<SessionQuestionDTOforCreate, SessionQuestion>();
+            CreateMap<SessionQuestion, SessionQuestionDTOforUpdate>();
+            CreateMap<SessionQuestionDTOforUpdate, SessionQuestion>();
+            CreateMap<SessionQuestion, SessionQuestionDTOforGetandGetAll>();
+            CreateMap<SessionQuestionDTOforGetandGetAll, SessionQuestion>();
 
-            CreateMap<Session, SessionDTO_forCreate>();
-            CreateMap<SessionDTO_forCreate, Session>();
-            CreateMap<Session, SessionDTO_forUpdate>();
-            CreateMap<SessionDTO_forUpdate, Session>();
-            CreateMap<Session, SessionDTO_forGetandGetAll>();
-            CreateMap<SessionDTO_forGetandGetAll, Session>();
+            CreateMap<Session, SessionDTOforCreate>();
+            CreateMap<SessionDTOforCreate, Session>();
+            CreateMap<Session, SessionDTOforUpdate>();
+            CreateMap<SessionDTOforUpdate, Session>();
+            CreateMap<Session, SessionDTOforGetandGetAll>();
+            CreateMap<SessionDTOforGetandGetAll, Session>();
 
-            CreateMap<Structure, StructureDTO_forCreate>();
-            CreateMap<StructureDTO_forCreate, Structure>();
-            CreateMap<Structure, StructureDTO_forUpdate>();
-            CreateMap<StructureDTO_forUpdate, Structure>();
-            CreateMap<Structure, StructureDTO_forGetandGetAll>();
-            CreateMap<StructureDTO_forGetandGetAll, Structure>();
+            CreateMap<Structure, StructureDTOforCreate>();
+            CreateMap<StructureDTOforCreate, Structure>();
+            CreateMap<Structure, StructureDTOforUpdate>();
+            CreateMap<StructureDTOforUpdate, Structure>();
+            CreateMap<Structure, StructureDTOforGetandGetAll>();
+            CreateMap<StructureDTOforGetandGetAll, Structure>();
 
-            CreateMap<StructureType, StructureTypeDTO_forCreate>();
-            CreateMap<StructureTypeDTO_forCreate, StructureType>();
-            CreateMap<StructureType, StructureTypeDTO_forUpdate>();
-            CreateMap<StructureTypeDTO_forUpdate, StructureType>();
-            CreateMap<StructureType, StructureTypeDTO_forGetandGetAll>();
-            CreateMap<StructureTypeDTO_forGetandGetAll, StructureType>();
+            CreateMap<StructureType, StructureTypeDTOforCreate>();
+            CreateMap<StructureTypeDTOforCreate, StructureType>();
+            CreateMap<StructureType, StructureTypeDTOforUpdate>();
+            CreateMap<StructureTypeDTOforUpdate, StructureType>();
+            CreateMap<StructureType, StructureTypeDTOforGetandGetAll>();
+            CreateMap<StructureTypeDTOforGetandGetAll, StructureType>();
 
-            CreateMap<Vacancy, VacancyDTO_forCreate>();
-            CreateMap<VacancyDTO_forCreate, Vacancy>();
-            CreateMap<Vacancy, VacancyDTO_forUpdate>();
-            CreateMap<VacancyDTO_forUpdate, Vacancy>();
-            CreateMap<Vacancy, VacancyDTO_forGetandGetAll>();
-            CreateMap<VacancyDTO_forGetandGetAll, Vacancy>();
+            CreateMap<Vacancy, VacancyDTOforCreate>();
+            CreateMap<VacancyDTOforCreate, Vacancy>();
+            CreateMap<Vacancy, VacancyDTOforUpdate>();
+            CreateMap<VacancyDTOforUpdate, Vacancy>();
+            CreateMap<Vacancy, VacancyDTOforGetandGetAll>();
+            CreateMap<VacancyDTOforGetandGetAll, Vacancy>();
 
-            CreateMap<Position, PositionDTO_forCreate>();
-            CreateMap<PositionDTO_forCreate, Position>();
-            CreateMap<Position, PositionDTO_forUpdate>();
-            CreateMap<PositionDTO_forUpdate, Position>();
-            CreateMap<Position, PositionDTO_forGetandGetAll>();
-            CreateMap<PositionDTO_forGetandGetAll, Position>();
+            CreateMap<Position, PositionDTOforCreate>();
+            CreateMap<PositionDTOforCreate, Position>();
+            CreateMap<Position, PositionDTOforUpdate>();
+            CreateMap<PositionDTOforUpdate, Position>();
+            CreateMap<Position, PositionDTOforGetandGetAll>();
+            CreateMap<PositionDTOforGetandGetAll, Position>();
 
-            CreateMap<User, UserDTO_forCreate>();
-            CreateMap<UserDTO_forCreate, User>();
-            CreateMap<User, UserDTO_forUpdate>();
-            CreateMap<UserDTO_forUpdate, User>();
-            CreateMap<User, UserDTO_forGetandGetAll>();
-            CreateMap<UserDTO_forGetandGetAll, User>();
+            CreateMap<User, UserDTOforCreate>();
+            CreateMap<UserDTOforCreate, User>();
+            CreateMap<User, UserDTOforUpdate>();
+            CreateMap<UserDTOforUpdate, User>();
+            CreateMap<User, UserDTOforGetandGetAll>();
+            CreateMap<UserDTOforGetandGetAll, User>();
 
+            CreateMap<Role, RoleDTOforCreate>();
+            CreateMap<RoleDTOforCreate, Role>();
+            CreateMap<Role, RoleDTOforUpdate>();
+            CreateMap<RoleDTOforUpdate, Role>();
+            CreateMap<Role, RoleDTOforGetandGetAll>();
+            CreateMap<RoleDTOforGetandGetAll, Role>();
+
+            CreateMap<UserRole, UserRoleDTOforCreate>();
+            CreateMap<UserRoleDTOforCreate, UserRole>();
+            CreateMap<UserRole, UserRoleDTOforUpdate>();
+            CreateMap<UserRoleDTOforUpdate, UserRole>();
+            CreateMap<UserRole, UserRoleDTOforGetandGetAll>();
+            CreateMap<UserRoleDTOforGetandGetAll, UserRole>();
+
+            CreateMap<UserClaim, UserClaimDTOforCreate>();
+            CreateMap<UserClaimDTOforCreate, UserClaim>();
+            CreateMap<UserClaim, UserClaimDTOforUpdate>();
+            CreateMap<UserClaimDTOforUpdate, UserClaim>();
+            CreateMap<UserClaim, UserClaimDTOforGetandGetAll>();
+            CreateMap<UserClaimDTOforGetandGetAll, UserClaim>();
+
+            CreateMap<RoleClaim, RoleClaimDTOforCreate>();
+            CreateMap<RoleClaimDTOforCreate, RoleClaim>();
+            CreateMap<RoleClaim, RoleClaimDTOforUpdate>();
+            CreateMap<RoleClaimDTOforUpdate, RoleClaim>();
+            CreateMap<RoleClaim, RoleClaimDTOforGetandGetAll>();
+            CreateMap<RoleClaimDTOforGetandGetAll, RoleClaim>();
 
 
             CreateMap<Login, LoginDTO>();

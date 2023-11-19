@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Interview.Application.Exception;
-using Interview.Application.Mapper.DTO;
+using Interview.Application.Mapper.DTO.LevelDTO;
 using Interview.Application.Repositories.Custom;
 using Interview.Application.Services.Abstract;
 using Interview.Domain.Entities.Models;
@@ -28,7 +28,7 @@ namespace Interview.Application.Services.Concrete
 
         #region Level service manager
 
-        public async Task LevelCreate(LevelDTO_forCreate model)
+        public async Task LevelCreate(LevelDTOforCreate model)
         {
 
 
@@ -48,13 +48,13 @@ namespace Interview.Application.Services.Concrete
             await _levelWriteRepository.SaveAsync();
         }
 
-        public async Task<List<LevelDTO_forGetandGetAll>> GetLevel()
+        public async Task<List<LevelDTOforGetandGetAll>> GetLevel()
         {
-            List<LevelDTO_forGetandGetAll> datas = null;
+            List<LevelDTOforGetandGetAll> datas = null;
 
             await Task.Run(() =>
             {
-                datas = _mapper.Map<List<LevelDTO_forGetandGetAll>>(_levelReadRepository.GetAll(false));
+                datas = _mapper.Map<List<LevelDTOforGetandGetAll>>(_levelReadRepository.GetAll(false));
             });
 
             if (datas.Count <= 0)
@@ -65,12 +65,12 @@ namespace Interview.Application.Services.Concrete
             return datas;
         }
 
-        public async Task<LevelDTO_forGetandGetAll> GetLevelById(int id)
+        public async Task<LevelDTOforGetandGetAll> GetLevelById(int id)
         {
-            LevelDTO_forGetandGetAll item = null;
+            LevelDTOforGetandGetAll item = null;
 
 
-            item = _mapper.Map<LevelDTO_forGetandGetAll>(await _levelReadRepository.GetByIdAsync(id.ToString(), false));
+            item = _mapper.Map<LevelDTOforGetandGetAll>(await _levelReadRepository.GetByIdAsync(id.ToString(), false));
 
 
             if (item == null)
@@ -81,7 +81,7 @@ namespace Interview.Application.Services.Concrete
             return item;
         }
 
-        public async Task LevelUpdate(LevelDTO_forUpdate model)
+        public async Task LevelUpdate(LevelDTOforUpdate model)
         {
 
             var existing = await _levelReadRepository.GetByIdAsync(model.Id.ToString(), false);
@@ -116,7 +116,7 @@ namespace Interview.Application.Services.Concrete
 
         }
 
-        public async Task<LevelDTO_forGetandGetAll> DeleteLevelById(int id)
+        public async Task<LevelDTOforGetandGetAll> DeleteLevelById(int id)
         {
 
             if (_levelReadRepository.GetAll().Any(i => i.Id == Convert.ToInt32(id)))

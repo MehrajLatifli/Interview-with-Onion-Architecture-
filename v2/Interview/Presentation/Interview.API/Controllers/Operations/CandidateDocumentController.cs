@@ -1,5 +1,5 @@
 ﻿using Interview.API.API_Routes;
-using Interview.Application.Mapper.DTO;
+using Interview.Application.Mapper.DTO.CandidateDocumentDTO;
 using Interview.Application.Services.Abstract;
 using Interview.Domain.Entities.AuthModels;
 using Interview.Persistence.ServiceExtensions;
@@ -12,7 +12,7 @@ namespace Interview.API.Controllers.Operations
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Policy = "AdminOnly")]
+
     public class CandidateDocumentController : ControllerBase
     {
 
@@ -54,7 +54,7 @@ namespace Interview.API.Controllers.Operations
 
         [HttpPost]
         [Route(Routes.CandidateDocument)]
-        public async Task<IActionResult> CandidateDocumentCreate([FromForm] CandidateDocumentDTO_forCreate model)
+        public async Task<IActionResult> CandidateDocumentCreate([FromForm] CandidateDocumentDTOforCreate model)
         {
 
             await _candidateDocumentService.CandidateDocumentCreate(model, ServiceExtension.ConnectionStringAzure);
@@ -66,7 +66,7 @@ namespace Interview.API.Controllers.Operations
 
         [HttpPut]
         [Route(Routes.CandidateDocument)]
-        public async Task<IActionResult> CandidateDocumentUpdate([FromForm] CandidateDocumentDTO_forUpdate model)
+        public async Task<IActionResult> CandidateDocumentUpdate([FromForm] CandidateDocumentDTOforUpdate model)
         {
 
 

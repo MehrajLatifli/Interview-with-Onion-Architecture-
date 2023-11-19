@@ -1,6 +1,4 @@
-﻿
-
-using Interview.Application.Mapper.DTO;
+﻿using Interview.Application.Mapper.DTO.SessionDTO;
 using System.Security.Claims;
 
 namespace Interview.Application.Services.Abstract
@@ -9,15 +7,15 @@ namespace Interview.Application.Services.Abstract
     {
         #region Session service
 
-        public Task SessionCreate(SessionDTO_forCreate model, ClaimsPrincipal User);
+        public Task SessionCreate(SessionDTOforCreate model, ClaimsPrincipal User);
 
-        public Task<List<SessionDTO_forGetandGetAll>> GetSession();
+        public Task<List<SessionDTOforGetandGetAll>> GetSession();
 
-        public Task<SessionDTO_forGetandGetAll> GetSessionById(int id);
+        public Task<SessionDTOforGetandGetAll> GetSessionById(int id);
 
-        public Task SessionUpdate(SessionDTO_forUpdate model);
+        public Task SessionUpdate(SessionDTOforUpdate model);
 
-        public Task<SessionDTO_forGetandGetAll> DeleteSessionById(int id);
+        public Task<SessionDTOforGetandGetAll> DeleteSessionById(int id);
 
 
 

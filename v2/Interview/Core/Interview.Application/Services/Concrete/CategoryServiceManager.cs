@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Interview.Application.Exception;
-using Interview.Application.Mapper.DTO;
+using Interview.Application.Mapper.DTO.CategoryDTO;
 using Interview.Application.Repositories.Custom;
 using Interview.Application.Services.Abstract;
 using Interview.Domain.Entities.Models;
@@ -29,7 +29,7 @@ namespace Interview.Application.Services.Concrete
 
         #region Category service manager
 
-        public async Task CategoryCreate(CategoryDTO_forCreate model)
+        public async Task CategoryCreate(CategoryDTOforCreate model)
         {
 
 
@@ -50,14 +50,14 @@ namespace Interview.Application.Services.Concrete
             await _categoryWriteRepository.SaveAsync();
         }
 
-        public async Task<List<CategoryDTO_forGetandGetAll>> GetCategory()
+        public async Task<List<CategoryDTOforGetandGetAll>> GetCategory()
         {
 
-            List<CategoryDTO_forGetandGetAll> datas = null;
+            List<CategoryDTOforGetandGetAll> datas = null;
 
             await Task.Run(() =>
             {
-                datas = _mapper.Map<List<CategoryDTO_forGetandGetAll>>(_categoryReadRepository.GetAll(false));
+                datas = _mapper.Map<List<CategoryDTOforGetandGetAll>>(_categoryReadRepository.GetAll(false));
             });
 
             if (datas.Count <= 0)
@@ -68,12 +68,12 @@ namespace Interview.Application.Services.Concrete
             return datas;
         }
 
-        public async Task<CategoryDTO_forGetandGetAll> GetCategoryById(int id)
+        public async Task<CategoryDTOforGetandGetAll> GetCategoryById(int id)
         {
-            CategoryDTO_forGetandGetAll item = null;
+            CategoryDTOforGetandGetAll item = null;
 
 
-            item = _mapper.Map<CategoryDTO_forGetandGetAll>(await _categoryReadRepository.GetByIdAsync(id.ToString(), false));
+            item = _mapper.Map<CategoryDTOforGetandGetAll>(await _categoryReadRepository.GetByIdAsync(id.ToString(), false));
 
 
             if (item == null)
@@ -84,7 +84,7 @@ namespace Interview.Application.Services.Concrete
             return item;
         }
 
-        public async Task CategoryUpdate(CategoryDTO_forUpdate model)
+        public async Task CategoryUpdate(CategoryDTOforUpdate model)
         {
 
 
@@ -113,7 +113,7 @@ namespace Interview.Application.Services.Concrete
 
         }
 
-        public async Task<CategoryDTO_forGetandGetAll> DeleteCategoryById(int id)
+        public async Task<CategoryDTOforGetandGetAll> DeleteCategoryById(int id)
         {
 
             if (_categoryReadRepository.GetAll().Any(i => i.Id == Convert.ToInt32(id)))

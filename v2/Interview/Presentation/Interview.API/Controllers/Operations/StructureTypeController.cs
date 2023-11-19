@@ -1,5 +1,5 @@
 ﻿using Interview.API.API_Routes;
-using Interview.Application.Mapper.DTO;
+using Interview.Application.Mapper.DTO.StructureTypeDTO;
 using Interview.Application.Services.Abstract;
 using Interview.Domain.Entities.AuthModels;
 using Microsoft.AspNetCore.Authorization;
@@ -10,7 +10,7 @@ namespace Interview.API.Controllers.Operations
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Policy = "AdminOnly")]
+
     public class StructureTypeController : ControllerBase
     {
 
@@ -52,7 +52,7 @@ namespace Interview.API.Controllers.Operations
 
         [HttpPost]
         [Route(Routes.StructureType)]
-        public async Task<IActionResult> StructureTypeCreate([FromBody] StructureTypeDTO_forCreate model)
+        public async Task<IActionResult> StructureTypeCreate([FromBody] StructureTypeDTOforCreate model)
         {
 
             await _structureTypeService.StructureTypeCreate(model);
@@ -64,7 +64,7 @@ namespace Interview.API.Controllers.Operations
 
         [HttpPut]
         [Route(Routes.StructureType)]
-        public async Task<IActionResult> StructureTypeUpdate([FromBody] StructureTypeDTO_forUpdate model)
+        public async Task<IActionResult> StructureTypeUpdate([FromBody] StructureTypeDTOforUpdate model)
         {
 
 

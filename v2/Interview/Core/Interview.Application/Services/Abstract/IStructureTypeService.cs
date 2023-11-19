@@ -1,6 +1,4 @@
-﻿
-
-using Interview.Application.Mapper.DTO;
+﻿using Interview.Application.Mapper.DTO.StructureTypeDTO;
 
 namespace Interview.Application.Services.Abstract
 {
@@ -8,15 +6,15 @@ namespace Interview.Application.Services.Abstract
     {
         #region StructureType service
 
-        public Task StructureTypeCreate(StructureTypeDTO_forCreate model);
+        public Task StructureTypeCreate(StructureTypeDTOforCreate model);
 
-        public Task<List<StructureTypeDTO_forGetandGetAll>> GetStructureType();
+        public Task<List<StructureTypeDTOforGetandGetAll>> GetStructureType();
 
-        public Task<StructureTypeDTO_forGetandGetAll> GetStructureTypeById(int id);
+        public Task<StructureTypeDTOforGetandGetAll> GetStructureTypeById(int id);
 
-        public Task StructureTypeUpdate(StructureTypeDTO_forUpdate model);
+        public Task StructureTypeUpdate(StructureTypeDTOforUpdate model);
 
-        public Task<StructureTypeDTO_forGetandGetAll> DeleteStructureTypeById(int id);
+        public Task<StructureTypeDTOforGetandGetAll> DeleteStructureTypeById(int id);
 
         #endregion
     }

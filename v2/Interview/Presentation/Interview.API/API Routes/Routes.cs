@@ -70,7 +70,11 @@ namespace Interview.API.API_Routes
 
         public const string RandomQuestion2 = "randomQuestion2";
 
-        public const string createRole = "createRole";
+        public const string addUser = "addUser";
+        public const string addRole = "addRole";
+        public const string addRoleClaim = "addRoleClaim";
+        public const string addUserClaim = "addUserClaim";
+        public const string addUserRole = "addUserRole";
         public const string RegisterAdmin = "registerAdmin";
         public const string RegisterHR = "registerHR";
         public const string RegisterUser = "RegisterUser";
@@ -81,6 +85,8 @@ namespace Interview.API.API_Routes
         public const string RevokeAll = "revoke-all";
         public const string UpdateProfile = "updateProfile";
         public const string UpdatePassword = "updatePassword";
+        public const string GetMehtods = "getMehtods";
+        public const string GetUserAccess = "getUserAccess";
         public const string GetAdmins = "getAdmins";
         public const string GetHR = "getHR";
         public const string GetRoles = "GetRoles";

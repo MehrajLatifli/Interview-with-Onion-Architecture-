@@ -1,6 +1,4 @@
-﻿
-
-using Interview.Application.Mapper.DTO;
+﻿using Interview.Application.Mapper.DTO.CandidateDTO;
 
 namespace Interview.Application.Services.Abstract
 {
@@ -8,15 +6,15 @@ namespace Interview.Application.Services.Abstract
     {
         #region Candidate service
 
-        public Task CandidateCreate(CandidateDTO_forCreate model);
+        public Task CandidateCreate(CandidateDTOforCreate model);
 
-        public Task<List<CandidateDTO_forGetandGetAll>> GetCandidate();
+        public Task<List<CandidateDTOforGetandGetAll>> GetCandidate();
 
-        public Task<CandidateDTO_forGetandGetAll> GetCandidateById(int id);
+        public Task<CandidateDTOforGetandGetAll> GetCandidateById(int id);
 
-        public Task CandidateUpdate(CandidateDTO_forUpdate model);
+        public Task CandidateUpdate(CandidateDTOforUpdate model);
 
-        public Task<CandidateDTO_forGetandGetAll> DeleteCandidateById(int id);
+        public Task<CandidateDTOforGetandGetAll> DeleteCandidateById(int id);
 
         #endregion
     }

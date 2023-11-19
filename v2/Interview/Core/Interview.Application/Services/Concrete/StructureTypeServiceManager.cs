@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Interview.Application.Exception;
-using Interview.Application.Mapper.DTO;
+using Interview.Application.Mapper.DTO.StructureTypeDTO;
 using Interview.Application.Repositories.Custom;
 using Interview.Application.Services.Abstract;
 using Interview.Domain.Entities.Models;
@@ -27,7 +27,7 @@ namespace Interview.Application.Services.Concrete
 
         #region StructureType service manager
 
-        public async Task StructureTypeCreate(StructureTypeDTO_forCreate model)
+        public async Task StructureTypeCreate(StructureTypeDTOforCreate model)
         {
 
 
@@ -47,13 +47,13 @@ namespace Interview.Application.Services.Concrete
             await _structureTypeWriteRepository.SaveAsync();
         }
 
-        public async Task<List<StructureTypeDTO_forGetandGetAll>> GetStructureType()
+        public async Task<List<StructureTypeDTOforGetandGetAll>> GetStructureType()
         {
-            List<StructureTypeDTO_forGetandGetAll> datas = null;
+            List<StructureTypeDTOforGetandGetAll> datas = null;
 
             await Task.Run(() =>
             {
-                datas = _mapper.Map<List<StructureTypeDTO_forGetandGetAll>>(_structureTypeReadRepository.GetAll(false));
+                datas = _mapper.Map<List<StructureTypeDTOforGetandGetAll>>(_structureTypeReadRepository.GetAll(false));
             });
 
             if (datas.Count <= 0)
@@ -64,12 +64,12 @@ namespace Interview.Application.Services.Concrete
             return datas;
         }
 
-        public async Task<StructureTypeDTO_forGetandGetAll> GetStructureTypeById(int id)
+        public async Task<StructureTypeDTOforGetandGetAll> GetStructureTypeById(int id)
         {
-            StructureTypeDTO_forGetandGetAll item = null;
+            StructureTypeDTOforGetandGetAll item = null;
 
 
-            item = _mapper.Map<StructureTypeDTO_forGetandGetAll>(await _structureTypeReadRepository.GetByIdAsync(id.ToString(), false));
+            item = _mapper.Map<StructureTypeDTOforGetandGetAll>(await _structureTypeReadRepository.GetByIdAsync(id.ToString(), false));
 
 
             if (item == null)
@@ -80,7 +80,7 @@ namespace Interview.Application.Services.Concrete
             return item;
         }
 
-        public async Task StructureTypeUpdate(StructureTypeDTO_forUpdate model)
+        public async Task StructureTypeUpdate(StructureTypeDTOforUpdate model)
         {
 
             var existing = await _structureTypeReadRepository.GetByIdAsync(model.Id.ToString(), false);
@@ -114,7 +114,7 @@ namespace Interview.Application.Services.Concrete
 
         }
 
-        public async Task<StructureTypeDTO_forGetandGetAll> DeleteStructureTypeById(int id)
+        public async Task<StructureTypeDTOforGetandGetAll> DeleteStructureTypeById(int id)
         {
 
             if (_structureTypeReadRepository.GetAll().Any(i => i.Id == Convert.ToInt32(id)))

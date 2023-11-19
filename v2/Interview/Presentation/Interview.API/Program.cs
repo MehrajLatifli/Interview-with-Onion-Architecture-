@@ -98,6 +98,7 @@ builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddAutoMapper(typeof(MapperProfile).Assembly);
 
+builder.Services.AddMemoryCache();
 
 
 builder.Services.AddPersistenceServices();

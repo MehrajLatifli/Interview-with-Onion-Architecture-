@@ -1,5 +1,5 @@
 ﻿using Interview.API.API_Routes;
-using Interview.Application.Mapper.DTO;
+using Interview.Application.Mapper.DTO.CategoryDTO;
 using Interview.Application.Services.Abstract;
 using Interview.Domain.Entities.AuthModels;
 using Microsoft.AspNetCore.Authorization;
@@ -10,7 +10,7 @@ namespace Interview.API.Controllers.Operations
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Policy = "AdminOnly")]
+
     public class CategoryController : ControllerBase
     {
 
@@ -52,7 +52,7 @@ namespace Interview.API.Controllers.Operations
 
 
         [HttpPost(Routes.Category)]
-        public async Task<IActionResult> CategoryCreate([FromBody] CategoryDTO_forCreate model)
+        public async Task<IActionResult> CategoryCreate([FromBody] CategoryDTOforCreate model)
         {
 
             await _categoryService.CategoryCreate(model);
@@ -63,7 +63,7 @@ namespace Interview.API.Controllers.Operations
 
 
         [HttpPut(Routes.Category)]
-        public async Task<IActionResult> CategoryUpdate([FromBody] CategoryDTO_forUpdate model)
+        public async Task<IActionResult> CategoryUpdate([FromBody] CategoryDTOforUpdate model)
         {
 
 

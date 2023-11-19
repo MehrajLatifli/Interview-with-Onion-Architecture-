@@ -96,11 +96,23 @@ namespace Interview.Persistence.ServiceExtensions
             //.AddEntityFrameworkStores<InterviewContext>()
             //.AddDefaultTokenProviders();
 
-            services.AddScoped<IAuthService, AuthServiceManager>();
-
             services.AddScoped<IUserReadRepository, UserReadRepository>();
             services.AddScoped<IUserWriteRepository, UserWriteRepository>();
 
+            services.AddScoped<IRoleReadRepository, RoleReadRepository>();
+            services.AddScoped<IRoleWriteRepository, RoleWriteRepository>();
+
+            services.AddScoped<IUserRoleReadRepository, UserRoleReadRepository>();
+            services.AddScoped<IUserRoleWriteRepository, UserRoleWriteRepository>();
+
+            services.AddScoped<IUserClaimReadRepository, UserClaimReadRepository>();
+            services.AddScoped<IUserClaimWriteRepository, UserClaimWriteRepository>();
+
+            services.AddScoped<IRoleClaimReadRepository, RoleClaimReadRepository>();
+            services.AddScoped<IRoleClaimWriteRepository, RoleClaimWriteRepository>();
+
+
+            services.AddScoped<IAuthService, AuthServiceManager>();
 
             services.AddScoped<ICandidateDocumentService, CandidateDocumentServiceManager>();
 

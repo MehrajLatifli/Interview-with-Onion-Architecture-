@@ -1,5 +1,5 @@
 ﻿using Interview.API.API_Routes;
-using Interview.Application.Mapper.DTO;
+using Interview.Application.Mapper.DTO.LevelDTO;
 using Interview.Application.Services.Abstract;
 using Interview.Domain.Entities.AuthModels;
 using Microsoft.AspNetCore.Authorization;
@@ -10,7 +10,7 @@ namespace Interview.API.Controllers.Operations
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Policy = "AdminOnly")]
+
     public class LevelController : ControllerBase
     {
 
@@ -55,7 +55,7 @@ namespace Interview.API.Controllers.Operations
 
         [HttpPost(Routes.Level)]
 
-        public async Task<IActionResult> LevelCreate([FromBody] LevelDTO_forCreate model)
+        public async Task<IActionResult> LevelCreate([FromBody] LevelDTOforCreate model)
         {
 
             await _levelService.LevelCreate(model);
@@ -66,7 +66,7 @@ namespace Interview.API.Controllers.Operations
 
 
         [HttpPut(Routes.Level)]
-        public async Task<IActionResult> LevelUpdate([FromBody] LevelDTO_forUpdate model)
+        public async Task<IActionResult> LevelUpdate([FromBody] LevelDTOforUpdate model)
         {
 
 

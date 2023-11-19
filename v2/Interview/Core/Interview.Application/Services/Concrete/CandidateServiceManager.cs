@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Interview.Application.Exception;
-using Interview.Application.Mapper.DTO;
+using Interview.Application.Mapper.DTO.CandidateDTO;
 using Interview.Application.Repositories.Custom;
 using Interview.Application.Services.Abstract;
 using Interview.Domain.Entities.Models;
@@ -34,7 +34,7 @@ namespace Interview.Application.Services.Concrete
 
         #region Candidate service manager
 
-        public async Task CandidateCreate(CandidateDTO_forCreate model)
+        public async Task CandidateCreate(CandidateDTOforCreate model)
         {
 
 
@@ -61,13 +61,13 @@ namespace Interview.Application.Services.Concrete
             await _candidateWriteRepository.SaveAsync();
         }
 
-        public async Task<List<CandidateDTO_forGetandGetAll>> GetCandidate()
+        public async Task<List<CandidateDTOforGetandGetAll>> GetCandidate()
         {
-            List<CandidateDTO_forGetandGetAll> datas = null;
+            List<CandidateDTOforGetandGetAll> datas = null;
 
             await Task.Run(() =>
             {
-                datas = _mapper.Map<List<CandidateDTO_forGetandGetAll>>(_candidateReadRepository.GetAll(false));
+                datas = _mapper.Map<List<CandidateDTOforGetandGetAll>>(_candidateReadRepository.GetAll(false));
             });
 
             if (datas.Count <= 0)
@@ -78,12 +78,12 @@ namespace Interview.Application.Services.Concrete
             return datas;
         }
 
-        public async Task<CandidateDTO_forGetandGetAll> GetCandidateById(int id)
+        public async Task<CandidateDTOforGetandGetAll> GetCandidateById(int id)
         {
-            CandidateDTO_forGetandGetAll item = null;
+            CandidateDTOforGetandGetAll item = null;
 
 
-            item = _mapper.Map<CandidateDTO_forGetandGetAll>(await _candidateReadRepository.GetByIdAsync(id.ToString(), false));
+            item = _mapper.Map<CandidateDTOforGetandGetAll>(await _candidateReadRepository.GetByIdAsync(id.ToString(), false));
 
 
             if (item == null)
@@ -94,7 +94,7 @@ namespace Interview.Application.Services.Concrete
             return item;
         }
 
-        public async Task CandidateUpdate(CandidateDTO_forUpdate model)
+        public async Task CandidateUpdate(CandidateDTOforUpdate model)
         {
 
             var existing = await _candidateReadRepository.GetByIdAsync(model.Id.ToString(), false);
@@ -129,7 +129,7 @@ namespace Interview.Application.Services.Concrete
 
         }
 
-        public async Task<CandidateDTO_forGetandGetAll> DeleteCandidateById(int id)
+        public async Task<CandidateDTOforGetandGetAll> DeleteCandidateById(int id)
         {
 
             if (_candidateReadRepository.GetAll().Any(i => i.Id == Convert.ToInt32(id)))

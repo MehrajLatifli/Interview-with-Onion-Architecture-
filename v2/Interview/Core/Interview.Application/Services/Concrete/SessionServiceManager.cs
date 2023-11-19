@@ -1,8 +1,12 @@
 ﻿using AutoMapper;
 using Interview.Application.Exception;
-using Interview.Application.Mapper.DTO;
+using Interview.Application.Mapper.DTO.LevelDTO;
+using Interview.Application.Mapper.DTO.QuestionDTO;
+using Interview.Application.Mapper.DTO.SessionDTO;
+using Interview.Application.Mapper.DTO.SessionQuestionDTO;
 using Interview.Application.Repositories.Custom;
 using Interview.Application.Services.Abstract;
+using Interview.Domain.Entities.IdentityAuth;
 using Interview.Domain.Entities.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
@@ -34,7 +38,10 @@ namespace Interview.Application.Services.Concrete
         private readonly ILevelWriteRepository _levelWriteRepository;
         private readonly ILevelReadRepository _levelReadRepository;
 
-        public SessionServiceManager(IMapper mapper, ISessionWriteRepository sessionWriteRepository, ISessionReadRepository sessionReadRepository, IVacancyWriteRepository vacancyWriteRepository, IVacancyReadRepository vacancyReadRepository, ICandidateWriteRepository candidateWriteRepository, ICandidateReadRepository candidateReadRepository, ISessionQuestionWriteRepository sessionQuestionWriteRepository, ISessionQuestionReadRepository sessionQuestionReadRepository, IQuestionWriteRepository questionWriteRepository, IQuestionReadRepository questionReadRepository, ILevelWriteRepository levelWriteRepository, ILevelReadRepository levelReadRepository)
+        private readonly IUserWriteRepository _userWriteRepository;
+        private readonly IUserReadRepository _userReadRepository;
+
+        public SessionServiceManager(IMapper mapper, ISessionWriteRepository sessionWriteRepository, ISessionReadRepository sessionReadRepository, IVacancyWriteRepository vacancyWriteRepository, IVacancyReadRepository vacancyReadRepository, ICandidateWriteRepository candidateWriteRepository, ICandidateReadRepository candidateReadRepository, ISessionQuestionWriteRepository sessionQuestionWriteRepository, ISessionQuestionReadRepository sessionQuestionReadRepository, IQuestionWriteRepository questionWriteRepository, IQuestionReadRepository questionReadRepository, ILevelWriteRepository levelWriteRepository, ILevelReadRepository levelReadRepository, IUserWriteRepository userWriteRepository, IUserReadRepository userReadRepository)
         {
             _mapper = mapper;
             _sessionWriteRepository = sessionWriteRepository;
@@ -49,6 +56,8 @@ namespace Interview.Application.Services.Concrete
             _questionReadRepository = questionReadRepository;
             _levelWriteRepository = levelWriteRepository;
             _levelReadRepository = levelReadRepository;
+            _userWriteRepository = userWriteRepository;
+            _userReadRepository = userReadRepository;
         }
 
 
@@ -61,7 +70,7 @@ namespace Interview.Application.Services.Concrete
 
         #region Session service manager
 
-        public async Task SessionCreate(SessionDTO_forCreate model, ClaimsPrincipal User)
+        public async Task SessionCreate(SessionDTOforCreate model, ClaimsPrincipal User)
         {
 
 
@@ -86,39 +95,35 @@ namespace Interview.Application.Services.Concrete
 
             var username = User.Identity.Name;
 
-            var currentUser = string.Empty; /* await _userManager.FindByNameAsync(username)*/;
+           
 
-            if (currentUser is null)
-            {
-                throw new NotFoundException("CurrentUser not found");
-            }
+                entity = new Session
+                {
 
-            entity = new Session
-            {
-
-                EndValue = entity.EndValue,
-                StartDate = entity.StartDate,
-                EndDate = entity.EndDate,
-                VacancyId = model.VacancyId,
-                CandidateId = model.CandidateId,
-                //UserAccountId= currentUser.Id,
+                    EndValue = entity.EndValue,
+                    StartDate = entity.StartDate,
+                    EndDate = entity.EndDate,
+                    VacancyId = model.VacancyId,
+                    CandidateId = model.CandidateId,
+                    UserId = _userReadRepository.GetAll(false).AsEnumerable().Where(i => i.UserName == username).FirstOrDefault().Id,
 
 
-            };
+                };
 
 
-            await _sessionWriteRepository.AddAsync(entity);
+                await _sessionWriteRepository.AddAsync(entity);
 
-            await _sessionWriteRepository.SaveAsync();
+                await _sessionWriteRepository.SaveAsync();
+            
         }
 
-        public async Task<List<SessionDTO_forGetandGetAll>> GetSession()
+        public async Task<List<SessionDTOforGetandGetAll>> GetSession()
         {
-            List<SessionDTO_forGetandGetAll> datas = null;
+            List<SessionDTOforGetandGetAll> datas = null;
 
             await Task.Run(() =>
             {
-                datas = _mapper.Map<List<SessionDTO_forGetandGetAll>>(_sessionReadRepository.GetAll(false));
+                datas = _mapper.Map<List<SessionDTOforGetandGetAll>>(_sessionReadRepository.GetAll(false));
             });
 
             if (datas.Count <= 0)
@@ -129,12 +134,12 @@ namespace Interview.Application.Services.Concrete
             return datas;
         }
 
-        public async Task<SessionDTO_forGetandGetAll> GetSessionById(int id)
+        public async Task<SessionDTOforGetandGetAll> GetSessionById(int id)
         {
-            SessionDTO_forGetandGetAll item = null;
+            SessionDTOforGetandGetAll item = null;
 
 
-            item = _mapper.Map<SessionDTO_forGetandGetAll>(await _sessionReadRepository.GetByIdAsync(id.ToString(), false));
+            item = _mapper.Map<SessionDTOforGetandGetAll>(await _sessionReadRepository.GetByIdAsync(id.ToString(), false));
 
 
             if (item == null)
@@ -145,7 +150,7 @@ namespace Interview.Application.Services.Concrete
             return item;
         }
 
-        public async Task SessionUpdate(SessionDTO_forUpdate model)
+        public async Task SessionUpdate(SessionDTOforUpdate model)
         {
 
 
@@ -153,7 +158,7 @@ namespace Interview.Application.Services.Concrete
 
             await Task.Run(() =>
             {
-                if (!_mapper.Map<List<SessionDTO_forGetandGetAll>>(_sessionReadRepository.GetAll(false)).Any(i => i.Id == model.Id))
+                if (!_mapper.Map<List<SessionDTOforGetandGetAll>>(_sessionReadRepository.GetAll(false)).Any(i => i.Id == model.Id))
                 {
                     throw new NotFoundException("Session not found");
                 }
@@ -163,10 +168,10 @@ namespace Interview.Application.Services.Concrete
   
 
 
-            var  sessionQuery = from sq in _mapper.Map<List<SessionQuestionDTO_forGetandGetAll>>(_sessionQuestionReadRepository.GetAll(false))
-                            join q in _mapper.Map<List<QuestionDTO_forGetandGetAll>>(_questionReadRepository.GetAll(false)) on sq.QuestionId equals q.Id
-                            join s in _mapper.Map<List<SessionDTO_forGetandGetAll>>(_sessionReadRepository.GetAll(false)) on sq.SessionId equals s.Id
-                            join l in _mapper.Map<List<LevelDTO_forGetandGetAll>>(_levelReadRepository.GetAll(false)) on q.LevelId equals l.Id
+            var  sessionQuery = from sq in _mapper.Map<List<SessionQuestionDTOforGetandGetAll>>(_sessionQuestionReadRepository.GetAll(false))
+                            join q in _mapper.Map<List<QuestionDTOforGetandGetAll>>(_questionReadRepository.GetAll(false)) on sq.QuestionId equals q.Id
+                            join s in _mapper.Map<List<SessionDTOforGetandGetAll>>(_sessionReadRepository.GetAll(false)) on sq.SessionId equals s.Id
+                            join l in _mapper.Map<List<LevelDTOforGetandGetAll>>(_levelReadRepository.GetAll(false)) on q.LevelId equals l.Id
                             where s.Id == model.Id
                             select new 
                             {
@@ -190,11 +195,11 @@ namespace Interview.Application.Services.Concrete
             {
                 Id = model.Id,
                 EndValue = totalEndValue,
-                StartDate = _mapper.Map<SessionDTO_forGetandGetAll>(await _sessionReadRepository.GetByIdAsync(model.Id.ToString(), false)).StartDate,
+                StartDate = _mapper.Map<SessionDTOforGetandGetAll>(await _sessionReadRepository.GetByIdAsync(model.Id.ToString(), false)).StartDate,
                 EndDate = model.EndDate,
                 VacancyId = _sessionReadRepository.GetAll(false).Where(i => i.Id == model.Id).FirstOrDefault().VacancyId,
                 CandidateId = _sessionReadRepository.GetAll(false).Where(i => i.Id == model.Id).FirstOrDefault().CandidateId,
-                //UserAccountId= _sessionReadRepository.GetAll(false).Where(i => i.Id == model.Id).FirstOrDefault().UserAccountId,
+                UserId= _sessionReadRepository.GetAll(false).Where(i => i.Id == model.Id).FirstOrDefault().UserId,
 
 
             };
@@ -204,7 +209,7 @@ namespace Interview.Application.Services.Concrete
 
         }
 
-        public async Task<SessionDTO_forGetandGetAll> DeleteSessionById(int id)
+        public async Task<SessionDTOforGetandGetAll> DeleteSessionById(int id)
         {
 
             if (_sessionReadRepository.GetAll().Any(i => i.Id == Convert.ToInt32(id)))

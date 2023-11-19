@@ -1,6 +1,4 @@
-﻿
-
-using Interview.Application.Mapper.DTO;
+﻿using Interview.Application.Mapper.DTO.CategoryDTO;
 
 namespace Interview.Application.Services.Abstract
 {
@@ -8,15 +6,15 @@ namespace Interview.Application.Services.Abstract
     {
         #region Category service
 
-        public Task CategoryCreate(CategoryDTO_forCreate model);
+        public Task CategoryCreate(CategoryDTOforCreate model);
 
-        public Task<List<CategoryDTO_forGetandGetAll>> GetCategory();
+        public Task<List<CategoryDTOforGetandGetAll>> GetCategory();
 
-        public Task<CategoryDTO_forGetandGetAll> GetCategoryById(int id);
+        public Task<CategoryDTOforGetandGetAll> GetCategoryById(int id);
 
-        public Task CategoryUpdate(CategoryDTO_forUpdate model);
+        public Task CategoryUpdate(CategoryDTOforUpdate model);
 
-        public Task<CategoryDTO_forGetandGetAll> DeleteCategoryById(int id);
+        public Task<CategoryDTOforGetandGetAll> DeleteCategoryById(int id);
 
         #endregion
     }

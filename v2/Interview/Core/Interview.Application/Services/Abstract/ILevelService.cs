@@ -1,6 +1,4 @@
-﻿
-
-using Interview.Application.Mapper.DTO;
+﻿using Interview.Application.Mapper.DTO.LevelDTO;
 
 namespace Interview.Application.Services.Abstract
 {
@@ -8,15 +6,15 @@ namespace Interview.Application.Services.Abstract
     {
         #region Level service
 
-        public Task LevelCreate(LevelDTO_forCreate model);
+        public Task LevelCreate(LevelDTOforCreate model);
 
-        public Task<List<LevelDTO_forGetandGetAll>> GetLevel();
+        public Task<List<LevelDTOforGetandGetAll>> GetLevel();
 
-        public Task<LevelDTO_forGetandGetAll> GetLevelById(int id);
+        public Task<LevelDTOforGetandGetAll> GetLevelById(int id);
 
-        public Task LevelUpdate(LevelDTO_forUpdate model);
+        public Task LevelUpdate(LevelDTOforUpdate model);
 
-        public Task<LevelDTO_forGetandGetAll> DeleteLevelById(int id);
+        public Task<LevelDTOforGetandGetAll> DeleteLevelById(int id);
 
         #endregion
     }

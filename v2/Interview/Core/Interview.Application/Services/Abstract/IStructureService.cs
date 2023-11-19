@@ -1,6 +1,4 @@
-﻿
-
-using Interview.Application.Mapper.DTO;
+﻿using Interview.Application.Mapper.DTO.StructureDTO;
 
 namespace Interview.Application.Services.Abstract
 {
@@ -8,15 +6,15 @@ namespace Interview.Application.Services.Abstract
     {
         #region Structure service
 
-        public Task StructureCreate(StructureDTO_forCreate model);
+        public Task StructureCreate(StructureDTOforCreate model);
 
-        public Task<List<StructureDTO_forGetandGetAll>> GetStructure();
+        public Task<List<StructureDTOforGetandGetAll>> GetStructure();
 
-        public Task<StructureDTO_forGetandGetAll> GetStructureById(int id);
+        public Task<StructureDTOforGetandGetAll> GetStructureById(int id);
 
-        public Task StructureUpdate(StructureDTO_forUpdate model);
+        public Task StructureUpdate(StructureDTOforUpdate model);
 
-        public Task<StructureDTO_forGetandGetAll> DeleteStructureById(int id);
+        public Task<StructureDTOforGetandGetAll> DeleteStructureById(int id);
 
         #endregion
     }

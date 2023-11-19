@@ -1,6 +1,4 @@
-﻿
-
-using Interview.Application.Mapper.DTO;
+﻿using Interview.Application.Mapper.DTO.QuestionDTO;
 
 namespace Interview.Application.Services.Abstract
 {
@@ -9,15 +7,15 @@ namespace Interview.Application.Services.Abstract
 
         #region Question service
 
-        public Task QuestionCreate(QuestionDTO_forCreate model);
+        public Task QuestionCreate(QuestionDTOforCreate model);
 
-        public Task<List<QuestionDTO_forGetandGetAll>> GetQuestion();
+        public Task<List<QuestionDTOforGetandGetAll>> GetQuestion();
 
-        public Task<QuestionDTO_forGetandGetAll> GetQuestionById(int id);
+        public Task<QuestionDTOforGetandGetAll> GetQuestionById(int id);
 
-        public Task QuestionUpdate(QuestionDTO_forUpdate model);
+        public Task QuestionUpdate(QuestionDTOforUpdate model);
 
-        public Task<QuestionDTO_forGetandGetAll> DeleteQuestionById(int id);
+        public Task<QuestionDTOforGetandGetAll> DeleteQuestionById(int id);
 
         #endregion
     }

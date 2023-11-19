@@ -1,7 +1,7 @@
 ﻿
 
-using Interview.Application.Mapper.AuthDTO;
-using Interview.Application.Mapper.DTO;
+
+using Interview.Application.Mapper.DTO.VacancyDTO;
 using Interview.Domain.Entities.AuthModels;
 
 namespace Interview.Application.Services.Abstract
@@ -11,15 +11,15 @@ namespace Interview.Application.Services.Abstract
 
         #region Vacancy service
 
-        public Task VacancyCreate(VacancyDTO_forCreate model);
+        public Task VacancyCreate(VacancyDTOforCreate model);
 
-        public Task<List<VacancyDTO_forGetandGetAll>> GetVacancy();
+        public Task<List<VacancyDTOforGetandGetAll>> GetVacancy();
 
-        public Task<VacancyDTO_forGetandGetAll> GetVacancyById(int id);
+        public Task<VacancyDTOforGetandGetAll> GetVacancyById(int id);
 
-        public Task VacancyUpdate(VacancyDTO_forUpdate model);
+        public Task VacancyUpdate(VacancyDTOforUpdate model);
 
-        public Task<VacancyDTO_forGetandGetAll> DeleteVacancyById(int id);
+        public Task<VacancyDTOforGetandGetAll> DeleteVacancyById(int id);
 
         #endregion
     }

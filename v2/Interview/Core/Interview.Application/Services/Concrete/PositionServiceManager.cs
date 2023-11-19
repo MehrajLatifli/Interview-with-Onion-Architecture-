@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Interview.Application.Exception;
-using Interview.Application.Mapper.DTO;
+using Interview.Application.Mapper.DTO.PositionDTO;
 using Interview.Application.Repositories.Custom;
 using Interview.Application.Services.Abstract;
 using Interview.Domain.Entities.Models;
@@ -31,7 +31,7 @@ namespace Interview.Application.Services.Concrete
 
         #region Position service manager
 
-        public async Task PositionCreate(PositionDTO_forCreate model)
+        public async Task PositionCreate(PositionDTOforCreate model)
         {
 
 
@@ -51,13 +51,13 @@ namespace Interview.Application.Services.Concrete
             await _positionWriteRepository.SaveAsync();
         }
 
-        public async Task<List<PositionDTO_forGetandGetAll>> GetPosition()
+        public async Task<List<PositionDTOforGetandGetAll>> GetPosition()
         {
-            List<PositionDTO_forGetandGetAll> datas = null;
+            List<PositionDTOforGetandGetAll> datas = null;
 
             await Task.Run(() =>
             {
-                datas = _mapper.Map<List<PositionDTO_forGetandGetAll>>(_positionReadRepository.GetAll(false));
+                datas = _mapper.Map<List<PositionDTOforGetandGetAll>>(_positionReadRepository.GetAll(false));
             });
 
             if (datas.Count <= 0)
@@ -68,12 +68,12 @@ namespace Interview.Application.Services.Concrete
             return datas;
         }
 
-        public async Task<PositionDTO_forGetandGetAll> GetPositionById(int id)
+        public async Task<PositionDTOforGetandGetAll> GetPositionById(int id)
         {
-            PositionDTO_forGetandGetAll item = null;
+            PositionDTOforGetandGetAll item = null;
 
 
-            item = _mapper.Map<PositionDTO_forGetandGetAll>(await _positionReadRepository.GetByIdAsync(id.ToString(), false));
+            item = _mapper.Map<PositionDTOforGetandGetAll>(await _positionReadRepository.GetByIdAsync(id.ToString(), false));
 
 
             if (item == null)
@@ -84,7 +84,7 @@ namespace Interview.Application.Services.Concrete
             return item;
         }
 
-        public async Task PositionUpdate(PositionDTO_forUpdate model)
+        public async Task PositionUpdate(PositionDTOforUpdate model)
         {
 
             var existing = await _positionReadRepository.GetByIdAsync(model.Id.ToString(), false);
@@ -118,7 +118,7 @@ namespace Interview.Application.Services.Concrete
 
         }
 
-        public async Task<PositionDTO_forGetandGetAll> DeletePositionById(int id)
+        public async Task<PositionDTOforGetandGetAll> DeletePositionById(int id)
         {
 
             if (_positionReadRepository.GetAll().Any(i => i.Id == Convert.ToInt32(id)))

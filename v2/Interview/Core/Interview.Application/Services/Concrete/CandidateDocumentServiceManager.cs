@@ -2,7 +2,7 @@
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Interview.Application.Exception;
-using Interview.Application.Mapper.DTO;
+using Interview.Application.Mapper.DTO.CandidateDocumentDTO;
 using Interview.Application.Repositories.Custom;
 using Interview.Application.Services.Abstract;
 using Interview.Domain.Entities.Models;
@@ -34,7 +34,7 @@ namespace Interview.Application.Services.Concrete
 
         #region CandidateDocument service manager
 
-        public async Task CandidateDocumentCreate(CandidateDocumentDTO_forCreate model, string AzureconnectionString)
+        public async Task CandidateDocumentCreate(CandidateDocumentDTOforCreate model, string AzureconnectionString)
         {
 
 
@@ -84,13 +84,13 @@ namespace Interview.Application.Services.Concrete
             await _candidateDocumentWriteRepository.SaveAsync();
         }
 
-        public async Task<List<CandidateDocumentDTO_forGetandGetAll>> GetCandidateDocument()
+        public async Task<List<CandidateDocumentDTOforGetandGetAll>> GetCandidateDocument()
         {
-            List<CandidateDocumentDTO_forGetandGetAll> datas = null;
+            List<CandidateDocumentDTOforGetandGetAll> datas = null;
 
             await Task.Run(() =>
             {
-                datas = _mapper.Map<List<CandidateDocumentDTO_forGetandGetAll>>(_candidateDocumentReadRepository.GetAll(false));
+                datas = _mapper.Map<List<CandidateDocumentDTOforGetandGetAll>>(_candidateDocumentReadRepository.GetAll(false));
             });
 
             if (datas.Count <= 0)
@@ -101,12 +101,12 @@ namespace Interview.Application.Services.Concrete
             return datas;
         }
 
-        public async Task<CandidateDocumentDTO_forGetandGetAll> GetCandidateDocumentById(int id)
+        public async Task<CandidateDocumentDTOforGetandGetAll> GetCandidateDocumentById(int id)
         {
-            CandidateDocumentDTO_forGetandGetAll item = null;
+            CandidateDocumentDTOforGetandGetAll item = null;
 
 
-            item = _mapper.Map<CandidateDocumentDTO_forGetandGetAll>(await _candidateDocumentReadRepository.GetByIdAsync(id.ToString(), false));
+            item = _mapper.Map<CandidateDocumentDTOforGetandGetAll>(await _candidateDocumentReadRepository.GetByIdAsync(id.ToString(), false));
 
 
             if (item == null)
@@ -117,7 +117,7 @@ namespace Interview.Application.Services.Concrete
             return item;
         }
 
-        public async Task CandidateDocumentUpdate(CandidateDocumentDTO_forUpdate model, string AzureconnectionString)
+        public async Task CandidateDocumentUpdate(CandidateDocumentDTOforUpdate model, string AzureconnectionString)
         {
 
             var existing = await _candidateDocumentReadRepository.GetByIdAsync(model.Id.ToString(), false);
@@ -183,7 +183,7 @@ namespace Interview.Application.Services.Concrete
 
         }
 
-        public async Task<CandidateDocumentDTO_forGetandGetAll> DeleteCandidateDocumentById(int id)
+        public async Task<CandidateDocumentDTOforGetandGetAll> DeleteCandidateDocumentById(int id)
         {
 
             if (_candidateDocumentReadRepository.GetAll().Any(i => i.Id == Convert.ToInt32(id)))

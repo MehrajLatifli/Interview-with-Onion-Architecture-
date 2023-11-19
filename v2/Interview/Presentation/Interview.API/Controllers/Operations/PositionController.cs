@@ -1,5 +1,5 @@
 ﻿using Interview.API.API_Routes;
-using Interview.Application.Mapper.DTO;
+using Interview.Application.Mapper.DTO.PositionDTO;
 using Interview.Application.Services.Abstract;
 using Interview.Domain.Entities.AuthModels;
 using Microsoft.AspNetCore.Authorization;
@@ -10,7 +10,7 @@ namespace Interview.API.Controllers.Operations
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Policy = "AdminOnly")]
+
     public class PositionController : ControllerBase
     {
 
@@ -48,7 +48,7 @@ namespace Interview.API.Controllers.Operations
 
 
         [HttpPost(Routes.Position)]
-        public async Task<IActionResult> PositionCreate([FromBody] PositionDTO_forCreate model)
+        public async Task<IActionResult> PositionCreate([FromBody] PositionDTOforCreate model)
         {
 
             await _positionService.PositionCreate(model);
@@ -59,7 +59,7 @@ namespace Interview.API.Controllers.Operations
 
 
         [HttpPut(Routes.Position)]
-        public async Task<IActionResult> PositionUpdate([FromBody] PositionDTO_forUpdate model)
+        public async Task<IActionResult> PositionUpdate([FromBody] PositionDTOforUpdate model)
         {
 
 

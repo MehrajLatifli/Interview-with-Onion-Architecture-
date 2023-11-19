@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Interview.Application.Exception;
-using Interview.Application.Mapper.DTO;
+using Interview.Application.Mapper.DTO.QuestionDTO;
 using Interview.Application.Repositories.Custom;
 using Interview.Application.Services.Abstract;
 using Interview.Domain.Entities.Models;
@@ -44,7 +44,7 @@ namespace Interview.Application.Services.Concrete
 
         #region Question service manager
 
-        public async Task QuestionCreate(QuestionDTO_forCreate model)
+        public async Task QuestionCreate(QuestionDTOforCreate model)
         {
 
 
@@ -90,13 +90,13 @@ namespace Interview.Application.Services.Concrete
             await _questionWriteRepository.SaveAsync();
         }
 
-        public async Task<List<QuestionDTO_forGetandGetAll>> GetQuestion()
+        public async Task<List<QuestionDTOforGetandGetAll>> GetQuestion()
         {
-            List<QuestionDTO_forGetandGetAll> datas = null;
+            List<QuestionDTOforGetandGetAll> datas = null;
 
             await Task.Run(() =>
             {
-                datas = _mapper.Map<List<QuestionDTO_forGetandGetAll>>(_questionReadRepository.GetAll(false));
+                datas = _mapper.Map<List<QuestionDTOforGetandGetAll>>(_questionReadRepository.GetAll(false));
             });
 
             if (datas.Count <= 0)
@@ -109,12 +109,12 @@ namespace Interview.Application.Services.Concrete
 
 
 
-        public async Task<QuestionDTO_forGetandGetAll> GetQuestionById(int id)
+        public async Task<QuestionDTOforGetandGetAll> GetQuestionById(int id)
         {
-            QuestionDTO_forGetandGetAll item = null;
+            QuestionDTOforGetandGetAll item = null;
 
 
-            item = _mapper.Map<QuestionDTO_forGetandGetAll>(await _questionReadRepository.GetByIdAsync(id.ToString(), false));
+            item = _mapper.Map<QuestionDTOforGetandGetAll>(await _questionReadRepository.GetByIdAsync(id.ToString(), false));
 
 
             if (item == null)
@@ -125,7 +125,7 @@ namespace Interview.Application.Services.Concrete
             return item;
         }
 
-        public async Task QuestionUpdate(QuestionDTO_forUpdate model)
+        public async Task QuestionUpdate(QuestionDTOforUpdate model)
         {
 
 
@@ -181,7 +181,7 @@ namespace Interview.Application.Services.Concrete
 
         }
 
-        public async Task<QuestionDTO_forGetandGetAll> DeleteQuestionById(int id)
+        public async Task<QuestionDTOforGetandGetAll> DeleteQuestionById(int id)
         {
 
             if (_questionReadRepository.GetAll().Any(i => i.Id == Convert.ToInt32(id)))

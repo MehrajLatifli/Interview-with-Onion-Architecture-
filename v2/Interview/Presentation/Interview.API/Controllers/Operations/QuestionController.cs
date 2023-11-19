@@ -1,5 +1,5 @@
 ﻿using Interview.API.API_Routes;
-using Interview.Application.Mapper.DTO;
+using Interview.Application.Mapper.DTO.QuestionDTO;
 using Interview.Application.Services.Abstract;
 using Interview.Domain.Entities.AuthModels;
 using Microsoft.AspNetCore.Authorization;
@@ -10,7 +10,7 @@ namespace Interview.API.Controllers.Operations
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Policy = "AdminOnly")]
+
     public class QuestionController : ControllerBase
     {
 
@@ -54,7 +54,7 @@ namespace Interview.API.Controllers.Operations
 
 
         [HttpPost(Routes.Question)]
-        public async Task<IActionResult> QuestionCreate([FromBody] QuestionDTO_forCreate model)
+        public async Task<IActionResult> QuestionCreate([FromBody] QuestionDTOforCreate model)
         {
 
             await _questionService.QuestionCreate(model);
@@ -65,7 +65,7 @@ namespace Interview.API.Controllers.Operations
 
 
         [HttpPut(Routes.Question)]
-        public async Task<IActionResult> QuestionUpdate([FromBody] QuestionDTO_forUpdate model)
+        public async Task<IActionResult> QuestionUpdate([FromBody] QuestionDTOforUpdate model)
         {
 
 

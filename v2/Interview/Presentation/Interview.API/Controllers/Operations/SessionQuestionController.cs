@@ -1,5 +1,5 @@
 ﻿using Interview.API.API_Routes;
-using Interview.Application.Mapper.DTO;
+using Interview.Application.Mapper.DTO.SessionQuestionDTO;
 using Interview.Application.Services.Abstract;
 using Interview.Domain.Entities.AuthModels;
 using Interview.Domain.Entities.Models;
@@ -12,7 +12,7 @@ namespace Interview.API.Controllers.Operations
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Policy = "AllRoles")]
+ 
     public class SessionQuestionController : ControllerBase
     {
 
@@ -67,7 +67,7 @@ namespace Interview.API.Controllers.Operations
 
 
         [HttpPost(Routes.SessionQuestion)]
-        public async Task<IActionResult> SessionQuestionCreate([FromBody] SessionQuestionDTO_forCreate model)
+        public async Task<IActionResult> SessionQuestionCreate([FromBody] SessionQuestionDTOforCreate model)
         {
 
             await _sessionQuestionService.SessionQuestionCreate(model);
@@ -78,7 +78,7 @@ namespace Interview.API.Controllers.Operations
 
 
         [HttpPut(Routes.SessionQuestion)]
-        public async Task<IActionResult> SessionQuestionUpdate([FromBody] SessionQuestionDTO_forUpdate model)
+        public async Task<IActionResult> SessionQuestionUpdate([FromBody] SessionQuestionDTOforUpdate model)
         {
 
 

@@ -1,6 +1,4 @@
-﻿
-
-using Interview.Application.Mapper.DTO;
+﻿using Interview.Application.Mapper.DTO.PositionDTO;
 
 namespace Interview.Application.Services.Abstract
 {
@@ -10,15 +8,15 @@ namespace Interview.Application.Services.Abstract
 
         #region Position service
 
-        public Task PositionCreate(PositionDTO_forCreate model);
+        public Task PositionCreate(PositionDTOforCreate model);
 
-        public Task<List<PositionDTO_forGetandGetAll>> GetPosition();
+        public Task<List<PositionDTOforGetandGetAll>> GetPosition();
 
-        public Task<PositionDTO_forGetandGetAll> GetPositionById(int id);
+        public Task<PositionDTOforGetandGetAll> GetPositionById(int id);
 
-        public Task PositionUpdate(PositionDTO_forUpdate model);
+        public Task PositionUpdate(PositionDTOforUpdate model);
 
-        public Task<PositionDTO_forGetandGetAll> DeletePositionById(int id);
+        public Task<PositionDTOforGetandGetAll> DeletePositionById(int id);
 
         #endregion
 

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Interview.Application.Exception;
-using Interview.Application.Mapper.DTO;
+using Interview.Application.Mapper.DTO.VacancyDTO;
 using Interview.Application.Repositories.Custom;
 using Interview.Application.Services.Abstract;
 using Interview.Domain.Entities.Models;
@@ -40,7 +40,7 @@ namespace Interview.Application.Services.Concrete
 
         #region Vacancy service manager
 
-        public async Task VacancyCreate(VacancyDTO_forCreate model)
+        public async Task VacancyCreate(VacancyDTOforCreate model)
         {
 
 
@@ -81,13 +81,13 @@ namespace Interview.Application.Services.Concrete
             await _vacancyWriteRepository.SaveAsync();
         }
 
-        public async Task<List<VacancyDTO_forGetandGetAll>> GetVacancy()
+        public async Task<List<VacancyDTOforGetandGetAll>> GetVacancy()
         {
-            List<VacancyDTO_forGetandGetAll> datas = null;
+            List<VacancyDTOforGetandGetAll> datas = null;
 
             await Task.Run(() =>
             {
-                datas = _mapper.Map<List<VacancyDTO_forGetandGetAll>>(_vacancyReadRepository.GetAll(false));
+                datas = _mapper.Map<List<VacancyDTOforGetandGetAll>>(_vacancyReadRepository.GetAll(false));
             });
 
             if (datas.Count <= 0)
@@ -98,12 +98,12 @@ namespace Interview.Application.Services.Concrete
             return datas;
         }
 
-        public async Task<VacancyDTO_forGetandGetAll> GetVacancyById(int id)
+        public async Task<VacancyDTOforGetandGetAll> GetVacancyById(int id)
         {
-            VacancyDTO_forGetandGetAll item = null;
+            VacancyDTOforGetandGetAll item = null;
 
 
-            item = _mapper.Map<VacancyDTO_forGetandGetAll>(await _vacancyReadRepository.GetByIdAsync(id.ToString(), false));
+            item = _mapper.Map<VacancyDTOforGetandGetAll>(await _vacancyReadRepository.GetByIdAsync(id.ToString(), false));
 
 
             if (item == null)
@@ -114,7 +114,7 @@ namespace Interview.Application.Services.Concrete
             return item;
         }
 
-        public async Task VacancyUpdate(VacancyDTO_forUpdate model)
+        public async Task VacancyUpdate(VacancyDTOforUpdate model)
         {
 
 
@@ -168,7 +168,7 @@ namespace Interview.Application.Services.Concrete
 
         }
 
-        public async Task<VacancyDTO_forGetandGetAll> DeleteVacancyById(int id)
+        public async Task<VacancyDTOforGetandGetAll> DeleteVacancyById(int id)
         {
 
             if (_vacancyReadRepository.GetAll().Any(i => i.Id == Convert.ToInt32(id)))
