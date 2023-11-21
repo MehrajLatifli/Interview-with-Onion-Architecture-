@@ -126,8 +126,16 @@ namespace Interview.Application.Services.Concrete
 
                 if (users.Any(i => i.UserName == currentUser))
                 {
+                    var hascrateRole = roles.FirstOrDefault(i => i.Name == UserRoles.Admin);
+
+                    if (hascrateRole == null)
+                    {
+                        throw new NotFoundException("No such role has been created.");
+                    }
+
                     if (roles.Any(i => i.Name == UserRoles.Admin))
                     {
+
 
                         if (userroles.Any(i => i.UserId == users.Where(i => i.UserName == currentUser).FirstOrDefault().Id && (i.RoleId == roles.Where(i => i.Name == UserRoles.Admin).FirstOrDefault().Id)))
                         {
@@ -236,9 +244,15 @@ namespace Interview.Application.Services.Concrete
 
                 if (users.Any(i => i.UserName == currentUser))
                 {
+                        var hascrateRole = roles.FirstOrDefault(i => i.Name == UserRoles.HR);
+
+                        if (hascrateRole == null)
+                        {
+                            throw new NotFoundException("No such role has been created.");
+                        }
+
                     if (roles.Any(i => i.Name == UserRoles.HR || i.Name == UserRoles.Admin))
                     {
-
                         if (userroles.Any(i => i.UserId == users.Where(i => i.UserName == currentUser).FirstOrDefault().Id && (i.RoleId == roles.Where(i => i.Name == UserRoles.HR).FirstOrDefault().Id || i.RoleId == roles.Where(i => i.Name == UserRoles.Admin).FirstOrDefault().Id)))
                         {
                             if (userclaims.Any(i => (i.ClaimType == UserAccess.Read_ClaimType || i.ClaimType == UserAccess.AllAccess_ClaimType) && (i.UserId == users.Where(i => i.UserName == currentUser).FirstOrDefault().Id)))
