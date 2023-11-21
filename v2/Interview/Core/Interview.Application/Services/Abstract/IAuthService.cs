@@ -1,6 +1,7 @@
 ﻿using Interview.Application.Mapper.DTO;
 using Interview.Application.Mapper.DTO.AuthDTO;
 using Interview.Domain.Entities.AuthModels;
+using Interview.Domain.Entities.Others;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,13 +20,16 @@ namespace Interview.Application.Services.Abstract
 
         public Task<List<RoleAccessMethodDTO>> GetMehtods(ClaimsPrincipal User);
         public Task<List<UserAccessDTO>> GetUserAccess(ClaimsPrincipal User);
+        public Task<List<GetAuthDTOModel>> GetAdmins(ClaimsPrincipal User);
+        public Task<List<GetAuthDTOModel>> GetHRs(ClaimsPrincipal User);
         public Task AddRole(string roleName, ClaimsPrincipal User);
         public Task AddRoleClaim(string roleId, string roleAccessMethodId, ClaimsPrincipal User);
         public Task AddUserClaim(string userId, string userAccessId, ClaimsPrincipal User);
         public Task AddUserRole(string userId, string roleId, ClaimsPrincipal User);
         public Task AddUser(RegisterDTO model, string ConnectionStringAzure);
 
-        public Task RegisterUser(RegisterDTO model, string ConnectionStringAzure);
+        public Task RegisterAdmin(RegisterAdminDTO model, string ConnectionStringAzure);
+
 
         //public Task RegisterAdmin(RegisterDTO model, string ConnectionStringAzure);
 

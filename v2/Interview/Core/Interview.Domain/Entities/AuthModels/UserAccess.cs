@@ -3,9 +3,9 @@
     public struct UserAccess
     {
 
-        public static readonly string Write_ClaimValue = "Write";
-        public static readonly string Read_ClaimValue = "Read";
-        public static readonly string AllAccess_ClaimValue = "All Access";
+        public static readonly string Write_ClaimType = "Write";
+        public static readonly string Read_ClaimType = "Read";
+        public static readonly string AllAccess_ClaimType = "All Access";
 
     }
 }

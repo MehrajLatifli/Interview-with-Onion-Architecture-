@@ -45,24 +45,33 @@ namespace Interview.API.Controllers.Auth
         }
 
 
-
-        [HttpPost]
-        [Route(Routes.addUser)]
-        public async Task<IActionResult> AddUser([FromForm] RegisterDTO model)
+        [HttpGet]
+        [Route(Routes.GetAdmins)]
+        public async Task<IActionResult> GetAdmins()
         {
+            return Ok(await _authservice.GetAdmins(User));
 
-            await _authservice.AddUser(model, ServiceExtension.ConnectionStringAzure);
 
-
-            return Ok(new Response { Status = "Success", Message = "User created successfully!" });
         }
 
+        [HttpGet]
+        [Route(Routes.GetHR)]
+        public async Task<IActionResult> GetHRs()
+        {
+            return Ok(await _authservice.GetHRs(User));
+
+
+        }
+
+
+
+
         [HttpPost]
-        [Route(Routes.RegisterUser)]
-        public async Task<IActionResult> RegisterUser([FromForm] RegisterDTO model)
+        [Route(Routes.RegisterAdmin)]
+        public async Task<IActionResult> RegisterAdmin([FromForm] RegisterAdminDTO model)
         {
 
-            await _authservice.RegisterUser(model, ServiceExtension.ConnectionStringAzure);
+            await _authservice.RegisterAdmin(model, ServiceExtension.ConnectionStringAzure);
 
 
             return Ok(new Response { Status = "Success", Message = "User created successfully!" });
@@ -78,6 +87,7 @@ namespace Interview.API.Controllers.Auth
             return Ok(await _authservice.Login(model));
 
         }
+
 
         [HttpGet]
         [Route(Routes.GetMehtods)]
@@ -97,6 +107,20 @@ namespace Interview.API.Controllers.Auth
 
 
         }
+
+
+        [HttpPost]
+        [Route(Routes.addUser)]
+        public async Task<IActionResult> AddUser([FromForm] RegisterDTO model)
+        {
+
+            await _authservice.AddUser(model, ServiceExtension.ConnectionStringAzure);
+
+
+            return Ok(new Response { Status = "Success", Message = "User created successfully!" });
+        }
+
+
 
         [HttpPost]
         [Route(Routes.addRole)]

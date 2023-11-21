@@ -1,9 +1,9 @@
 ﻿
 using Microsoft.AspNetCore.Http;
 
-namespace Interview.Domain.Entities.AuthModels
+namespace Interview.Domain.Entities.Others
 {
-    public class GetAuthModel
+    public class GetAuthDTOModel
     {
         public string Id { get; set; }
 
@@ -15,7 +15,7 @@ namespace Interview.Domain.Entities.AuthModels
 
         public string ImagePath { get; set; }
 
-        public List <UserClaimModel> UserClaims { get; set; }
+        public List <PermitionsDTOModel> Permitions { get; set; }
 
     }
 }

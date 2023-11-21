@@ -155,6 +155,9 @@ namespace Interview.Application.Mapper
             CreateMap<Register, RegisterDTO>();
             CreateMap<RegisterDTO, Register>();
 
+            CreateMap<Register, RegisterAdminDTO>();
+            CreateMap<RegisterAdminDTO, Register>();
+
             CreateMap<UpdatePassword, UpdatePasswordDTO>();
             CreateMap<UpdatePasswordDTO, UpdatePassword>();
 
